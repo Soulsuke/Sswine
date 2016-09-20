@@ -1,4 +1,4 @@
-# sSwine
+# Sswine
 A super Swine, I guess.
 
 This repo is a WiP for something I've been procrastinatinating too much to
