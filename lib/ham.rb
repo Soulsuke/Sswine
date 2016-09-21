@@ -2,7 +2,7 @@ require "pathname"
 require "yaml"
 
 =begin
-Ham class.
+Ham class.  
 A ham is a chunk of a swine. So, every sub-directory of .sswine is, by
 definition a Ham. Edible hams are those which have a usable config file contain
 a wine_env folder.
@@ -194,8 +194,7 @@ class Ham
   public
   def openShell
     # Directory to start the shell in:
-    dir = Pathname.new "#{@config_global["Path"].realpath}/wine_env/drive_c"
-    Dir.chdir dir
+    Dir.chdir "#{@config_global["Path"].realpath}/wine_env/drive_c"
 
     # Default shell for the current user:
     shell = `getent passwd #{ENV["USER"]}`.chomp.split( ":" ).pop

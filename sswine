@@ -1,0 +1,112 @@
+#! /usr/bin/env ruby
+
+=begin
+A simple wrapper for Sswine!
+This file must remain within Sswine's folder, but it can be symlinked anywhere.
+There are no other requirements, really.
+=end
+
+# System requirements:
+require "pathname"
+
+# Move into Sswine's directory:
+dir = Pathname.new $0
+Dir.chdir dir.realpath.dirname
+
+# Finally, require Sswine:
+require "./lib/sswine.rb"
+
+###############################################################################
+### Functions                                                               ###
+###############################################################################
+def showHelpReference
+  lines = Array.new
+
+  # Help reference lines:
+  # Header:
+  lines.push "\e[33mSswine: split wine."
+  lines.push "\e[33mUsage:\e[0m"
+
+  # Write .desktop files:
+  lines.push "\e[34msswine -d/--desktop\e[0m: writes .desktop files for each" +
+             " valid entry of each edible Ham."
+  # Help reference:
+  lines.push "\e[34msswine -h/--help\e[0m: shows this help reference."
+  # Kill all hams:
+  lines.push "\e[34msswine -k/--kill\e[0m: runs 'wineserver -k' for each Ham."
+  # Open shell:
+  lines.push "\e[34msswine -s/--shell\e[0m: prompts the user to choose an " +
+             "edible Ham. Then, the user's default shell is opened in the " +
+             "choosen entry's folder, with the WINEPREFIX variable correctly" +
+             " set."
+  # Update all hams:
+  lines.push "\e[34msswine -u/--update\e[0m: runs 'wineboot' for each edible" +
+             "Ham. This is supposed to update wine files on each of them."
+
+  # Max 80 characters per line, but preserving words integrity! :3
+  lines.each do |entry|
+    # 80 characters line container:
+    composed = ""
+
+    # Split each message string on spaces:
+    entry.split( " " ).each do |word|
+      # If the current composed message plus the current word exceeds 80 is
+      # within 80 characters, keep composing:
+      if 80 >= "#{composed + " " + word}".length then
+        # Add a space when needed:
+        unless composed.empty? then
+          composed += " "
+        end
+        composed += "#{word}"
+
+      # If the current word would not fit in an 80 characters line, print the
+      # current composed message, and start composing the next one with an
+      # indentation of 2 spaces.
+      else
+        puts composed
+        composed = "  #{word}"
+      end
+    end
+
+    # Finally, print the last line:
+    puts composed
+  end
+end
+
+###############################################################################
+### Main wrapper                                                            ###
+###############################################################################
+
+if 1 == ARGV.size then
+  # The protagonist! Yay!
+  s = Sswine.new
+
+  # Create desktop files:
+  if [ "-d", "--desktop" ].include? ARGV[0] then
+    s.writeDesktopFiles
+
+  # Help reference:
+  elsif [ "-h", "--help" ].include? ARGV[0] then
+    showHelpReference
+
+  # Kill all hams:
+  elsif [ "-k", "--kill" ].include? ARGV[0] then
+    s.killAllHams
+
+  # Run a shell for a ham:
+  elsif [ "-s", "--shell" ].include? ARGV[0] then
+    s.openShell
+
+  # Update all hams:
+  elsif [ "-u", "--update" ].include? ARGV[0] then
+    s.updateAllHams
+  end
+
+  exit 0
+
+# Wrong number of parameters:
+else
+  showHelpReference
+  exit -1
+end
+

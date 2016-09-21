@@ -3,15 +3,14 @@ require "./lib/ham.rb"
 
 =begin
 Sswine stands for "Sswine: split wine", where wine stands for "wine is not (an)
-emulator".
-
+emulator".  
 This class is designed to handle Hams located in $HOME/.sswine. Each Ham must
-be composed of:
-config.yaml:: Ham configuration file.
-wine_env:: Folder containing the wine bottle.
-Additionally, the following folders can also be present:
-icons:: Folder containing the Ham-specific icons.
-custom_wine:: Folder containing a Ham-specific version of wine to be used.
+be composed of:  
+config.yaml:: Ham configuration file.  
+wine_env:: Folder containing the wine bottle.  
+Additionally, the following folders can also be present:  
+icons:: Folder containing the Ham-specific icons.  
+custom_wine:: Folder containing a Ham-specific version of wine to be used.  
 =end
 
 class Sswine
@@ -57,7 +56,7 @@ class Sswine
     end
   end
 
-  # Creates the desktop entries for every edible Ham.
+  # Creates the .desktop entries for every edible Ham.
   public
   def writeDesktopFiles
     # TODO: create directories.

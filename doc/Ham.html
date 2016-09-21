@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>class Ham - RDoc Documentation</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "./";
+</script>
+
+<script src="./js/jquery.js"></script>
+<script src="./js/darkfish.js"></script>
+
+<link href="./css/fonts.css" rel="stylesheet">
+<link href="./css/rdoc.css" rel="stylesheet">
+
+
+
+<body id="top" role="document" class="class">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="./index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="./table_of_contents.html#pages">Pages</a>
+    <a href="./table_of_contents.html#classes">Classes</a>
+    <a href="./table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+
+  <div id="class-metadata">
+    
+    <div id="parent-class-section" class="nav-section">
+  <h3>Parent</h3>
+
+  
+  <p class="link">Object
+  
+</div>
+
+    
+    
+    <!-- Method Quickref -->
+<div id="method-list-section" class="nav-section">
+  <h3>Methods</h3>
+
+  <ul class="link-list" role="directory">
+    
+    <li ><a href="#method-c-new">::new</a>
+    
+    <li ><a href="#method-i-checkEntry">#checkEntry</a>
+    
+    <li ><a href="#method-i-getDesktopEntries">#getDesktopEntries</a>
+    
+    <li ><a href="#method-i-openShell">#openShell</a>
+    
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-labelledby="class-Ham">
+  <h1 id="class-Ham" class="class">
+    class Ham
+  </h1>
+
+  <section class="description">
+    
+<p><a href="Ham.html">Ham</a> class.</p>
+
+<p>A ham is a chunk of a swine. So, every sub-directory of .sswine is, by
+definition a <a href="Ham.html">Ham</a>. Edible hams are those which have a
+usable config file contain a wine_env folder.</p>
+
+  </section>
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+    <section class="attribute-method-details" class="method-section">
+      <header>
+        <h3>Attributes</h3>
+      </header>
+
+      
+      <div id="attribute-i-edible" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">edible</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-ham_folder" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">ham_folder</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        
+        
+        </div>
+      </div>
+      
+    </section>
+    
+
+    
+     <section id="public-class-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Class Methods</h3>
+       </header>
+
+    
+      <div id="method-c-new" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">new</span><span
+            class="method-args">( path )</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Constructor: takes the path of the ham&#39;s folder as the only parameter.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="new-source">
+            <pre><span class="ruby-comment"># File lib/ham.rb, line 20</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>( <span class="ruby-identifier">path</span> )
+  <span class="ruby-comment"># Initialize instance variables:</span>
+  <span class="ruby-ivar">@ham_folder</span> = <span class="ruby-constant">Pathname</span>.<span class="ruby-identifier">new</span> <span class="ruby-identifier">path</span>
+  <span class="ruby-ivar">@edible</span> = <span class="ruby-keyword">false</span>
+  <span class="ruby-ivar">@config_global</span> = <span class="ruby-constant">Hash</span>.<span class="ruby-identifier">new</span>
+  <span class="ruby-ivar">@config_entries</span> = <span class="ruby-constant">Hash</span>.<span class="ruby-identifier">new</span>
+
+  <span class="ruby-comment"># Edible is false by default, so we only have to look for the case where</span>
+  <span class="ruby-comment"># everything is ok.</span>
+  
+  <span class="ruby-comment"># The config file is ok:</span>
+  <span class="ruby-identifier">config_file</span> = <span class="ruby-constant">Pathname</span>.<span class="ruby-identifier">new</span> <span class="ruby-node">&quot;#{@ham_folder}/config.yaml&quot;</span>
+
+  <span class="ruby-comment"># Config file permissions:</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">config_file</span>.<span class="ruby-identifier">file?</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">config_file</span>.<span class="ruby-identifier">readable?</span> <span class="ruby-keyword">then</span>
+    <span class="ruby-comment"># To avoid an odd crash...</span>
+    <span class="ruby-keyword">begin</span>
+      <span class="ruby-comment"># Attempt to parse the YAML file...</span>
+      <span class="ruby-identifier">conf</span> = <span class="ruby-constant">YAML</span>.<span class="ruby-identifier">load_file</span> <span class="ruby-identifier">config_file</span>
+      <span class="ruby-identifier">conf</span>.<span class="ruby-identifier">each_key</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">key</span><span class="ruby-operator">|</span>
+
+        <span class="ruby-identifier">checked</span> = <span class="ruby-identifier">checkEntry</span> <span class="ruby-identifier">conf</span>[<span class="ruby-identifier">key</span>], <span class="ruby-identifier">key</span>
+        <span class="ruby-comment"># checked will be nil if the configuration is invalid:</span>
+        <span class="ruby-keyword">unless</span> <span class="ruby-identifier">checked</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-keyword">then</span>
+          <span class="ruby-keyword">if</span> <span class="ruby-string">&quot;Global Values&quot;</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">key</span> <span class="ruby-keyword">then</span>
+            <span class="ruby-ivar">@config_global</span> = <span class="ruby-identifier">checked</span>
+
+          <span class="ruby-keyword">else</span>
+            <span class="ruby-ivar">@config_entries</span>[<span class="ruby-identifier">key</span>] = <span class="ruby-identifier">checked</span>
+          <span class="ruby-keyword">end</span>
+
+        <span class="ruby-comment"># Error message, in case:</span>
+        <span class="ruby-keyword">else</span>
+          <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;Invalid config entry: #{key}&quot;</span>
+        <span class="ruby-keyword">end</span>
+      <span class="ruby-keyword">end</span>
+
+    <span class="ruby-comment"># I&#39;m forced to put this in, but it really won&#39;t do anything.</span>
+    <span class="ruby-keyword">rescue</span>
+      <span class="ruby-ivar">@edible</span> = <span class="ruby-keyword">false</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-comment"># If there are enough elements, go ahead:</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-value">0</span> <span class="ruby-operator">&lt;</span> <span class="ruby-ivar">@config_entries</span>.<span class="ruby-identifier">size</span> <span class="ruby-keyword">and</span> <span class="ruby-value">0</span> <span class="ruby-operator">&lt;</span> <span class="ruby-ivar">@config_entries</span>.<span class="ruby-identifier">size</span> <span class="ruby-keyword">then</span>
+      <span class="ruby-comment"># This is important: the Ham must contain the wine_env folder!</span>
+      <span class="ruby-keyword">if</span> <span class="ruby-constant">Pathname</span>.<span class="ruby-identifier">new</span>( <span class="ruby-node">&quot;#{@ham_folder}/wine_env&quot;</span> ).<span class="ruby-identifier">directory?</span> <span class="ruby-keyword">then</span>
+        <span class="ruby-ivar">@edible</span> = <span class="ruby-keyword">true</span>
+      <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Instance Methods</h3>
+       </header>
+
+    
+      <div id="method-i-getDesktopEntries" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">getDesktopEntries</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Generates .desktop files for every entry in the config file (of course, 
+except for Global Values), then returns a hash containing the file name as
+the key, and the file&#39;s content as its value.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="getDesktopEntries-source">
+            <pre><span class="ruby-comment"># File lib/ham.rb, line 120</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">getDesktopEntries</span>
+  <span class="ruby-identifier">desktop_entries</span> = <span class="ruby-constant">Hash</span>.<span class="ruby-identifier">new</span>
+
+  <span class="ruby-ivar">@config_entries</span>.<span class="ruby-identifier">each_key</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">entry</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">new_entry_hash</span> = <span class="ruby-constant">Hash</span>.<span class="ruby-identifier">new</span>
+
+    <span class="ruby-comment"># Add all the global options:</span>
+    <span class="ruby-ivar">@config_global</span>.<span class="ruby-identifier">each_key</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">g</span><span class="ruby-operator">|</span>
+      <span class="ruby-identifier">new_entry_hash</span>[<span class="ruby-identifier">g</span>] = <span class="ruby-ivar">@config_global</span>[<span class="ruby-identifier">g</span>]
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-comment"># Addthe entry&#39;s options:</span>
+    <span class="ruby-identifier">new_entry_hash</span>[<span class="ruby-string">&quot;Name&quot;</span>] = <span class="ruby-identifier">entry</span>
+    <span class="ruby-ivar">@config_entries</span>[<span class="ruby-identifier">entry</span>].<span class="ruby-identifier">each_key</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ent</span><span class="ruby-operator">|</span>
+      <span class="ruby-identifier">new_entry_hash</span>[<span class="ruby-identifier">ent</span>] = <span class="ruby-ivar">@config_entries</span>[<span class="ruby-identifier">entry</span>][<span class="ruby-identifier">ent</span>]
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-identifier">new_entry_name</span> = <span class="ruby-node">&quot;#{new_entry_hash[&quot;Name&quot;]}.desktop&quot;</span>
+    <span class="ruby-identifier">new_entry_content</span> = <span class="ruby-string">&quot;[Desktop Entry]\n&quot;</span>
+
+    <span class="ruby-identifier">new_entry_hash</span>.<span class="ruby-identifier">each_key</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">key</span><span class="ruby-operator">|</span>
+      <span class="ruby-comment"># Add WINEPREFIX to the command:</span>
+      <span class="ruby-keyword">if</span> <span class="ruby-string">&quot;Exec&quot;</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">key</span> <span class="ruby-keyword">then</span>
+        <span class="ruby-comment"># This must be used for all cases:</span>
+        <span class="ruby-identifier">new_entry_content</span> <span class="ruby-operator">+=</span> <span class="ruby-node">&quot;#{key}=env &quot;</span>
+
+        <span class="ruby-comment"># If there is a custom_wine folder inside the Ham&#39;s directory, it</span>
+        <span class="ruby-comment"># should be used instead of the system-wide wine installation.</span>
+        <span class="ruby-identifier">custom_wine</span> = <span class="ruby-constant">Pathname</span>.<span class="ruby-identifier">new</span> <span class="ruby-node">&quot;#{@ham_folder.realpath}/custom_wine/&quot;</span> <span class="ruby-operator">+</span>
+                                   <span class="ruby-string">&quot;bin/wine&quot;</span>
+
+        <span class="ruby-comment"># To do so, we&#39;ll add custom_wine/bin to the PATH variable.</span>
+        <span class="ruby-keyword">if</span> <span class="ruby-identifier">custom_wine</span>.<span class="ruby-identifier">executable?</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">custom_wine</span>.<span class="ruby-identifier">file?</span> <span class="ruby-keyword">then</span>
+          <span class="ruby-identifier">new_entry_content</span> <span class="ruby-operator">+=</span> <span class="ruby-node">&quot;PATH=#{custom_wine.dirname.realpath}:$PATH &quot;</span>
+        <span class="ruby-keyword">end</span>
+
+        <span class="ruby-comment"># add the WINEPREFIX:</span>
+        <span class="ruby-identifier">new_entry_content</span> <span class="ruby-operator">+=</span> <span class="ruby-node">&quot;WINEPREFIX=#{@ham_folder.realpath}/wine_env &quot;</span>
+
+        <span class="ruby-comment"># Executable name:</span>
+        <span class="ruby-identifier">new_entry_content</span> <span class="ruby-operator">+=</span> <span class="ruby-node">&quot;#{new_entry_hash[key]}\n&quot;</span>
+
+      <span class="ruby-comment"># Check if the icon is located in the icons sub-folder:</span>
+      <span class="ruby-keyword">elsif</span> <span class="ruby-string">&quot;Icon&quot;</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">key</span> <span class="ruby-keyword">then</span>
+        <span class="ruby-comment"># It always starts like this:</span>
+        <span class="ruby-identifier">new_entry_content</span> <span class="ruby-operator">+=</span> <span class="ruby-node">&quot;#{key}=&quot;</span>
+
+        <span class="ruby-identifier">icon</span> = <span class="ruby-constant">Pathname</span>.<span class="ruby-identifier">new</span> <span class="ruby-node">&quot;#{@ham_folder.realpath}/icons/&quot;</span> <span class="ruby-operator">+</span>
+                            <span class="ruby-node">&quot;#{new_entry_hash[key]}&quot;</span>
+
+        <span class="ruby-comment"># If there&#39;s an icon sub-folder and the icon file is in there,</span>
+        <span class="ruby-comment"># use it:</span>
+        <span class="ruby-keyword">if</span> <span class="ruby-identifier">icon</span>.<span class="ruby-identifier">file?</span> <span class="ruby-keyword">then</span>
+          <span class="ruby-identifier">new_entry_content</span> <span class="ruby-operator">+=</span> <span class="ruby-node">&quot;#{icon.realpath}\n&quot;</span>
+
+        <span class="ruby-comment"># Else, try using a system-wide one:</span>
+        <span class="ruby-keyword">else</span>
+          <span class="ruby-identifier">new_entry_content</span> <span class="ruby-operator">+=</span> <span class="ruby-node">&quot;#{new_entry_hash[key]}\n&quot;</span>
+        <span class="ruby-keyword">end</span>
+
+      <span class="ruby-keyword">else</span>
+        <span class="ruby-identifier">new_entry_content</span> <span class="ruby-operator">+=</span> <span class="ruby-node">&quot;#{key}=#{new_entry_hash[key]}\n&quot;</span>
+      <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">end</span>
+    <span class="ruby-identifier">new_entry_content</span> <span class="ruby-operator">+=</span> <span class="ruby-string">&quot; &quot;</span>
+
+    <span class="ruby-identifier">desktop_entries</span>[<span class="ruby-identifier">new_entry_name</span>] = <span class="ruby-identifier">new_entry_content</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">desktop_entries</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-openShell" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">openShell</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Opens a shell for this <a href="Ham.html">Ham</a> in its wine_env/drive_c
+folder, setting the right WINEPREFIX variable to avoid issues.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="openShell-source">
+            <pre><span class="ruby-comment"># File lib/ham.rb, line 195</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">openShell</span>
+  <span class="ruby-comment"># Directory to start the shell in:</span>
+  <span class="ruby-constant">Dir</span>.<span class="ruby-identifier">chdir</span> <span class="ruby-node">&quot;#{@config_global[&quot;Path&quot;].realpath}/wine_env/drive_c&quot;</span>
+
+  <span class="ruby-comment"># Default shell for the current user:</span>
+  <span class="ruby-identifier">shell</span> = <span class="ruby-node">%x`getent passwd #{ENV[&quot;USER&quot;]}`</span>.<span class="ruby-identifier">chomp</span>.<span class="ruby-identifier">split</span>( <span class="ruby-string">&quot;:&quot;</span> ).<span class="ruby-identifier">pop</span>
+
+  <span class="ruby-comment"># WINEPREFIX variable:</span>
+  <span class="ruby-identifier">prefix</span> = <span class="ruby-constant">Pathname</span>.<span class="ruby-identifier">new</span> <span class="ruby-node">&quot;#{@ham_folder.realpath}/wine_env&quot;</span>
+
+  <span class="ruby-comment"># Run the shell!</span>
+  <span class="ruby-identifier">system</span> <span class="ruby-node">&quot;env WINEPREFIX=#{prefix.realpath} #{shell}&quot;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+     <section id="private-instance-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Private Instance Methods</h3>
+       </header>
+
+    
+      <div id="method-i-checkEntry" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">checkEntry</span><span
+            class="method-args">( entry, key )</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Checks if the given entry is valid, and makes sure the Path and Icon  keys
+will point to, respectively, an existing folder or file. Returns a valid
+tweaked entry on success, nil otherwise.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="checkEntry-source">
+            <pre><span class="ruby-comment"># File lib/ham.rb, line 76</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">checkEntry</span>( <span class="ruby-identifier">entry</span>, <span class="ruby-identifier">key</span> )
+  <span class="ruby-comment"># This will be the container of the return value:</span>
+  <span class="ruby-identifier">ret</span> = <span class="ruby-identifier">entry</span>
+
+  <span class="ruby-comment"># Some specific checks are required for Global Values:</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-string">&quot;Global Values&quot;</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">key</span> <span class="ruby-keyword">then</span>
+    <span class="ruby-comment"># Must contain: Type, Categories, Icon, Path</span>
+    <span class="ruby-keyword">unless</span> <span class="ruby-identifier">entry</span>.<span class="ruby-identifier">key?</span> <span class="ruby-string">&quot;Type&quot;</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">entry</span>.<span class="ruby-identifier">key?</span> <span class="ruby-string">&quot;Categories&quot;</span> <span class="ruby-keyword">and</span>
+           <span class="ruby-identifier">entry</span>.<span class="ruby-identifier">key?</span> <span class="ruby-string">&quot;Icon&quot;</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">entry</span>.<span class="ruby-identifier">key?</span> <span class="ruby-string">&quot;Path&quot;</span> <span class="ruby-keyword">then</span>
+      <span class="ruby-identifier">ret</span> = <span class="ruby-keyword">nil</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-comment"># Make sure the folder Path points to exists, and make it absolute:</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">entry</span>.<span class="ruby-identifier">key?</span> <span class="ruby-string">&quot;Path&quot;</span> <span class="ruby-keyword">then</span>
+    <span class="ruby-identifier">complete_path</span> = <span class="ruby-constant">Pathname</span>.<span class="ruby-identifier">new</span> <span class="ruby-node">&quot;#{@ham_folder}/wine_env/drive_c/&quot;</span> <span class="ruby-operator">+</span>
+                                 <span class="ruby-node">&quot;#{entry[&quot;Path&quot;]}&quot;</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">complete_path</span>.<span class="ruby-identifier">directory?</span> <span class="ruby-keyword">then</span>
+      <span class="ruby-identifier">entry</span>[<span class="ruby-string">&quot;Path&quot;</span>] = <span class="ruby-identifier">complete_path</span>.<span class="ruby-identifier">realpath</span>
+
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-identifier">ret</span> = <span class="ruby-keyword">nil</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-comment"># Make sure the file Icon points to exists, and make it absolute:</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">entry</span>.<span class="ruby-identifier">key?</span> <span class="ruby-string">&quot;Icon&quot;</span> <span class="ruby-keyword">then</span>
+    <span class="ruby-identifier">complete_path</span> = <span class="ruby-constant">Pathname</span>.<span class="ruby-identifier">new</span> <span class="ruby-node">&quot;#{@ham_folder}/icons/#{entry[&quot;Icon&quot;]}&quot;</span>
+
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">complete_path</span>.<span class="ruby-identifier">file?</span> <span class="ruby-keyword">then</span>
+      <span class="ruby-identifier">entry</span>[<span class="ruby-string">&quot;Icon&quot;</span>] = <span class="ruby-identifier">complete_path</span>.<span class="ruby-identifier">realpath</span>
+
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-identifier">ret</span> = <span class="ruby-keyword">nil</span>
+    <span class="ruby-keyword">end</span>   
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">ret</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+  </section>
+</main>
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="http://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.1.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+

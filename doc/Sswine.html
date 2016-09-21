@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>class Sswine - RDoc Documentation</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "./";
+</script>
+
+<script src="./js/jquery.js"></script>
+<script src="./js/darkfish.js"></script>
+
+<link href="./css/fonts.css" rel="stylesheet">
+<link href="./css/rdoc.css" rel="stylesheet">
+
+
+
+<body id="top" role="document" class="class">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="./index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="./table_of_contents.html#pages">Pages</a>
+    <a href="./table_of_contents.html#classes">Classes</a>
+    <a href="./table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+
+  <div id="class-metadata">
+    
+    <div id="parent-class-section" class="nav-section">
+  <h3>Parent</h3>
+
+  
+  <p class="link">Object
+  
+</div>
+
+    
+    
+    <!-- Method Quickref -->
+<div id="method-list-section" class="nav-section">
+  <h3>Methods</h3>
+
+  <ul class="link-list" role="directory">
+    
+    <li ><a href="#method-c-new">::new</a>
+    
+    <li ><a href="#method-i-killAllHams">#killAllHams</a>
+    
+    <li ><a href="#method-i-openShell">#openShell</a>
+    
+    <li ><a href="#method-i-updateAllHams">#updateAllHams</a>
+    
+    <li ><a href="#method-i-writeDesktopFiles">#writeDesktopFiles</a>
+    
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-labelledby="class-Sswine">
+  <h1 id="class-Sswine" class="class">
+    class Sswine
+  </h1>
+
+  <section class="description">
+    
+<p><a href="Sswine.html">Sswine</a> stands for “Sswine: split wine”, where
+wine stands for “wine is not (an) emulator”.</p>
+
+<p>This class is designed to handle Hams located in $HOME/.sswine. Each <a
+href="Ham.html">Ham</a> must be composed of:</p>
+<dl class="rdoc-list note-list"><dt>config.yaml
+<dd>
+<p><a href="Ham.html">Ham</a> configuration file.</p>
+</dd><dt>wine_env
+<dd>
+<p>Folder containing the wine bottle.</p>
+</dd></dl>
+
+<p>Additionally, the following folders can also be present:</p>
+<dl class="rdoc-list note-list"><dt>icons
+<dd>
+<p>Folder containing the Ham-specific icons.</p>
+</dd><dt>custom_wine
+<dd>
+<p>Folder containing a Ham-specific version of wine to be used.</p>
+</dd></dl>
+
+  </section>
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+
+    
+     <section id="public-class-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Class Methods</h3>
+       </header>
+
+    
+      <div id="method-c-new" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">new</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Constructor: no parameters are needed.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="new-source">
+            <pre><span class="ruby-comment"># File lib/sswine.rb, line 22</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>
+  <span class="ruby-ivar">@main_dir</span> = <span class="ruby-constant">Pathname</span>.<span class="ruby-identifier">new</span> <span class="ruby-node">&quot;#{ENV[&quot;HOME&quot;]}/.sswine&quot;</span>
+  <span class="ruby-ivar">@desktop_files_dir</span> = <span class="ruby-constant">Pathname</span>.<span class="ruby-identifier">new</span> <span class="ruby-node">&quot;#{ENV[&quot;HOME&quot;]}/.local/share/&quot;</span> <span class="ruby-operator">+</span>
+                                    <span class="ruby-string">&quot;applications/sswine&quot;</span>
+  <span class="ruby-ivar">@hams</span> = <span class="ruby-constant">Array</span>.<span class="ruby-identifier">new</span>
+
+  <span class="ruby-comment"># Gotta ensure the folder which will contain the desktop files exist.</span>
+  <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@desktop_files_dir</span>.<span class="ruby-identifier">directory?</span> <span class="ruby-keyword">then</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-ivar">@desktop_files_dir</span>.<span class="ruby-identifier">exist?</span> <span class="ruby-keyword">then</span>
+      <span class="ruby-ivar">@desktop_files_dir</span>.<span class="ruby-identifier">delete</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-ivar">@desktop_files_dir</span>.<span class="ruby-identifier">mkpath</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-comment"># If the main folder does not exist, create it.</span>
+  <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@main_dir</span>.<span class="ruby-identifier">directory?</span> <span class="ruby-keyword">then</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-ivar">@main_dir</span>.<span class="ruby-identifier">exist?</span> <span class="ruby-keyword">then</span>
+      <span class="ruby-ivar">@main_dir</span>.<span class="ruby-identifier">delete</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-ivar">@main_dir</span>.<span class="ruby-identifier">mkpath</span>
+
+  <span class="ruby-comment"># If it does, let&#39;s process the Hams!</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-ivar">@main_dir</span>.<span class="ruby-identifier">each_child</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">entry</span><span class="ruby-operator">|</span>
+      <span class="ruby-identifier">pork</span> = <span class="ruby-constant">Ham</span>.<span class="ruby-identifier">new</span> <span class="ruby-identifier">entry</span>
+
+      <span class="ruby-comment"># No error message is printed here, because Ham&#39;s constructor already</span>
+      <span class="ruby-comment"># does so.</span>
+      <span class="ruby-keyword">if</span> <span class="ruby-identifier">pork</span>.<span class="ruby-identifier">edible</span> <span class="ruby-keyword">then</span>
+        <span class="ruby-ivar">@hams</span>.<span class="ruby-identifier">push</span> <span class="ruby-identifier">pork</span>
+      <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Instance Methods</h3>
+       </header>
+
+    
+      <div id="method-i-killAllHams" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">killAllHams</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Terminates every <a href="Ham.html">Ham</a> (alive or not).</p>
+          
+          
+
+          
+          <div class="method-source-code" id="killAllHams-source">
+            <pre><span class="ruby-comment"># File lib/sswine.rb, line 78</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">killAllHams</span>
+  <span class="ruby-ivar">@hams</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">h</span><span class="ruby-operator">|</span>
+    <span class="ruby-node">%x`env WINEPREFIX=#{h.ham_folder.realpath}/wine_env wineserver -k`</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-openShell" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">openShell</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Prints a list of all the available hams, then makes the user chose one. A
+shell will be opened in such Ham&#39;s directory, with the WINEPREFIX
+varialbe correctly set. The shell to use will be the user&#39;s default
+one.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="openShell-source">
+            <pre><span class="ruby-comment"># File lib/sswine.rb, line 96</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">openShell</span>
+  <span class="ruby-comment"># This will store the user input:</span>
+  <span class="ruby-identifier">choice</span> = <span class="ruby-value">-1</span>
+
+  <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@hams</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span> <span class="ruby-keyword">then</span>
+    <span class="ruby-identifier">puts</span> <span class="ruby-string">&quot;No Hams found. Nothing to do.&quot;</span>
+
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-comment"># It has to be user-interactive!</span>
+    <span class="ruby-keyword">while</span> <span class="ruby-keyword">true</span> <span class="ruby-keyword">do</span>
+      <span class="ruby-comment"># Print the selection menu:</span>
+      <span class="ruby-identifier">puts</span> <span class="ruby-string">&quot;Edible hams:&quot;</span>
+      <span class="ruby-ivar">@hams</span>.<span class="ruby-identifier">each_with_index</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">h</span>, <span class="ruby-identifier">idx</span><span class="ruby-operator">|</span>
+        <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;[#{idx + 1}] - #{h.ham_folder.basename}&quot;</span>
+      <span class="ruby-keyword">end</span>
+      <span class="ruby-identifier">print</span> <span class="ruby-string">&quot;Choose one: &quot;</span>
+
+      <span class="ruby-comment"># Get the user input:</span>
+      <span class="ruby-identifier">choice</span> = <span class="ruby-constant">STDIN</span>.<span class="ruby-identifier">gets</span>.<span class="ruby-identifier">chomp</span>.<span class="ruby-identifier">to_i</span> <span class="ruby-operator">-</span> <span class="ruby-value">1</span>
+
+      <span class="ruby-comment"># Input error check:</span>
+      <span class="ruby-keyword">if</span> <span class="ruby-ivar">@hams</span>[<span class="ruby-identifier">choice</span>].<span class="ruby-identifier">nil?</span> <span class="ruby-keyword">or</span> <span class="ruby-value">0</span> <span class="ruby-operator">&gt;</span> <span class="ruby-identifier">choice</span> <span class="ruby-keyword">then</span>
+        <span class="ruby-identifier">puts</span> <span class="ruby-string">&quot;Invalid value. Please, try again.&quot;</span>
+        <span class="ruby-identifier">puts</span> <span class="ruby-string">&quot;&quot;</span>
+
+      <span class="ruby-comment"># Valid choice: out of the loop!</span>
+      <span class="ruby-keyword">else</span>
+        <span class="ruby-keyword">break</span>
+      <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-comment"># Open the desired shell!</span>
+    <span class="ruby-ivar">@hams</span>[<span class="ruby-identifier">choice</span>].<span class="ruby-identifier">openShell</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-updateAllHams" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">updateAllHams</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Attempts to update every <a href="Ham.html">Ham</a>.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="updateAllHams-source">
+            <pre><span class="ruby-comment"># File lib/sswine.rb, line 86</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">updateAllHams</span>
+  <span class="ruby-ivar">@hams</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">h</span><span class="ruby-operator">|</span>
+    <span class="ruby-node">%x`env WINEPREFIX=#{h.ham_folder.realpath}/wine_env wineboot`</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-writeDesktopFiles" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">writeDesktopFiles</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Creates the .desktop entries for every edible <a href="Ham.html">Ham</a>.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="writeDesktopFiles-source">
+            <pre><span class="ruby-comment"># File lib/sswine.rb, line 61</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">writeDesktopFiles</span>
+  <span class="ruby-comment"># TODO: create directories.</span>
+
+  <span class="ruby-comment"># Process each Ham...</span>
+  <span class="ruby-ivar">@hams</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">h</span><span class="ruby-operator">|</span>
+    <span class="ruby-comment"># Write the files!</span>
+    <span class="ruby-identifier">h</span>.<span class="ruby-identifier">getDesktopEntries</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">key</span>, <span class="ruby-identifier">entry</span><span class="ruby-operator">|</span>
+      <span class="ruby-constant">File</span>.<span class="ruby-identifier">open</span> <span class="ruby-node">&quot;#{@desktop_files_dir.realpath}/#{key}&quot;</span>, <span class="ruby-string">&quot;w&quot;</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">f</span><span class="ruby-operator">|</span>
+        <span class="ruby-identifier">f</span>.<span class="ruby-identifier">puts</span> <span class="ruby-identifier">entry</span>
+      <span class="ruby-keyword">end</span>
+      <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;Created: #{@desktop_files_dir.realpath}/#{key}&quot;</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+  </section>
+</main>
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="http://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.1.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+
