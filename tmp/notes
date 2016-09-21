@@ -4,11 +4,21 @@
 ### Needed functionalities                                                  ###
 ###############################################################################
 -c : checks for invalid configuration files
+ >>> Sswine::new >>> Ham::new
+
 -d : creates .desktop files
+ >>> Sswine::writeDesktopFiles 
+
 -h : shows help
+
 -k : wineserver -k for everyone
+ >>> Sswine::killAllHams
+
 -s <shell> : list prefixes, then open a shell
+ >>> Sswine::openShell (will open the user default shell)
+
 -u : wineboot for everyone
+ >>> Sswine::updateAllHams
 
 ###############################################################################
 ### To create menu entries (tested on Cinnamon, but should work everywhere) ###
