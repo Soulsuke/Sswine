@@ -9,6 +9,7 @@ should give a clue about what its purpouse is for.
 A valid Ham folder must contain at least:  
 - config.yaml: a configuration entry (see below for a reference)  
 - wine_env: a wine bottle  
+
 Optionally, it can also contain:  
 - icons: a folder containing Ham-specific icons (any image file supported by
          your desktoop manager's menu)  
