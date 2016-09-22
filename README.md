@@ -18,7 +18,7 @@ Optionally, it can also contain:
 ### Usage
 Sswine's current functionalities are (as shown in its help reference):  
 sswine -c/--check: checks each entry of each Ham for errors. No output means
-                   that everything is ok.
+                   that everything is ok.  
 sswine -d/--desktop: writes .desktop files for each valid entry of each
                      edible Ham.  
 sswine -h/--help: shows this help reference.  
