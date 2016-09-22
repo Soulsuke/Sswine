@@ -16,23 +16,37 @@ class Ham
 
   attr_reader :ham_folder, :edible
 
-  # Constructor: takes the path of the ham's folder as the only parameter.
-  def initialize( path )
+  # Constructor: takes the path of the ham's folder and the verbosity mode
+  # (true/false) as parameters.
+  def initialize( path, verbose )
     # Initialize instance variables:
     @ham_folder = Pathname.new path
-    @edible = false
+    @edible = true
     @config_global = Hash.new
     @config_entries = Hash.new
 
-    # Edible is false by default, so we only have to look for the case where
-    # everything is ok.
-    
-    # The config file is ok:
+    # If there's no wine_env folder, it's not edible.
+    unless Pathname.new( "#{@ham_folder}/wine_env" ).directory? then
+      @edible = false
+      if verbose then
+        puts "!!! Ignoring: #{@ham_folder.basename} (sub-folder wine_env " +
+             "not found)"
+      end
+    end
+
+    # If there's no config file, it's not edible:
     config_file = Pathname.new "#{@ham_folder}/config.yaml"
 
-    # Config file permissions:
-    if config_file.file? and config_file.readable? then
-      # To avoid an odd crash...
+    unless !@edible or config_file.file? or config_file.readable? then
+      @edible = false
+      if verbose then
+        puts "!!! Ignoring: #{@ham_folder.basename} (config.yaml not found)"
+      end
+    end
+
+    # Now, if the Ham is stll edible, go ahead!
+    if @edible then
+      # To avoid odd crashes...
       begin
         # Attempt to parse the YAML file...
         conf = YAML.load_file config_file
@@ -50,7 +64,10 @@ class Ham
 
           # Error message, in case:
           else
-            puts "Invalid config entry: #{key}"
+            if verbose then
+              puts "!!! Ignoring entry of #{@ham_folder.basename}: #{key} " +
+                   "(invalid config entry)"
+            end
           end
         end
 
@@ -59,11 +76,11 @@ class Ham
         @edible = false
       end
 
-      # If there are enough elements, go ahead:
-      if 0 < @config_entries.size and 0 < @config_entries.size then
-        # This is important: the Ham must contain the wine_env folder!
-        if Pathname.new( "#{@ham_folder}/wine_env" ).directory? then
-          @edible = true
+      # If there is no global config or no entries, it is not edible.
+      if 0 == ( @config_global.size + @config_entries.size ) then
+        @edible = false
+        if verbose then
+          puts "!!! Ignoring: #{@ham_folder.basename} (invalid config file)"
         end
       end
     end
@@ -76,15 +93,6 @@ class Ham
   def checkEntry( entry, key )
     # This will be the container of the return value:
     ret = entry
-
-    # Some specific checks are required for Global Values:
-    if "Global Values" == key then
-      # Must contain: Type, Categories, Icon, Path
-      unless entry.key? "Type" and entry.key? "Categories" and
-             entry.key? "Icon" and entry.key? "Path" then
-        ret = nil
-      end
-    end
 
     # Make sure the folder Path points to exists, and make it absolute:
     if entry.key? "Path" then

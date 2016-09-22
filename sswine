@@ -28,6 +28,8 @@ def showHelpReference
   lines.push "\e[33mUsage:\e[0m"
 
   # Write .desktop files:
+  lines.push "\e[34msswine -c/--check\e[0m: checks each entry of each Ham " +
+             "for errors. No output means that everything is ok."
   lines.push "\e[34msswine -d/--desktop\e[0m: writes .desktop files for each" +
              " valid entry of each edible Ham."
   # Help reference:
@@ -78,12 +80,15 @@ end
 ###############################################################################
 
 if 1 == ARGV.size then
-  # The protagonist! Yay!
-  s = Sswine.new
+
+  # Check Hams and their entries for errors:
+  if [ "-c", "--check" ].include? ARGV[0] then
+    s = Sswine.new true
 
   # Create desktop files:
-  if [ "-d", "--desktop" ].include? ARGV[0] then
-    s.writeDesktopFiles
+  elsif [ "-d", "--desktop" ].include? ARGV[0] then
+    s = Sswine.new true
+    s.writeMenuEntries
 
   # Help reference:
   elsif [ "-h", "--help" ].include? ARGV[0] then
@@ -91,14 +96,17 @@ if 1 == ARGV.size then
 
   # Kill all hams:
   elsif [ "-k", "--kill" ].include? ARGV[0] then
+    s = Sswine.new false
     s.killAllHams
 
   # Run a shell for a ham:
   elsif [ "-s", "--shell" ].include? ARGV[0] then
+    s = Sswine.new false
     s.openShell
 
   # Update all hams:
   elsif [ "-u", "--update" ].include? ARGV[0] then
+    s = Sswine.new false
     s.updateAllHams
   end
 

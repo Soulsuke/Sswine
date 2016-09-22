@@ -14,12 +14,12 @@ custom_wine:: Folder containing a Ham-specific version of wine to be used.
 =end
 
 class Sswine
-  @main_dir          # Main sswine directory, located in $HOME/.sswine
+  @main_dir          # Main sswine directory, located in $HOME/.sswine.
   @desktop_files_dir # Directory containing the .desktop files of sswine.
-  @hams              # Each ham is a sub-directory of @main_dir
+  @hams              # Each Ham is a sub-directory of @main_dir.
 
-  # Constructor: no parameters are needed.
-  def initialize
+  # Constructor: takes the verbosity (true/false) is needed as .
+  def initialize( verbose )
     @main_dir = Pathname.new "#{ENV["HOME"]}/.sswine"
     @desktop_files_dir = Pathname.new "#{ENV["HOME"]}/.local/share/" +
                                       "applications/sswine"
@@ -45,7 +45,7 @@ class Sswine
     # If it does, let's process the Hams!
     else
       @main_dir.each_child do |entry|
-        pork = Ham.new entry
+        pork = Ham.new entry, verbose
 
         # No error message is printed here, because Ham's constructor already
         # does so.
@@ -56,20 +56,63 @@ class Sswine
     end
   end
 
-  # Creates the .desktop entries for every edible Ham.
+  # Creates a menu folder for Sswine, and adds to it an entry for each valid
+  # one of each Ham.
   public
-  def writeDesktopFiles
-    # TODO: create directories.
+  def writeMenuEntries
+    # Ensure the folder file exists:
+    folder_file = Pathname.new "#{ENV["HOME"]}/.local/share/" +
+                               "desktop-directories/sswine.directory"
+    folder_file.dirname.mkpath
 
-    # Process each Ham...
+    # Write the folder file:
+    File.open folder_file, "w" do |f|
+      f.puts "[Desktop Entry]"
+      f.puts "Version=1.0"
+      f.puts "Type=Directory"
+      f.puts "Name=Sswine"
+      f.puts "Icon=wine"
+    end
+
+    # Ensure the menu file exists:
+    menu_file = Pathname.new "#{ENV["HOME"]}/.config/menus/" +
+                             "applications-merged/sswine.menu"
+    menu_file.dirname.mkpath
+
+    # Write the first part of the menu file:
+    File.open menu_file, "w" do |f|
+      f.puts "<Menu>"
+      f.puts "  <Name>Applications</Name>"
+      f.puts "  <Menu>"
+      f.puts "    <AppDir>#{@desktop_files_dir.realpath}</AppDir>"
+      f.puts "    <Name>Sswine</Name>"
+      f.puts "    <Directory>#{folder_file.basename}</Directory>"
+      f.puts "    <Include>"
+    end
+
+    # Now, process each Ham...
     @hams.each do |h|
-      # Write the files!
+      # And each of its entries...
       h.getDesktopEntries.each do |key, entry|
+        # Write the entry's .desktop file:
         File.open "#{@desktop_files_dir.realpath}/#{key}", "w" do |f|
           f.puts entry
         end
+
+        # Add it to Sswine's menu file:
+        File.open menu_file, "a" do |f|
+          f.puts "      <Filename>#{key}</Filename>"
+        end
+
         puts "Created: #{@desktop_files_dir.realpath}/#{key}"
       end
+    end
+
+    # Write the last part of the menu file:
+    File.open menu_file, "a" do |f|
+      f.puts "    </Include>"
+      f.puts "  </Menu>"
+      f.puts "</Menu>"
     end
   end
 
