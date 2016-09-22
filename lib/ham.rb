@@ -13,6 +13,7 @@ class Ham
   @edible         # Set to true if the config file is ok, false otherwise.
   @config_global  # Global options for all entries (if not overridden).
   @config_entries # Entry-specific options, which override global ones.
+  @verbose        # Verbose logs enabled/disabled
 
   attr_reader :ham_folder, :edible
 
@@ -24,13 +25,14 @@ class Ham
     @edible = true
     @config_global = Hash.new
     @config_entries = Hash.new
+    @verbose = verbose
 
     # If there's no wine_env folder, it's not edible.
     unless Pathname.new( "#{@ham_folder}/wine_env" ).directory? then
       @edible = false
-      if verbose then
-        puts "!!! Ignoring: #{@ham_folder.basename} (sub-folder wine_env " +
-             "not found)"
+      if true == @verbose then
+        puts "\e[31m!!! Ignoring:\e[0m #{@ham_folder.basename} (sub-folder " +
+             "wine_env not found)"
       end
     end
 
@@ -39,8 +41,9 @@ class Ham
 
     unless !@edible or config_file.file? or config_file.readable? then
       @edible = false
-      if verbose then
-        puts "!!! Ignoring: #{@ham_folder.basename} (config.yaml not found)"
+      if true == @verbose then
+        puts "\e[31m!!! Ignoring:\e[0m #{@ham_folder.basename} (config.yaml " +
+             "not found)"
       end
     end
 
@@ -64,7 +67,7 @@ class Ham
 
           # Error message, in case:
           else
-            if verbose then
+            if true == @verbose then
               puts "!!! Ignoring entry of #{@ham_folder.basename}: #{key} " +
                    "(invalid config entry)"
             end
@@ -79,8 +82,9 @@ class Ham
       # If there is no global config or no entries, it is not edible.
       if 0 == ( @config_global.size + @config_entries.size ) then
         @edible = false
-        if verbose then
-          puts "!!! Ignoring: #{@ham_folder.basename} (invalid config file)"
+        if true == @verbose then
+          puts "\e[31m!!! Ignoring:\e[0m #{@ham_folder.basename} (invalid " +
+               "config file)"
         end
       end
     end

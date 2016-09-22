@@ -155,21 +155,11 @@ href="Ham.html">Ham</a> must be composed of:</p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/sswine.rb, line 22</span>
+            <pre><span class="ruby-comment"># File lib/sswine.rb, line 23</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>( <span class="ruby-identifier">verbose</span> )
   <span class="ruby-ivar">@main_dir</span> = <span class="ruby-constant">Pathname</span>.<span class="ruby-identifier">new</span> <span class="ruby-node">&quot;#{ENV[&quot;HOME&quot;]}/.sswine&quot;</span>
-  <span class="ruby-ivar">@desktop_files_dir</span> = <span class="ruby-constant">Pathname</span>.<span class="ruby-identifier">new</span> <span class="ruby-node">&quot;#{ENV[&quot;HOME&quot;]}/.local/share/&quot;</span> <span class="ruby-operator">+</span>
-                                    <span class="ruby-string">&quot;applications/sswine&quot;</span>
   <span class="ruby-ivar">@hams</span> = <span class="ruby-constant">Array</span>.<span class="ruby-identifier">new</span>
-
-  <span class="ruby-comment"># Gotta ensure the folder which will contain the desktop files exist.</span>
-  <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@desktop_files_dir</span>.<span class="ruby-identifier">directory?</span> <span class="ruby-keyword">then</span>
-    <span class="ruby-keyword">if</span> <span class="ruby-ivar">@desktop_files_dir</span>.<span class="ruby-identifier">exist?</span> <span class="ruby-keyword">then</span>
-      <span class="ruby-ivar">@desktop_files_dir</span>.<span class="ruby-identifier">delete</span>
-    <span class="ruby-keyword">end</span>
-
-    <span class="ruby-ivar">@desktop_files_dir</span>.<span class="ruby-identifier">mkpath</span>
-  <span class="ruby-keyword">end</span>
+  <span class="ruby-ivar">@verbose</span> = <span class="ruby-identifier">verbose</span>
 
   <span class="ruby-comment"># If the main folder does not exist, create it.</span>
   <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@main_dir</span>.<span class="ruby-identifier">directory?</span> <span class="ruby-keyword">then</span>
@@ -181,8 +171,9 @@ href="Ham.html">Ham</a> must be composed of:</p>
 
   <span class="ruby-comment"># If it does, let&#39;s process the Hams!</span>
   <span class="ruby-keyword">else</span>
-    <span class="ruby-ivar">@main_dir</span>.<span class="ruby-identifier">each_child</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">entry</span><span class="ruby-operator">|</span>
-      <span class="ruby-identifier">pork</span> = <span class="ruby-constant">Ham</span>.<span class="ruby-identifier">new</span> <span class="ruby-identifier">entry</span>, <span class="ruby-identifier">verbose</span>
+    <span class="ruby-comment"># In alphabetical order.</span>
+    <span class="ruby-ivar">@main_dir</span>.<span class="ruby-identifier">children</span>.<span class="ruby-identifier">sort</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">entry</span><span class="ruby-operator">|</span>
+      <span class="ruby-identifier">pork</span> = <span class="ruby-constant">Ham</span>.<span class="ruby-identifier">new</span> <span class="ruby-identifier">entry</span>, <span class="ruby-ivar">@verbose</span>
 
       <span class="ruby-comment"># No error message is printed here, because Ham&#39;s constructor already</span>
       <span class="ruby-comment"># does so.</span>
@@ -229,7 +220,7 @@ href="Ham.html">Ham</a> must be composed of:</p>
 
           
           <div class="method-source-code" id="killAllHams-source">
-            <pre><span class="ruby-comment"># File lib/sswine.rb, line 121</span>
+            <pre><span class="ruby-comment"># File lib/sswine.rb, line 147</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">killAllHams</span>
   <span class="ruby-ivar">@hams</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">h</span><span class="ruby-operator">|</span>
     <span class="ruby-node">%x`env WINEPREFIX=#{h.ham_folder.realpath}/wine_env wineserver -k`</span>
@@ -267,7 +258,7 @@ one.</p>
 
           
           <div class="method-source-code" id="openShell-source">
-            <pre><span class="ruby-comment"># File lib/sswine.rb, line 139</span>
+            <pre><span class="ruby-comment"># File lib/sswine.rb, line 165</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">openShell</span>
   <span class="ruby-comment"># This will store the user input:</span>
   <span class="ruby-identifier">choice</span> = <span class="ruby-value">-1</span>
@@ -332,7 +323,7 @@ one.</p>
 
           
           <div class="method-source-code" id="updateAllHams-source">
-            <pre><span class="ruby-comment"># File lib/sswine.rb, line 129</span>
+            <pre><span class="ruby-comment"># File lib/sswine.rb, line 155</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">updateAllHams</span>
   <span class="ruby-ivar">@hams</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">h</span><span class="ruby-operator">|</span>
     <span class="ruby-node">%x`env WINEPREFIX=#{h.ham_folder.realpath}/wine_env wineboot`</span>
@@ -368,8 +359,21 @@ an entry for each valid one of each <a href="Ham.html">Ham</a>.</p>
 
           
           <div class="method-source-code" id="writeMenuEntries-source">
-            <pre><span class="ruby-comment"># File lib/sswine.rb, line 62</span>
+            <pre><span class="ruby-comment"># File lib/sswine.rb, line 54</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">writeMenuEntries</span>
+  <span class="ruby-comment"># This is to make a decent log:</span>
+  <span class="ruby-identifier">created</span> = <span class="ruby-constant">Hash</span>.<span class="ruby-identifier">new</span>
+
+  <span class="ruby-comment"># Create a new folder for sswine&#39;s .desktop files (to both ensure it does</span>
+  <span class="ruby-comment"># exist and to remove unnecessary .desktop files):</span>
+  <span class="ruby-identifier">desktop_files_folder</span> = <span class="ruby-constant">Pathname</span>.<span class="ruby-identifier">new</span> <span class="ruby-node">&quot;#{ENV[&quot;HOME&quot;]}/.local/share/&quot;</span> <span class="ruby-operator">+</span>
+                                    <span class="ruby-string">&quot;applications/sswine&quot;</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">desktop_files_folder</span>.<span class="ruby-identifier">exist?</span> <span class="ruby-keyword">then</span>
+    <span class="ruby-constant">FileUtils</span>.<span class="ruby-identifier">rm_r</span> <span class="ruby-identifier">desktop_files_folder</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">desktop_files_folder</span>.<span class="ruby-identifier">mkpath</span>
+
+
   <span class="ruby-comment"># Ensure the folder file exists:</span>
   <span class="ruby-identifier">folder_file</span> = <span class="ruby-constant">Pathname</span>.<span class="ruby-identifier">new</span> <span class="ruby-node">&quot;#{ENV[&quot;HOME&quot;]}/.local/share/&quot;</span> <span class="ruby-operator">+</span>
                              <span class="ruby-string">&quot;desktop-directories/sswine.directory&quot;</span>
@@ -394,7 +398,7 @@ an entry for each valid one of each <a href="Ham.html">Ham</a>.</p>
     <span class="ruby-identifier">f</span>.<span class="ruby-identifier">puts</span> <span class="ruby-string">&quot;&lt;Menu&gt;&quot;</span>
     <span class="ruby-identifier">f</span>.<span class="ruby-identifier">puts</span> <span class="ruby-string">&quot;  &lt;Name&gt;Applications&lt;/Name&gt;&quot;</span>
     <span class="ruby-identifier">f</span>.<span class="ruby-identifier">puts</span> <span class="ruby-string">&quot;  &lt;Menu&gt;&quot;</span>
-    <span class="ruby-identifier">f</span>.<span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;    &lt;AppDir&gt;#{@desktop_files_dir.realpath}&lt;/AppDir&gt;&quot;</span>
+    <span class="ruby-identifier">f</span>.<span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;    &lt;AppDir&gt;#{desktop_files_folder.realpath}&lt;/AppDir&gt;&quot;</span>
     <span class="ruby-identifier">f</span>.<span class="ruby-identifier">puts</span> <span class="ruby-string">&quot;    &lt;Name&gt;Sswine&lt;/Name&gt;&quot;</span>
     <span class="ruby-identifier">f</span>.<span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;    &lt;Directory&gt;#{folder_file.basename}&lt;/Directory&gt;&quot;</span>
     <span class="ruby-identifier">f</span>.<span class="ruby-identifier">puts</span> <span class="ruby-string">&quot;    &lt;Include&gt;&quot;</span>
@@ -402,10 +406,13 @@ an entry for each valid one of each <a href="Ham.html">Ham</a>.</p>
 
   <span class="ruby-comment"># Now, process each Ham...</span>
   <span class="ruby-ivar">@hams</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">h</span><span class="ruby-operator">|</span>
+    <span class="ruby-comment"># Take note of what this Ham has created:</span>
+    <span class="ruby-identifier">created</span>[<span class="ruby-identifier">h</span>.<span class="ruby-identifier">ham_folder</span>.<span class="ruby-identifier">basename</span>] = <span class="ruby-constant">Array</span>.<span class="ruby-identifier">new</span>
+
     <span class="ruby-comment"># And each of its entries...</span>
     <span class="ruby-identifier">h</span>.<span class="ruby-identifier">getDesktopEntries</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">key</span>, <span class="ruby-identifier">entry</span><span class="ruby-operator">|</span>
       <span class="ruby-comment"># Write the entry&#39;s .desktop file:</span>
-      <span class="ruby-constant">File</span>.<span class="ruby-identifier">open</span> <span class="ruby-node">&quot;#{@desktop_files_dir.realpath}/#{key}&quot;</span>, <span class="ruby-string">&quot;w&quot;</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">f</span><span class="ruby-operator">|</span>
+      <span class="ruby-constant">File</span>.<span class="ruby-identifier">open</span> <span class="ruby-node">&quot;#{desktop_files_folder.realpath}/#{key}&quot;</span>, <span class="ruby-string">&quot;w&quot;</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">f</span><span class="ruby-operator">|</span>
         <span class="ruby-identifier">f</span>.<span class="ruby-identifier">puts</span> <span class="ruby-identifier">entry</span>
       <span class="ruby-keyword">end</span>
 
@@ -414,7 +421,8 @@ an entry for each valid one of each <a href="Ham.html">Ham</a>.</p>
         <span class="ruby-identifier">f</span>.<span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;      &lt;Filename&gt;#{key}&lt;/Filename&gt;&quot;</span>
       <span class="ruby-keyword">end</span>
 
-      <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;Created: #{@desktop_files_dir.realpath}/#{key}&quot;</span>
+      <span class="ruby-comment"># Take note of this for the log:</span>
+      <span class="ruby-identifier">created</span>[<span class="ruby-identifier">h</span>.<span class="ruby-identifier">ham_folder</span>.<span class="ruby-identifier">basename</span>].<span class="ruby-identifier">push</span> <span class="ruby-identifier">key</span>
     <span class="ruby-keyword">end</span>
   <span class="ruby-keyword">end</span>
 
@@ -423,6 +431,23 @@ an entry for each valid one of each <a href="Ham.html">Ham</a>.</p>
     <span class="ruby-identifier">f</span>.<span class="ruby-identifier">puts</span> <span class="ruby-string">&quot;    &lt;/Include&gt;&quot;</span>
     <span class="ruby-identifier">f</span>.<span class="ruby-identifier">puts</span> <span class="ruby-string">&quot;  &lt;/Menu&gt;&quot;</span>
     <span class="ruby-identifier">f</span>.<span class="ruby-identifier">puts</span> <span class="ruby-string">&quot;&lt;/Menu&gt;&quot;</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-comment"># If verbose, log what entries have been written:</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-keyword">true</span> <span class="ruby-operator">==</span> <span class="ruby-ivar">@verbose</span> <span class="ruby-keyword">then</span>
+    <span class="ruby-comment"># Header:</span>
+    <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;Created entries in \e[33m#{desktop_files_folder.realpath}\e[0m &quot;</span> <span class="ruby-operator">+</span>
+         <span class="ruby-string">&quot;for:&quot;</span>
+
+    <span class="ruby-identifier">created</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">key</span>, <span class="ruby-identifier">entries</span><span class="ruby-operator">|</span>
+      <span class="ruby-comment"># Show the Ham&#39;s name:</span>
+      <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot; &gt; \e[34m#{key}\e[0m&quot;</span>
+
+      <span class="ruby-comment"># Show what this Ham has generated:</span>
+      <span class="ruby-identifier">entries</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">entry</span><span class="ruby-operator">|</span>
+        <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;     #{entry}&quot;</span>
+      <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">end</span>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>

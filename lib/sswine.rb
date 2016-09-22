@@ -1,3 +1,4 @@
+require "fileutils"
 require "pathname"
 require "./lib/ham.rb"
 
@@ -14,25 +15,15 @@ custom_wine:: Folder containing a Ham-specific version of wine to be used.
 =end
 
 class Sswine
-  @main_dir          # Main sswine directory, located in $HOME/.sswine.
-  @desktop_files_dir # Directory containing the .desktop files of sswine.
-  @hams              # Each Ham is a sub-directory of @main_dir.
+  @main_dir # Main Sswine directory, located in $HOME/.sswine.
+  @hams     # Each Ham is a sub-directory of @main_dir.
+  @verbose  # Verbose logs enabled/disabled.
 
   # Constructor: takes the verbosity (true/false) is needed as .
   def initialize( verbose )
     @main_dir = Pathname.new "#{ENV["HOME"]}/.sswine"
-    @desktop_files_dir = Pathname.new "#{ENV["HOME"]}/.local/share/" +
-                                      "applications/sswine"
     @hams = Array.new
-
-    # Gotta ensure the folder which will contain the desktop files exist.
-    unless @desktop_files_dir.directory? then
-      if @desktop_files_dir.exist? then
-        @desktop_files_dir.delete
-      end
-
-      @desktop_files_dir.mkpath
-    end
+    @verbose = verbose
 
     # If the main folder does not exist, create it.
     unless @main_dir.directory? then
@@ -44,8 +35,9 @@ class Sswine
 
     # If it does, let's process the Hams!
     else
-      @main_dir.each_child do |entry|
-        pork = Ham.new entry, verbose
+      # In alphabetical order.
+      @main_dir.children.sort.each do |entry|
+        pork = Ham.new entry, @verbose
 
         # No error message is printed here, because Ham's constructor already
         # does so.
@@ -60,6 +52,19 @@ class Sswine
   # one of each Ham.
   public
   def writeMenuEntries
+    # This is to make a decent log:
+    created = Hash.new
+
+    # Create a new folder for sswine's .desktop files (to both ensure it does
+    # exist and to remove unnecessary .desktop files):
+    desktop_files_folder = Pathname.new "#{ENV["HOME"]}/.local/share/" +
+                                      "applications/sswine"
+    if desktop_files_folder.exist? then
+      FileUtils.rm_r desktop_files_folder
+    end
+    desktop_files_folder.mkpath
+
+
     # Ensure the folder file exists:
     folder_file = Pathname.new "#{ENV["HOME"]}/.local/share/" +
                                "desktop-directories/sswine.directory"
@@ -84,7 +89,7 @@ class Sswine
       f.puts "<Menu>"
       f.puts "  <Name>Applications</Name>"
       f.puts "  <Menu>"
-      f.puts "    <AppDir>#{@desktop_files_dir.realpath}</AppDir>"
+      f.puts "    <AppDir>#{desktop_files_folder.realpath}</AppDir>"
       f.puts "    <Name>Sswine</Name>"
       f.puts "    <Directory>#{folder_file.basename}</Directory>"
       f.puts "    <Include>"
@@ -92,10 +97,13 @@ class Sswine
 
     # Now, process each Ham...
     @hams.each do |h|
+      # Take note of what this Ham has created:
+      created[h.ham_folder.basename] = Array.new
+
       # And each of its entries...
       h.getDesktopEntries.each do |key, entry|
         # Write the entry's .desktop file:
-        File.open "#{@desktop_files_dir.realpath}/#{key}", "w" do |f|
+        File.open "#{desktop_files_folder.realpath}/#{key}", "w" do |f|
           f.puts entry
         end
 
@@ -104,7 +112,8 @@ class Sswine
           f.puts "      <Filename>#{key}</Filename>"
         end
 
-        puts "Created: #{@desktop_files_dir.realpath}/#{key}"
+        # Take note of this for the log:
+        created[h.ham_folder.basename].push key
       end
     end
 
@@ -113,6 +122,23 @@ class Sswine
       f.puts "    </Include>"
       f.puts "  </Menu>"
       f.puts "</Menu>"
+    end
+
+    # If verbose, log what entries have been written:
+    if true == @verbose then
+      # Header:
+      puts "Created entries in \e[33m#{desktop_files_folder.realpath}\e[0m " +
+           "for:"
+
+      created.each do |key, entries|
+        # Show the Ham's name:
+        puts " > \e[34m#{key}\e[0m"
+
+        # Show what this Ham has generated:
+        entries.each do |entry|
+          puts "     #{entry}"
+        end
+      end
     end
   end
 

@@ -172,20 +172,21 @@ usable config file contain a wine_env folder.</p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/ham.rb, line 21</span>
+            <pre><span class="ruby-comment"># File lib/ham.rb, line 22</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>( <span class="ruby-identifier">path</span>, <span class="ruby-identifier">verbose</span> )
   <span class="ruby-comment"># Initialize instance variables:</span>
   <span class="ruby-ivar">@ham_folder</span> = <span class="ruby-constant">Pathname</span>.<span class="ruby-identifier">new</span> <span class="ruby-identifier">path</span>
   <span class="ruby-ivar">@edible</span> = <span class="ruby-keyword">true</span>
   <span class="ruby-ivar">@config_global</span> = <span class="ruby-constant">Hash</span>.<span class="ruby-identifier">new</span>
   <span class="ruby-ivar">@config_entries</span> = <span class="ruby-constant">Hash</span>.<span class="ruby-identifier">new</span>
+  <span class="ruby-ivar">@verbose</span> = <span class="ruby-identifier">verbose</span>
 
   <span class="ruby-comment"># If there&#39;s no wine_env folder, it&#39;s not edible.</span>
   <span class="ruby-keyword">unless</span> <span class="ruby-constant">Pathname</span>.<span class="ruby-identifier">new</span>( <span class="ruby-node">&quot;#{@ham_folder}/wine_env&quot;</span> ).<span class="ruby-identifier">directory?</span> <span class="ruby-keyword">then</span>
     <span class="ruby-ivar">@edible</span> = <span class="ruby-keyword">false</span>
-    <span class="ruby-keyword">if</span> <span class="ruby-identifier">verbose</span> <span class="ruby-keyword">then</span>
-      <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;!!! Ignoring: #{@ham_folder.basename} (sub-folder wine_env &quot;</span> <span class="ruby-operator">+</span>
-           <span class="ruby-string">&quot;not found)&quot;</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-keyword">true</span> <span class="ruby-operator">==</span> <span class="ruby-ivar">@verbose</span> <span class="ruby-keyword">then</span>
+      <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;\e[31m!!! Ignoring:\e[0m #{@ham_folder.basename} (sub-folder &quot;</span> <span class="ruby-operator">+</span>
+           <span class="ruby-string">&quot;wine_env not found)&quot;</span>
     <span class="ruby-keyword">end</span>
   <span class="ruby-keyword">end</span>
 
@@ -194,8 +195,9 @@ usable config file contain a wine_env folder.</p>
 
   <span class="ruby-keyword">unless</span> <span class="ruby-operator">!</span><span class="ruby-ivar">@edible</span> <span class="ruby-keyword">or</span> <span class="ruby-identifier">config_file</span>.<span class="ruby-identifier">file?</span> <span class="ruby-keyword">or</span> <span class="ruby-identifier">config_file</span>.<span class="ruby-identifier">readable?</span> <span class="ruby-keyword">then</span>
     <span class="ruby-ivar">@edible</span> = <span class="ruby-keyword">false</span>
-    <span class="ruby-keyword">if</span> <span class="ruby-identifier">verbose</span> <span class="ruby-keyword">then</span>
-      <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;!!! Ignoring: #{@ham_folder.basename} (config.yaml not found)&quot;</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-keyword">true</span> <span class="ruby-operator">==</span> <span class="ruby-ivar">@verbose</span> <span class="ruby-keyword">then</span>
+      <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;\e[31m!!! Ignoring:\e[0m #{@ham_folder.basename} (config.yaml &quot;</span> <span class="ruby-operator">+</span>
+           <span class="ruby-string">&quot;not found)&quot;</span>
     <span class="ruby-keyword">end</span>
   <span class="ruby-keyword">end</span>
 
@@ -219,7 +221,7 @@ usable config file contain a wine_env folder.</p>
 
         <span class="ruby-comment"># Error message, in case:</span>
         <span class="ruby-keyword">else</span>
-          <span class="ruby-keyword">if</span> <span class="ruby-identifier">verbose</span> <span class="ruby-keyword">then</span>
+          <span class="ruby-keyword">if</span> <span class="ruby-keyword">true</span> <span class="ruby-operator">==</span> <span class="ruby-ivar">@verbose</span> <span class="ruby-keyword">then</span>
             <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;!!! Ignoring entry of #{@ham_folder.basename}: #{key} &quot;</span> <span class="ruby-operator">+</span>
                  <span class="ruby-string">&quot;(invalid config entry)&quot;</span>
           <span class="ruby-keyword">end</span>
@@ -234,8 +236,9 @@ usable config file contain a wine_env folder.</p>
     <span class="ruby-comment"># If there is no global config or no entries, it is not edible.</span>
     <span class="ruby-keyword">if</span> <span class="ruby-value">0</span> <span class="ruby-operator">==</span> ( <span class="ruby-ivar">@config_global</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">+</span> <span class="ruby-ivar">@config_entries</span>.<span class="ruby-identifier">size</span> ) <span class="ruby-keyword">then</span>
       <span class="ruby-ivar">@edible</span> = <span class="ruby-keyword">false</span>
-      <span class="ruby-keyword">if</span> <span class="ruby-identifier">verbose</span> <span class="ruby-keyword">then</span>
-        <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;!!! Ignoring: #{@ham_folder.basename} (invalid config file)&quot;</span>
+      <span class="ruby-keyword">if</span> <span class="ruby-keyword">true</span> <span class="ruby-operator">==</span> <span class="ruby-ivar">@verbose</span> <span class="ruby-keyword">then</span>
+        <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;\e[31m!!! Ignoring:\e[0m #{@ham_folder.basename} (invalid &quot;</span> <span class="ruby-operator">+</span>
+             <span class="ruby-string">&quot;config file)&quot;</span>
       <span class="ruby-keyword">end</span>
     <span class="ruby-keyword">end</span>
   <span class="ruby-keyword">end</span>
@@ -279,7 +282,7 @@ the key, and the file&#39;s content as its value.</p>
 
           
           <div class="method-source-code" id="getDesktopEntries-source">
-            <pre><span class="ruby-comment"># File lib/ham.rb, line 128</span>
+            <pre><span class="ruby-comment"># File lib/ham.rb, line 132</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">getDesktopEntries</span>
   <span class="ruby-identifier">desktop_entries</span> = <span class="ruby-constant">Hash</span>.<span class="ruby-identifier">new</span>
 
@@ -381,7 +384,7 @@ folder, setting the right WINEPREFIX variable to avoid issues.</p>
 
           
           <div class="method-source-code" id="openShell-source">
-            <pre><span class="ruby-comment"># File lib/ham.rb, line 203</span>
+            <pre><span class="ruby-comment"># File lib/ham.rb, line 207</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">openShell</span>
   <span class="ruby-comment"># Directory to start the shell in:</span>
   <span class="ruby-constant">Dir</span>.<span class="ruby-identifier">chdir</span> <span class="ruby-node">&quot;#{@config_global[&quot;Path&quot;].realpath}/wine_env/drive_c&quot;</span>
@@ -434,7 +437,7 @@ tweaked entry on success, nil otherwise.</p>
 
           
           <div class="method-source-code" id="checkEntry-source">
-            <pre><span class="ruby-comment"># File lib/ham.rb, line 93</span>
+            <pre><span class="ruby-comment"># File lib/ham.rb, line 97</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">checkEntry</span>( <span class="ruby-identifier">entry</span>, <span class="ruby-identifier">key</span> )
   <span class="ruby-comment"># This will be the container of the return value:</span>
   <span class="ruby-identifier">ret</span> = <span class="ruby-identifier">entry</span>
