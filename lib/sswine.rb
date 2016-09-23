@@ -138,7 +138,7 @@ class Sswine
 
         # Show what this Ham has generated:
         entries.each do |entry|
-          puts "     #{entry}"
+          puts "    #{entry}"
         end
       end
     end

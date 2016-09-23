@@ -35,8 +35,8 @@ class Ham
     unless Pathname.new( "#{@folder}/wine_env" ).directory? then
       @edible = false
       if true == @verbose then
-        puts "\e[31m!!! Ignoring:\e[0m #{@folder.basename} (sub-folder " +
-             "wine_env not found)"
+        puts "\e[31m!!! Ignored:\e[0m #{@folder.basename}"
+        puts " > Sub-folder wine_env not found."
       end
     end
 
@@ -46,8 +46,8 @@ class Ham
     unless !@edible or config_file.file? or config_file.readable? then
       @edible = false
       if true == @verbose then
-        puts "\e[31m!!! Ignoring:\e[0m #{@folder.basename} (config.yaml " +
-             "not found)"
+        puts "\e[31m!!! Ignored:\e[0m #{@folder.basename}"
+        puts " > Config.yaml not found."
       end
     end
 
@@ -57,24 +57,21 @@ class Ham
       begin
         # Attempt to parse the YAML file...
         conf = YAML.load_file config_file
+
+        # First off, handle "Global Values" if present:
+        if conf.key? "Global Values" then
+          @config_global = checkEntry (conf.delete "Global Values"),
+                           "Global Values"
+        end
+
+        # Now, handle entries:
         conf.each_key do |key|
-
+          # checked will be empty if the entry is invalid, and checkEntry
+          # already handles error messages.
           checked = checkEntry conf[key], key
-          # checked will be nil if the configuration is invalid:
-          unless checked.nil? then
-            if "Global Values" == key then
-              @config_global = checked
 
-            else
-              @config_entries[key] = checked
-            end
-
-          # Error message, in case:
-          else
-            if true == @verbose then
-              puts "!!! Ignoring entry of #{@folder.basename}: #{key} " +
-                   "(invalid config entry)"
-            end
+          unless checked.empty? then
+            @config_entries[key] = checked
           end
         end
 
@@ -87,8 +84,8 @@ class Ham
       if 0 == @config_entries.size then
         @edible = false
         if true == @verbose then
-          puts "\e[31m!!! Ignoring:\e[0m #{@folder.basename} (invalid " +
-               "config file)"
+          puts "\e[31m!!! Ignored:\e[0m #{@folder.basename}"
+          puts " > Not enough entries in config.yaml."
         end
       end
     end
@@ -96,28 +93,63 @@ class Ham
 
   # Checks if the given entry is valid, and makes sure the Path and Icon 
   # keys will point to, respectively, an existing folder or file.
-  # Returns a valid tweaked entry on success, nil otherwise.
+  # Returns a valid tweaked entry on success, or an empty one otherwise.
   private
   def checkEntry( entry, key )
     # This will be the container of the return value:
     ret = entry
 
+    # If this is not a "Global Values" entry, some checks must be performed:
+    if "Global Values" != key then
+      # First: there must be a "Path" key in either this entry or in
+      # "Global Values".
+      if entry["Path"].nil? and @config_global["Path"].nil? then
+        ret = Hash.new
+
+        # Log for verbose mode:
+        if true == @verbose then
+          puts "\e[31m!!! Ignored entry of #{@folder.basename}:\e[0m " +
+               "\"#{key}\""
+          puts " > No valud value for \"Path\" key in neither \"#{key}\" " +
+               "nor \"Global Values\"."
+        end
+
+      # Second: it must have an "Exec" key:
+      elsif entry["Exec"].nil? then
+        ret = Hash.new
+
+        # Log for verbose mode:
+        if true == @verbose then
+          puts "\e[31m!!! Ignored entry of #{@folder.basename}:\e[0m " +
+               "\"#{key}\""
+          puts " > No value for \"Exec\" key."
+        end
+      end
+    end
+
     # Make sure the folder Path points to exists, and make it absolute:
-    if entry.key? "Path" then
+    if false == ret.nil? and entry.key? "Path" then
       complete_path = Pathname.new "#{@folder}/wine_env/drive_c/" +
                                    "#{entry["Path"]}"
       if complete_path.directory? then
         entry["Path"] = complete_path.realpath
 
       else
-        ret = nil
+        ret = Hash.new
+
+        # Log for verbose mode:
+        if true == @verbose then
+          puts "\e[31m!!! Ignored entry of #{@folder.basename}:\e[0m " +
+               "\"#{key}\""
+          puts " > \"Path\" key points to a non existing location."
+        end
       end
     end
 
     # Check if the icon is the one within @folder}/icons. If so, make its
     # path absolute, so it will not be shadowed by system ones with the same
     # name.
-    if entry.key? "Icon" then
+    if false == ret.nil? and entry.key? "Icon" then
       complete_path = Pathname.new "#{@folder}/icons/#{entry["Icon"]}"
 
       if complete_path.file? then
