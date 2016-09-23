@@ -34,12 +34,12 @@ sswine -u/--update: runs 'wineboot' for each edible Ham. This is supposed to
 This file must always contain at least an entry.  
 Each entry must be composed of a name and a series of values, using the
 following syntax:  
-`Entry Name:`  
-&emsp;`Key1: "Value1"`  
-&emsp;`Key2: "Value2"`  
+>`Entry Name:`  
+>&emsp;`Key1: "Value1"`  
+>&emsp;`Key2: "Value2"`  
 
 The entry's name will be used for the name of both the menu entry and of the
-desktop file.
+desktop file. Thus, it can not contain invalid file name characters (eg. "/" ).
 
 To create a usable menu entry, you must specify the keys needed to create a
 valid .desktop file according to freedesktop.org's specification.  
@@ -47,16 +47,20 @@ valid .desktop file according to freedesktop.org's specification.
 If more entries would use the same value for some keys, you can specify global
 values to use for all entries (which are overridden by entry-specific values)
 in the following way:  
-`Global Values:`  
-&emsp;`Key1: "Value1"`  
-&emsp;`Key2: "Value2"`  
+>`Global Values:`  
+>&emsp;`Key1: "Value1"`  
+>&emsp;`Key2: "Value2"`  
 
-**IMPORTANT**: The value of key "Path", if specified, must be relative to
+**WARNING:** The value of key "Path", if specified, must be relative to
 "$HOME/.sswine/<Ham>/wine_env/drive_c", which is pretty much an unavoidable
 path while using wine.  
+**WARNING:** If the value of key "Exec" contains spaces other than the ones
+separating commands, they have to be escaped. Also "\" character needs to be
+escaped. To put it shortly: you have to put two \ before any space which does
+not separate two different commands.  
 
 A sample config.yaml is:  
-`Global Values:`  
+>`Global Values:`  
 &emsp;`Encoding: "UTF-8"`  
 &emsp;`Version: "1.0"`  
 &emsp;`Type: "Application"`  
@@ -66,8 +70,11 @@ A sample config.yaml is:
 &emsp;`Path: "global/path"`  
 &emsp;`Hidden: "false"`  
 &emsp;`NoDisplay: "false"`  
-
-`Program Name:`  
+>
+>`Program Name:`  
 &emsp;`Exec: "wine exec.exe"`  
 &emsp;`Icon: "entry_icon.png"`  
+>
+>`Other Program:`  
+>&emsp;`Exec: "wine exec\\ with\\ spaces.exe"`
 

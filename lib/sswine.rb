@@ -3,8 +3,7 @@ require "pathname"
 require "./lib/ham.rb"
 
 =begin
-Sswine stands for "Sswine: split wine", where wine stands for "wine is not (an)
-emulator".  
+Sswine stands for "Sswine: split wine".
 This class is designed to handle Hams located in $HOME/.sswine. Each Ham must
 be composed of:  
 config.yaml:: Ham configuration file.  
@@ -97,14 +96,17 @@ class Sswine
 
     # Now, process each Ham...
     @hams.each do |h|
-      # Take note of what this Ham has created:
-      created[h.ham_folder.basename] = Array.new
+      # Note down the name of this Ham:
+      created[h.folder.basename] = Array.new
 
-      # And each of its entries...
+      # For each entry it contains...
       h.getDesktopEntries.each do |key, entry|
-        # Write the entry's .desktop file:
+        # Write the relative.desktop file:
         File.open "#{desktop_files_folder.realpath}/#{key}", "w" do |f|
           f.puts entry
+
+          # Add an empty line at the end:
+          f.puts ""
         end
 
         # Add it to Sswine's menu file:
@@ -112,8 +114,8 @@ class Sswine
           f.puts "      <Filename>#{key}</Filename>"
         end
 
-        # Take note of this for the log:
-        created[h.ham_folder.basename].push key
+        # Note down what this Ham has generated:
+        created[h.folder.basename].push key
       end
     end
 
@@ -124,7 +126,7 @@ class Sswine
       f.puts "</Menu>"
     end
 
-    # If verbose, log what entries have been written:
+    # If verbose, show the processed Hams and the relative entries:
     if true == @verbose then
       # Header:
       puts "Created entries in \e[33m#{desktop_files_folder.realpath}\e[0m " +
@@ -146,7 +148,7 @@ class Sswine
   public
   def killAllHams
     @hams.each do |h|
-      `env WINEPREFIX=#{h.ham_folder.realpath}/wine_env wineserver -k`
+      h.killHam
     end
   end
 
@@ -154,7 +156,7 @@ class Sswine
   public
   def updateAllHams
     @hams.each do |h|
-      `env WINEPREFIX=#{h.ham_folder.realpath}/wine_env wineboot`
+      h.updateHam
     end
   end
 
@@ -175,7 +177,7 @@ class Sswine
         # Print the selection menu:
         puts "Edible hams:"
         @hams.each_with_index do |h, idx|
-          puts "[#{idx + 1}] - #{h.ham_folder.basename}"
+          puts "[#{idx + 1}] - #{h.folder.basename}"
         end
         print "Choose one: "
 

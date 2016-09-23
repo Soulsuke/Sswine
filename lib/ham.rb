@@ -9,40 +9,44 @@ a wine_env folder.
 =end
 
 class Ham
-  @ham_folder     # Folder of the Ham. Duh.
+  @folder         # Folder of the Ham. Duh.
   @edible         # Set to true if the config file is ok, false otherwise.
   @config_global  # Global options for all entries (if not overridden).
   @config_entries # Entry-specific options, which override global ones.
   @verbose        # Verbose logs enabled/disabled
 
-  attr_reader :ham_folder, :edible
+  # Folder of the Ham.
+  attr_reader :folder
+
+  # Set to true if the Ham is usable, false otherwise.
+  attr_reader :edible
 
   # Constructor: takes the path of the ham's folder and the verbosity mode
   # (true/false) as parameters.
   def initialize( path, verbose )
     # Initialize instance variables:
-    @ham_folder = Pathname.new path
+    @folder = Pathname.new path
     @edible = true
     @config_global = Hash.new
     @config_entries = Hash.new
     @verbose = verbose
 
     # If there's no wine_env folder, it's not edible.
-    unless Pathname.new( "#{@ham_folder}/wine_env" ).directory? then
+    unless Pathname.new( "#{@folder}/wine_env" ).directory? then
       @edible = false
       if true == @verbose then
-        puts "\e[31m!!! Ignoring:\e[0m #{@ham_folder.basename} (sub-folder " +
+        puts "\e[31m!!! Ignoring:\e[0m #{@folder.basename} (sub-folder " +
              "wine_env not found)"
       end
     end
 
     # If there's no config file, it's not edible:
-    config_file = Pathname.new "#{@ham_folder}/config.yaml"
+    config_file = Pathname.new "#{@folder}/config.yaml"
 
     unless !@edible or config_file.file? or config_file.readable? then
       @edible = false
       if true == @verbose then
-        puts "\e[31m!!! Ignoring:\e[0m #{@ham_folder.basename} (config.yaml " +
+        puts "\e[31m!!! Ignoring:\e[0m #{@folder.basename} (config.yaml " +
              "not found)"
       end
     end
@@ -68,7 +72,7 @@ class Ham
           # Error message, in case:
           else
             if true == @verbose then
-              puts "!!! Ignoring entry of #{@ham_folder.basename}: #{key} " +
+              puts "!!! Ignoring entry of #{@folder.basename}: #{key} " +
                    "(invalid config entry)"
             end
           end
@@ -79,11 +83,11 @@ class Ham
         @edible = false
       end
 
-      # If there is no global config or no entries, it is not edible.
-      if 0 == ( @config_global.size + @config_entries.size ) then
+      # If there are no entries, it is not edible.
+      if 0 == @config_entries.size then
         @edible = false
         if true == @verbose then
-          puts "\e[31m!!! Ignoring:\e[0m #{@ham_folder.basename} (invalid " +
+          puts "\e[31m!!! Ignoring:\e[0m #{@folder.basename} (invalid " +
                "config file)"
         end
       end
@@ -100,7 +104,7 @@ class Ham
 
     # Make sure the folder Path points to exists, and make it absolute:
     if entry.key? "Path" then
-      complete_path = Pathname.new "#{@ham_folder}/wine_env/drive_c/" +
+      complete_path = Pathname.new "#{@folder}/wine_env/drive_c/" +
                                    "#{entry["Path"]}"
       if complete_path.directory? then
         entry["Path"] = complete_path.realpath
@@ -110,17 +114,41 @@ class Ham
       end
     end
 
-    # Make sure the file Icon points to exists, and make it absolute:
+    # Check if the icon is the one within @folder}/icons. If so, make its
+    # path absolute, so it will not be shadowed by system ones with the same
+    # name.
     if entry.key? "Icon" then
-      complete_path = Pathname.new "#{@ham_folder}/icons/#{entry["Icon"]}"
+      complete_path = Pathname.new "#{@folder}/icons/#{entry["Icon"]}"
 
       if complete_path.file? then
         entry["Icon"] = complete_path.realpath
-
-      else
-        ret = nil
       end   
     end
+
+    return ret
+  end
+
+  # Returns a string containing the "env <variables>" command needed to run
+  # wine binaries without issues, to avoid code duplication.
+  private
+  def getHamEnv
+    # This will be the container of the return value:
+    ret = "env "
+
+    # If there is a custom_wine folder inside the Ham's directory which
+    # contains a wine binary, it should be used instead of the system-wide
+    # version (along with other wine binaries).
+    custom_wine = Pathname.new "#{@folder.realpath}/custom_wine/" +
+                               "bin/wine"
+
+    # To do so, add custom_wine/bin to the PATH variable. Whatever happens
+    # next is on the user who put the binaries there.
+    if custom_wine.executable? and custom_wine.file? then
+      ret += "PATH=#{custom_wine.dirname.realpath}:#{ENV["PATH"]} "
+    end
+
+    # Add the WINEPREFIX variable:
+    ret += "WINEPREFIX=#{@folder.realpath}/wine_env"
 
     return ret
   end
@@ -130,93 +158,91 @@ class Ham
   # name as the key, and the file's content as its value.
   public
   def getDesktopEntries
+    # This will contain all the .desktop files to write for this Ham. 
+    # The key will be the file name, and the value the contentit should have.
     desktop_entries = Hash.new
 
+    # Process every config entry!
     @config_entries.each_key do |entry|
+      # A temporary container for both global and entry-specific values:
       new_entry_hash = Hash.new
 
-      # Add all the global options:
+      # First add the global values:
       @config_global.each_key do |g|
         new_entry_hash[g] = @config_global[g]
       end
 
-      # Addthe entry's options:
-      new_entry_hash["Name"] = entry
-      @config_entries[entry].each_key do |ent|
-        new_entry_hash[ent] = @config_entries[entry][ent]
+      # Then add the entry-specific values, so they will override the global
+      # ones if needed:
+      @config_entries[entry].each_key do |e|
+        new_entry_hash[e] = @config_entries[entry][e]
       end
 
-      new_entry_name = "#{new_entry_hash["Name"]}.desktop"
-      new_entry_content = "[Desktop Entry]\n"
+      # Now, let's start putting stuff into desktop_entries!
+      file_name = "#{entry}.desktop"
+      desktop_entries[file_name] =  "[Desktop Entry]\n"
+      desktop_entries[file_name] += "Name=#{entry}\n"
 
       new_entry_hash.each_key do |key|
         # Add WINEPREFIX to the command:
         if "Exec" == key then
-          # This must be used for all cases:
-          new_entry_content += "#{key}=env "
-
-          # If there is a custom_wine folder inside the Ham's directory, it
-          # should be used instead of the system-wide wine installation.
-          custom_wine = Pathname.new "#{@ham_folder.realpath}/custom_wine/" +
-                                     "bin/wine"
-
-          # To do so, we'll add custom_wine/bin to the PATH variable.
-          if custom_wine.executable? and custom_wine.file? then
-            new_entry_content += "PATH=#{custom_wine.dirname.realpath}:$PATH "
-          end
-
-          # add the WINEPREFIX:
-          new_entry_content += "WINEPREFIX=#{@ham_folder.realpath}/wine_env "
-
-          # Executable name:
-          new_entry_content += "#{new_entry_hash[key]}\n"
+          # Put in the right env for the Exec key:
+          desktop_entries[file_name] += "#{getHamEnv} #{new_entry_hash[key]}\n"
 
         # Check if the icon is located in the icons sub-folder:
         elsif "Icon" == key then
           # It always starts like this:
-          new_entry_content += "#{key}="
+          desktop_entries[file_name] += "#{key}="
 
-          icon = Pathname.new "#{@ham_folder.realpath}/icons/" +
+          icon = Pathname.new "#{@folder.realpath}/icons/" +
                               "#{new_entry_hash[key]}"
 
           # If there's an icon sub-folder and the icon file is in there,
           # use it:
           if icon.file? then
-            new_entry_content += "#{icon.realpath}\n"
+            desktop_entries[file_name] += "#{icon.realpath}\n"
 
           # Else, try using a system-wide one:
           else
-            new_entry_content += "#{new_entry_hash[key]}\n"
+            desktop_entries[file_name] += "#{new_entry_hash[key]}\n"
           end
 
+        # Every other option: it's ok as it is.
         else
-          new_entry_content += "#{key}=#{new_entry_hash[key]}\n"
+          desktop_entries[file_name] += "#{key}=#{new_entry_hash[key]}\n"
         end
       end
-      new_entry_content += " "
-
-      desktop_entries[new_entry_name] = new_entry_content
     end
 
     return desktop_entries
   end
 
-  # Opens a shell for this Ham in its wine_env/drive_c folder, setting the
-  # right WINEPREFIX variable to avoid issues.
+  # Opens a shell for this Ham in its wine_env/drive_c folder.
   public
   def openShell
     # Directory to start the shell in:
-    Dir.chdir "#{@config_global["Path"].realpath}/wine_env/drive_c"
+    Dir.chdir "#{@folder.realpath}/wine_env/drive_c"
 
     # Default shell for the current user:
     shell = `getent passwd #{ENV["USER"]}`.chomp.split( ":" ).pop
 
-    # WINEPREFIX variable:
-    prefix = Pathname.new "#{@ham_folder.realpath}/wine_env"
-
     # Run the shell!
-    system "env WINEPREFIX=#{prefix.realpath} #{shell}"
+    system "#{getHamEnv} #{shell}"
   end
 
+  # Runs "wineserver -k" to kill any wine process for this Ham's wine bottle.
+  public
+  def killHam
+    # Kill command:
+    `#{getHamEnv} winekill -k`
+  end
+
+  # Runs wineboot, to attempt to update this Ham's wine bottle without making
+  # other changes.
+  public
+  def updateHam
+    # Update command:
+    `#{getHamEnv} wineboot`
+  end
 end
 

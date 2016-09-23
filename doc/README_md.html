@@ -115,30 +115,44 @@ files on each of them.</p>
 <h3 id="label-config.yaml">config.yaml<span><a href="#label-config.yaml">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
 <p>This file must always contain at least an entry.<br> Each entry must be
-composed of a name and a series of values, using the following syntax:<br>
-<code>Entry Name:</code><br>  <code>Key1: &quot;Value1&quot;</code><br>
+composed of a name and a series of values, using the following syntax:</p>
+
+<blockquote>
+<p><code>Entry Name:</code><br>  <code>Key1: &quot;Value1&quot;</code><br>
  <code>Key2: &quot;Value2&quot;</code></p>
+</blockquote>
 
 <p>The entry&#39;s name will be used for the name of both the menu entry and
-of the desktop file.</p>
+of the desktop file. Thus, it can not contain invalid file name characters
+(eg. “/” ).</p>
 
 <p>To create a usable menu entry, you must specify the keys needed to create a
 valid .desktop file according to freedesktop.org&#39;s specification.</p>
 
 <p>If more entries would use the same value for some keys, you can specify
 global values to use for all entries (which are overridden by
-entry-specific values) in the following way:<br> <code>Global
-Values:</code><br>  <code>Key1: &quot;Value1&quot;</code><br>  <code>Key2:
-&quot;Value2&quot;</code></p>
+entry-specific values) in the following way:</p>
 
-<p><strong>IMPORTANT</strong>: The value of key “Path”, if specified, must be
+<blockquote>
+<p><code>Global Values:</code><br>  <code>Key1: &quot;Value1&quot;</code><br>
+ <code>Key2: &quot;Value2&quot;</code></p>
+</blockquote>
+
+<p><strong>WARNING:</strong> The value of key “Path”, if specified, must be
 relative to “$HOME/.sswine/&lt;Ham&gt;/wine_env/drive_c”, which is pretty
-much an unavoidable path while using wine.</p>
+much an unavoidable path while using wine.<br> <strong>WARNING:</strong> If
+the value of key “Exec” contains spaces other than the ones separating
+commands, they have to be escaped. Also “&quot; character needs to be
+escaped. To put it shortly: you have to put two \ before any space which
+does not separate two different commands.</p>
 
-<p>A sample config.yaml is:<br> <code>Global Values:</code><br>
- <code>Encoding: &quot;UTF-8&quot;</code><br>  <code>Version:
-&quot;1.0&quot;</code><br>  <code>Type: &quot;Application&quot;</code><br>
- <code>Terminal: &quot;false&quot;</code><br>  <code>Categories:
+<p>A sample config.yaml is:</p>
+
+<blockquote>
+<p><code>Global Values:</code><br>  <code>Encoding:
+&quot;UTF-8&quot;</code><br>  <code>Version: &quot;1.0&quot;</code><br>
+ <code>Type: &quot;Application&quot;</code><br>  <code>Terminal:
+&quot;false&quot;</code><br>  <code>Categories:
 &quot;Games;&quot;</code><br>  <code>Icon:
 &quot;global_icon.png&quot;</code><br>  <code>Path:
 &quot;global/path&quot;</code><br>  <code>Hidden:
@@ -146,6 +160,10 @@ much an unavoidable path while using wine.</p>
 
 <p><code>Program Name:</code><br>  <code>Exec: &quot;wine
 exec.exe&quot;</code><br>  <code>Icon: &quot;entry_icon.png&quot;</code></p>
+
+<p><code>Other Program:</code><br>  <code>Exec: &quot;wine exec\ with\
+spaces.exe&quot;</code></p>
+</blockquote>
 </main>
 
 
