@@ -54,15 +54,19 @@ class Sswine
     # This is to make a decent log:
     created = Hash.new
 
-    # Create a new folder for sswine's .desktop files (to both ensure it does
-    # exist and to remove unnecessary .desktop files):
+    # Deleting this folder and creating one with the same name confuses some
+    # DEs' menu triggers, apparently. So... We gotta ensure the directory 
+    # exists, then remove every file it contains.
     desktop_files_folder = Pathname.new "#{ENV["HOME"]}/.local/share/" +
                                       "applications/sswine"
     if desktop_files_folder.exist? then
-      FileUtils.rm_r desktop_files_folder
-    end
-    desktop_files_folder.mkpath
+      desktop_files_folder.each_child do |entry|
+        FileUtils.rm_r entry
+      end
 
+    else
+      desktop_files_folder.mkpath
+    end
 
     # Ensure the folder file exists:
     folder_file = Pathname.new "#{ENV["HOME"]}/.local/share/" +

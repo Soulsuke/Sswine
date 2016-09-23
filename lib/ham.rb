@@ -219,7 +219,8 @@ class Ham
         # Add WINEPREFIX to the command:
         if "Exec" == key then
           # Put in the right env for the Exec key:
-          desktop_entries[file_name] += "#{getHamEnv} #{new_entry_hash[key]}\n"
+          desktop_entries[file_name] += "#{key}=#{getHamEnv} " +
+                                        "#{new_entry_hash[key]}\n"
 
         # Check if the icon is located in the icons sub-folder:
         elsif "Icon" == key then

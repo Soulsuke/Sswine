@@ -218,7 +218,7 @@ href="Ham.html">Ham</a> must be composed of:</p>
 
           
           <div class="method-source-code" id="killAllHams-source">
-            <pre><span class="ruby-comment"># File lib/sswine.rb, line 149</span>
+            <pre><span class="ruby-comment"># File lib/sswine.rb, line 153</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">killAllHams</span>
   <span class="ruby-ivar">@hams</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">h</span><span class="ruby-operator">|</span>
     <span class="ruby-identifier">h</span>.<span class="ruby-identifier">killHam</span>
@@ -256,7 +256,7 @@ one.</p>
 
           
           <div class="method-source-code" id="openShell-source">
-            <pre><span class="ruby-comment"># File lib/sswine.rb, line 167</span>
+            <pre><span class="ruby-comment"># File lib/sswine.rb, line 171</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">openShell</span>
   <span class="ruby-comment"># This will store the user input:</span>
   <span class="ruby-identifier">choice</span> = <span class="ruby-value">-1</span>
@@ -321,7 +321,7 @@ one.</p>
 
           
           <div class="method-source-code" id="updateAllHams-source">
-            <pre><span class="ruby-comment"># File lib/sswine.rb, line 157</span>
+            <pre><span class="ruby-comment"># File lib/sswine.rb, line 161</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">updateAllHams</span>
   <span class="ruby-ivar">@hams</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">h</span><span class="ruby-operator">|</span>
     <span class="ruby-identifier">h</span>.<span class="ruby-identifier">updateHam</span>
@@ -362,15 +362,19 @@ an entry for each valid one of each <a href="Ham.html">Ham</a>.</p>
   <span class="ruby-comment"># This is to make a decent log:</span>
   <span class="ruby-identifier">created</span> = <span class="ruby-constant">Hash</span>.<span class="ruby-identifier">new</span>
 
-  <span class="ruby-comment"># Create a new folder for sswine&#39;s .desktop files (to both ensure it does</span>
-  <span class="ruby-comment"># exist and to remove unnecessary .desktop files):</span>
+  <span class="ruby-comment"># Deleting this folder and creating one with the same name confuses some</span>
+  <span class="ruby-comment"># DEs&#39; menu triggers, apparently. So... We gotta ensure the directory </span>
+  <span class="ruby-comment"># exists, then remove every file it contains.</span>
   <span class="ruby-identifier">desktop_files_folder</span> = <span class="ruby-constant">Pathname</span>.<span class="ruby-identifier">new</span> <span class="ruby-node">&quot;#{ENV[&quot;HOME&quot;]}/.local/share/&quot;</span> <span class="ruby-operator">+</span>
                                     <span class="ruby-string">&quot;applications/sswine&quot;</span>
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">desktop_files_folder</span>.<span class="ruby-identifier">exist?</span> <span class="ruby-keyword">then</span>
-    <span class="ruby-constant">FileUtils</span>.<span class="ruby-identifier">rm_r</span> <span class="ruby-identifier">desktop_files_folder</span>
-  <span class="ruby-keyword">end</span>
-  <span class="ruby-identifier">desktop_files_folder</span>.<span class="ruby-identifier">mkpath</span>
+    <span class="ruby-identifier">desktop_files_folder</span>.<span class="ruby-identifier">each_child</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">entry</span><span class="ruby-operator">|</span>
+      <span class="ruby-constant">FileUtils</span>.<span class="ruby-identifier">rm_r</span> <span class="ruby-identifier">entry</span>
+    <span class="ruby-keyword">end</span>
 
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">desktop_files_folder</span>.<span class="ruby-identifier">mkpath</span>
+  <span class="ruby-keyword">end</span>
 
   <span class="ruby-comment"># Ensure the folder file exists:</span>
   <span class="ruby-identifier">folder_file</span> = <span class="ruby-constant">Pathname</span>.<span class="ruby-identifier">new</span> <span class="ruby-node">&quot;#{ENV[&quot;HOME&quot;]}/.local/share/&quot;</span> <span class="ruby-operator">+</span>

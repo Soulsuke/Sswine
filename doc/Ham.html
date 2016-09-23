@@ -316,7 +316,8 @@ the key, and the file&#39;s content as its value.</p>
       <span class="ruby-comment"># Add WINEPREFIX to the command:</span>
       <span class="ruby-keyword">if</span> <span class="ruby-string">&quot;Exec&quot;</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">key</span> <span class="ruby-keyword">then</span>
         <span class="ruby-comment"># Put in the right env for the Exec key:</span>
-        <span class="ruby-identifier">desktop_entries</span>[<span class="ruby-identifier">file_name</span>] <span class="ruby-operator">+=</span> <span class="ruby-node">&quot;#{getHamEnv} #{new_entry_hash[key]}\n&quot;</span>
+        <span class="ruby-identifier">desktop_entries</span>[<span class="ruby-identifier">file_name</span>] <span class="ruby-operator">+=</span> <span class="ruby-node">&quot;#{key}=#{getHamEnv} &quot;</span> <span class="ruby-operator">+</span>
+                                      <span class="ruby-node">&quot;#{new_entry_hash[key]}\n&quot;</span>
 
       <span class="ruby-comment"># Check if the icon is located in the icons sub-folder:</span>
       <span class="ruby-keyword">elsif</span> <span class="ruby-string">&quot;Icon&quot;</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">key</span> <span class="ruby-keyword">then</span>
@@ -375,7 +376,7 @@ bottle.</p>
 
           
           <div class="method-source-code" id="killHam-source">
-            <pre><span class="ruby-comment"># File lib/ham.rb, line 267</span>
+            <pre><span class="ruby-comment"># File lib/ham.rb, line 268</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">killHam</span>
   <span class="ruby-comment"># Kill command:</span>
   <span class="ruby-node">%x`#{getHamEnv} winekill -k`</span>
@@ -410,7 +411,7 @@ folder.</p>
 
           
           <div class="method-source-code" id="openShell-source">
-            <pre><span class="ruby-comment"># File lib/ham.rb, line 254</span>
+            <pre><span class="ruby-comment"># File lib/ham.rb, line 255</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">openShell</span>
   <span class="ruby-comment"># Directory to start the shell in:</span>
   <span class="ruby-constant">Dir</span>.<span class="ruby-identifier">chdir</span> <span class="ruby-node">&quot;#{@folder.realpath}/wine_env/drive_c&quot;</span>
@@ -451,7 +452,7 @@ making other changes.</p>
 
           
           <div class="method-source-code" id="updateHam-source">
-            <pre><span class="ruby-comment"># File lib/ham.rb, line 275</span>
+            <pre><span class="ruby-comment"># File lib/ham.rb, line 276</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">updateHam</span>
   <span class="ruby-comment"># Update command:</span>
   <span class="ruby-node">%x`#{getHamEnv} wineboot`</span>
