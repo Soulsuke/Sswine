@@ -72,11 +72,7 @@
     
     <li ><a href="#method-c-new">::new</a>
     
-    <li ><a href="#method-i-checkEntry">#checkEntry</a>
-    
     <li ><a href="#method-i-getDesktopEntries">#getDesktopEntries</a>
-    
-    <li ><a href="#method-i-getHamEnv">#getHamEnv</a>
     
     <li ><a href="#method-i-killHam">#killHam</a>
     
@@ -285,7 +281,7 @@ the key, and the file&#39;s content as its value.</p>
 
           
           <div class="method-source-code" id="getDesktopEntries-source">
-            <pre><span class="ruby-comment"># File lib/ham.rb, line 192</span>
+            <pre><span class="ruby-comment"># File lib/ham.rb, line 198</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">getDesktopEntries</span>
   <span class="ruby-comment"># This will contain all the .desktop files to write for this Ham. </span>
   <span class="ruby-comment"># The key will be the file name, and the value the contentit should have.</span>
@@ -307,10 +303,12 @@ the key, and the file&#39;s content as its value.</p>
       <span class="ruby-identifier">new_entry_hash</span>[<span class="ruby-identifier">e</span>] = <span class="ruby-ivar">@config_entries</span>[<span class="ruby-identifier">entry</span>][<span class="ruby-identifier">e</span>]
     <span class="ruby-keyword">end</span>
 
+    <span class="ruby-comment"># Sort it up!</span>
+    <span class="ruby-identifier">new_entry_hash</span> = <span class="ruby-identifier">new_entry_hash</span>.<span class="ruby-identifier">sort</span>.<span class="ruby-identifier">to_h</span>
+
     <span class="ruby-comment"># Now, let&#39;s start putting stuff into desktop_entries!</span>
     <span class="ruby-identifier">file_name</span> = <span class="ruby-node">&quot;#{entry}.desktop&quot;</span>
     <span class="ruby-identifier">desktop_entries</span>[<span class="ruby-identifier">file_name</span>] =  <span class="ruby-string">&quot;[Desktop Entry]\n&quot;</span>
-    <span class="ruby-identifier">desktop_entries</span>[<span class="ruby-identifier">file_name</span>] <span class="ruby-operator">+=</span> <span class="ruby-node">&quot;Name=#{entry}\n&quot;</span>
 
     <span class="ruby-identifier">new_entry_hash</span>.<span class="ruby-identifier">each_key</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">key</span><span class="ruby-operator">|</span>
       <span class="ruby-comment"># Add WINEPREFIX to the command:</span>
@@ -376,7 +374,7 @@ bottle.</p>
 
           
           <div class="method-source-code" id="killHam-source">
-            <pre><span class="ruby-comment"># File lib/ham.rb, line 268</span>
+            <pre><span class="ruby-comment"># File lib/ham.rb, line 276</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">killHam</span>
   <span class="ruby-comment"># Kill command:</span>
   <span class="ruby-node">%x`#{getHamEnv} winekill -k`</span>
@@ -411,7 +409,7 @@ folder.</p>
 
           
           <div class="method-source-code" id="openShell-source">
-            <pre><span class="ruby-comment"># File lib/ham.rb, line 255</span>
+            <pre><span class="ruby-comment"># File lib/ham.rb, line 263</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">openShell</span>
   <span class="ruby-comment"># Directory to start the shell in:</span>
   <span class="ruby-constant">Dir</span>.<span class="ruby-identifier">chdir</span> <span class="ruby-node">&quot;#{@folder.realpath}/wine_env/drive_c&quot;</span>
@@ -452,166 +450,10 @@ making other changes.</p>
 
           
           <div class="method-source-code" id="updateHam-source">
-            <pre><span class="ruby-comment"># File lib/ham.rb, line 276</span>
+            <pre><span class="ruby-comment"># File lib/ham.rb, line 284</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">updateHam</span>
   <span class="ruby-comment"># Update command:</span>
   <span class="ruby-node">%x`#{getHamEnv} wineboot`</span>
-<span class="ruby-keyword">end</span></pre>
-          </div>
-          
-        </div>
-
-        
-
-        
-      </div>
-
-    
-    </section>
-  
-     <section id="private-instance-5Buntitled-5D-method-details" class="method-section">
-       <header>
-         <h3>Private Instance Methods</h3>
-       </header>
-
-    
-      <div id="method-i-checkEntry" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">checkEntry</span><span
-            class="method-args">( entry, key )</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
-        </div>
-        
-
-        <div class="method-description">
-          
-          <p>Checks if the given entry is valid, and makes sure the Path and Icon  keys
-will point to, respectively, an existing folder or file. Returns a valid
-tweaked entry on success, or an empty one otherwise.</p>
-          
-          
-
-          
-          <div class="method-source-code" id="checkEntry-source">
-            <pre><span class="ruby-comment"># File lib/ham.rb, line 98</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">checkEntry</span>( <span class="ruby-identifier">entry</span>, <span class="ruby-identifier">key</span> )
-  <span class="ruby-comment"># This will be the container of the return value:</span>
-  <span class="ruby-identifier">ret</span> = <span class="ruby-identifier">entry</span>
-
-  <span class="ruby-comment"># If this is not a &quot;Global Values&quot; entry, some checks must be performed:</span>
-  <span class="ruby-keyword">if</span> <span class="ruby-string">&quot;Global Values&quot;</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">key</span> <span class="ruby-keyword">then</span>
-    <span class="ruby-comment"># First: there must be a &quot;Path&quot; key in either this entry or in</span>
-    <span class="ruby-comment"># &quot;Global Values&quot;.</span>
-    <span class="ruby-keyword">if</span> <span class="ruby-identifier">entry</span>[<span class="ruby-string">&quot;Path&quot;</span>].<span class="ruby-identifier">nil?</span> <span class="ruby-keyword">and</span> <span class="ruby-ivar">@config_global</span>[<span class="ruby-string">&quot;Path&quot;</span>].<span class="ruby-identifier">nil?</span> <span class="ruby-keyword">then</span>
-      <span class="ruby-identifier">ret</span> = <span class="ruby-constant">Hash</span>.<span class="ruby-identifier">new</span>
-
-      <span class="ruby-comment"># Log for verbose mode:</span>
-      <span class="ruby-keyword">if</span> <span class="ruby-keyword">true</span> <span class="ruby-operator">==</span> <span class="ruby-ivar">@verbose</span> <span class="ruby-keyword">then</span>
-        <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;\e[31m!!! Ignored entry of #{@folder.basename}:\e[0m &quot;</span> <span class="ruby-operator">+</span>
-             <span class="ruby-node">&quot;\&quot;#{key}\&quot;&quot;</span>
-        <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot; &gt; No valud value for \&quot;Path\&quot; key in neither \&quot;#{key}\&quot; &quot;</span> <span class="ruby-operator">+</span>
-             <span class="ruby-string">&quot;nor \&quot;Global Values\&quot;.&quot;</span>
-      <span class="ruby-keyword">end</span>
-
-    <span class="ruby-comment"># Second: it must have an &quot;Exec&quot; key:</span>
-    <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">entry</span>[<span class="ruby-string">&quot;Exec&quot;</span>].<span class="ruby-identifier">nil?</span> <span class="ruby-keyword">then</span>
-      <span class="ruby-identifier">ret</span> = <span class="ruby-constant">Hash</span>.<span class="ruby-identifier">new</span>
-
-      <span class="ruby-comment"># Log for verbose mode:</span>
-      <span class="ruby-keyword">if</span> <span class="ruby-keyword">true</span> <span class="ruby-operator">==</span> <span class="ruby-ivar">@verbose</span> <span class="ruby-keyword">then</span>
-        <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;\e[31m!!! Ignored entry of #{@folder.basename}:\e[0m &quot;</span> <span class="ruby-operator">+</span>
-             <span class="ruby-node">&quot;\&quot;#{key}\&quot;&quot;</span>
-        <span class="ruby-identifier">puts</span> <span class="ruby-string">&quot; &gt; No value for \&quot;Exec\&quot; key.&quot;</span>
-      <span class="ruby-keyword">end</span>
-    <span class="ruby-keyword">end</span>
-  <span class="ruby-keyword">end</span>
-
-  <span class="ruby-comment"># Make sure the folder Path points to exists, and make it absolute:</span>
-  <span class="ruby-keyword">if</span> <span class="ruby-keyword">false</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">ret</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">entry</span>.<span class="ruby-identifier">key?</span> <span class="ruby-string">&quot;Path&quot;</span> <span class="ruby-keyword">then</span>
-    <span class="ruby-identifier">complete_path</span> = <span class="ruby-constant">Pathname</span>.<span class="ruby-identifier">new</span> <span class="ruby-node">&quot;#{@folder}/wine_env/drive_c/&quot;</span> <span class="ruby-operator">+</span>
-                                 <span class="ruby-node">&quot;#{entry[&quot;Path&quot;]}&quot;</span>
-    <span class="ruby-keyword">if</span> <span class="ruby-identifier">complete_path</span>.<span class="ruby-identifier">directory?</span> <span class="ruby-keyword">then</span>
-      <span class="ruby-identifier">entry</span>[<span class="ruby-string">&quot;Path&quot;</span>] = <span class="ruby-identifier">complete_path</span>.<span class="ruby-identifier">realpath</span>
-
-    <span class="ruby-keyword">else</span>
-      <span class="ruby-identifier">ret</span> = <span class="ruby-constant">Hash</span>.<span class="ruby-identifier">new</span>
-
-      <span class="ruby-comment"># Log for verbose mode:</span>
-      <span class="ruby-keyword">if</span> <span class="ruby-keyword">true</span> <span class="ruby-operator">==</span> <span class="ruby-ivar">@verbose</span> <span class="ruby-keyword">then</span>
-        <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;\e[31m!!! Ignored entry of #{@folder.basename}:\e[0m &quot;</span> <span class="ruby-operator">+</span>
-             <span class="ruby-node">&quot;\&quot;#{key}\&quot;&quot;</span>
-        <span class="ruby-identifier">puts</span> <span class="ruby-string">&quot; &gt; \&quot;Path\&quot; key points to a non existing location.&quot;</span>
-      <span class="ruby-keyword">end</span>
-    <span class="ruby-keyword">end</span>
-  <span class="ruby-keyword">end</span>
-
-  <span class="ruby-comment"># Check if the icon is the one within @folder}/icons. If so, make its</span>
-  <span class="ruby-comment"># path absolute, so it will not be shadowed by system ones with the same</span>
-  <span class="ruby-comment"># name.</span>
-  <span class="ruby-keyword">if</span> <span class="ruby-keyword">false</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">ret</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">entry</span>.<span class="ruby-identifier">key?</span> <span class="ruby-string">&quot;Icon&quot;</span> <span class="ruby-keyword">then</span>
-    <span class="ruby-identifier">complete_path</span> = <span class="ruby-constant">Pathname</span>.<span class="ruby-identifier">new</span> <span class="ruby-node">&quot;#{@folder}/icons/#{entry[&quot;Icon&quot;]}&quot;</span>
-
-    <span class="ruby-keyword">if</span> <span class="ruby-identifier">complete_path</span>.<span class="ruby-identifier">file?</span> <span class="ruby-keyword">then</span>
-      <span class="ruby-identifier">entry</span>[<span class="ruby-string">&quot;Icon&quot;</span>] = <span class="ruby-identifier">complete_path</span>.<span class="ruby-identifier">realpath</span>
-    <span class="ruby-keyword">end</span>   
-  <span class="ruby-keyword">end</span>
-
-  <span class="ruby-keyword">return</span> <span class="ruby-identifier">ret</span>
-<span class="ruby-keyword">end</span></pre>
-          </div>
-          
-        </div>
-
-        
-
-        
-      </div>
-
-    
-      <div id="method-i-getHamEnv" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">getHamEnv</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
-        </div>
-        
-
-        <div class="method-description">
-          
-          <p>Returns a string containing the “env &lt;variables&gt;” command needed to
-run wine binaries without issues, to avoid code duplication.</p>
-          
-          
-
-          
-          <div class="method-source-code" id="getHamEnv-source">
-            <pre><span class="ruby-comment"># File lib/ham.rb, line 166</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">getHamEnv</span>
-  <span class="ruby-comment"># This will be the container of the return value:</span>
-  <span class="ruby-identifier">ret</span> = <span class="ruby-string">&quot;env &quot;</span>
-
-  <span class="ruby-comment"># If there is a custom_wine folder inside the Ham&#39;s directory which</span>
-  <span class="ruby-comment"># contains a wine binary, it should be used instead of the system-wide</span>
-  <span class="ruby-comment"># version (along with other wine binaries).</span>
-  <span class="ruby-identifier">custom_wine</span> = <span class="ruby-constant">Pathname</span>.<span class="ruby-identifier">new</span> <span class="ruby-node">&quot;#{@folder.realpath}/custom_wine/&quot;</span> <span class="ruby-operator">+</span>
-                             <span class="ruby-string">&quot;bin/wine&quot;</span>
-
-  <span class="ruby-comment"># To do so, add custom_wine/bin to the PATH variable. Whatever happens</span>
-  <span class="ruby-comment"># next is on the user who put the binaries there.</span>
-  <span class="ruby-keyword">if</span> <span class="ruby-identifier">custom_wine</span>.<span class="ruby-identifier">executable?</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">custom_wine</span>.<span class="ruby-identifier">file?</span> <span class="ruby-keyword">then</span>
-    <span class="ruby-identifier">ret</span> <span class="ruby-operator">+=</span> <span class="ruby-node">&quot;PATH=#{custom_wine.dirname.realpath}:#{ENV[&quot;PATH&quot;]} &quot;</span>
-  <span class="ruby-keyword">end</span>
-
-  <span class="ruby-comment"># Add the WINEPREFIX variable:</span>
-  <span class="ruby-identifier">ret</span> <span class="ruby-operator">+=</span> <span class="ruby-node">&quot;WINEPREFIX=#{@folder.realpath}/wine_env&quot;</span>
-
-  <span class="ruby-keyword">return</span> <span class="ruby-identifier">ret</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           

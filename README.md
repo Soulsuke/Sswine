@@ -38,8 +38,8 @@ following syntax:
 >&emsp;`Key1: "Value1"`  
 >&emsp;`Key2: "Value2"`  
 
-The entry's name will be used for the name of both the menu entry and of the
-desktop file. Thus, it can not contain invalid file name characters (eg. "/" ).
+The entry's name will be the .desktop file's one. If no "Name" key is provided,
+it will fill in for it as well.  
 
 To create a usable menu entry, you must specify the keys needed to create a
 valid .desktop file according to freedesktop.org's specification.  
@@ -61,20 +61,48 @@ not separate two different commands.
 
 A sample config.yaml is:  
 >`Global Values:`  
-&emsp;`Encoding: "UTF-8"`  
-&emsp;`Version: "1.0"`  
-&emsp;`Type: "Application"`  
-&emsp;`Terminal: "false"`  
-&emsp;`Categories: "Games;"`  
-&emsp;`Icon: "global_icon.png"`  
-&emsp;`Path: "global/path"`  
-&emsp;`Hidden: "false"`  
-&emsp;`NoDisplay: "false"`  
+>&emsp;`Encoding: "UTF-8"`  
+>&emsp;`Version: "1.0"`  
+>&emsp;`Type: "Application"`  
+>&emsp;`Terminal: "false"`  
+>&emsp;`Categories: "Games;"`  
+>&emsp;`Icon: "global_icon.png"`  
+>&emsp;`Path: "global/path"`  
+>&emsp;`Hidden: "false"`  
+>&emsp;`NoDisplay: "false"`  
 >
 >`Program Name:`  
-&emsp;`Exec: "wine exec.exe"`  
-&emsp;`Icon: "entry_icon.png"`  
+>&emsp;`Exec: "wine exec.exe"`  
+>&emsp;`Icon: "entry_icon.png"`  
 >
 >`Other Program:`  
->&emsp;`Exec: "wine exec\\ with\\ spaces.exe"`
+>&emsp;`Exec: "wine exec\\ with\\ spaces.exe"`  
+>&emsp;`Name: "Other/Program"`  
+
+Will generate "Program Name.desktop":  
+>`[Desktop Entry]`  
+>`Categories=Games;`  
+>`Encoding=UTF-8`  
+>`Exec=env WINEPREFIX=/home/<user>/.sswine/test/wine_env wine exec.exe`  
+>`Hidden=false`  
+>`Icon=/home/<user>/.sswine/test/icons/entry_icon.png`  
+>`NoDisplay=false`  
+>`Path=/home/<user>/.sswine/test/wine_env/drive_c/global/path`  
+>`Terminal=false`  
+>`Type=Application`  
+>`Version=1.0`  
+
+And "Other Program.desktop":  
+>`[Desktop Entry]`  
+>`Categories=Games;`  
+>`Encoding=UTF-8`  
+>`Exec=env WINEPREFIX=/home/<user>/.sswine/test/wine_env wine exec\ with\ spaces.exe`  
+>`Hidden=false`  
+>`Icon=/home/<user>/.sswine/test/icons/global_icon.png`  
+>`Name=Other/Program`  
+>`NoDisplay=false`  
+>`Path=/home/<user>/.sswine/test/wine_env/drive_c/global/path`  
+>`Terminal=false`  
+>`Type=Application`  
+>`Version=1.0`  
 

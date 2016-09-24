@@ -97,7 +97,7 @@ class Ham
   private
   def checkEntry( entry, key )
     # This will be the container of the return value:
-    ret = entry
+    ret = entry.sort.to_h
 
     # If this is not a "Global Values" entry, some checks must be performed:
     if "Global Values" != key then
@@ -124,6 +124,11 @@ class Ham
                "\"#{key}\""
           puts " > No value for \"Exec\" key."
         end
+
+      # Last but not least: if there is no "Name" key, the desired .desktop
+      # is used as the menu entry name.
+      elsif entry["Name"].nil? then
+        ret["Name"] = key
       end
     end
 
@@ -131,8 +136,9 @@ class Ham
     if false == ret.nil? and entry.key? "Path" then
       complete_path = Pathname.new "#{@folder}/wine_env/drive_c/" +
                                    "#{entry["Path"]}"
+
       if complete_path.directory? then
-        entry["Path"] = complete_path.realpath
+        ret["Path"] = complete_path.realpath
 
       else
         ret = Hash.new
@@ -153,7 +159,7 @@ class Ham
       complete_path = Pathname.new "#{@folder}/icons/#{entry["Icon"]}"
 
       if complete_path.file? then
-        entry["Icon"] = complete_path.realpath
+        ret["Icon"] = complete_path.realpath
       end   
     end
 
@@ -210,10 +216,12 @@ class Ham
         new_entry_hash[e] = @config_entries[entry][e]
       end
 
+      # Sort it up!
+      new_entry_hash = new_entry_hash.sort.to_h
+
       # Now, let's start putting stuff into desktop_entries!
       file_name = "#{entry}.desktop"
       desktop_entries[file_name] =  "[Desktop Entry]\n"
-      desktop_entries[file_name] += "Name=#{entry}\n"
 
       new_entry_hash.each_key do |key|
         # Add WINEPREFIX to the command:

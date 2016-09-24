@@ -122,9 +122,8 @@ composed of a name and a series of values, using the following syntax:</p>
  <code>Key2: &quot;Value2&quot;</code></p>
 </blockquote>
 
-<p>The entry&#39;s name will be used for the name of both the menu entry and
-of the desktop file. Thus, it can not contain invalid file name characters
-(eg. “/” ).</p>
+<p>The entry&#39;s name will be the .desktop file&#39;s one. If no “Name” key
+is provided, it will fill in for it as well.</p>
 
 <p>To create a usable menu entry, you must specify the keys needed to create a
 valid .desktop file according to freedesktop.org&#39;s specification.</p>
@@ -162,7 +161,35 @@ does not separate two different commands.</p>
 exec.exe&quot;</code><br>  <code>Icon: &quot;entry_icon.png&quot;</code></p>
 
 <p><code>Other Program:</code><br>  <code>Exec: &quot;wine exec\ with\
-spaces.exe&quot;</code></p>
+spaces.exe&quot;</code><br>  <code>Name: &quot;Other/Program&quot;</code></p>
+</blockquote>
+
+<p>Will generate “Program Name.desktop”:</p>
+
+<blockquote>
+<p><code>[Desktop Entry]</code><br> <code>Categories=Games;</code><br>
+<code>Encoding=UTF-8</code><br> <code>Exec=env
+WINEPREFIX=/home/&lt;user&gt;/.sswine/test/wine_env wine
+exec.exe</code><br> <code>Hidden=false</code><br>
+<code>Icon=/home/&lt;user&gt;/.sswine/test/icons/entry_icon.png</code><br>
+<code>NoDisplay=false</code><br>
+<code>Path=/home/&lt;user&gt;/.sswine/test/wine_env/drive_c/global/path</code><br>
+<code>Terminal=false</code><br> <code>Type=Application</code><br>
+<code>Version=1.0</code></p>
+</blockquote>
+
+<p>And “Other Program.desktop”:</p>
+
+<blockquote>
+<p><code>[Desktop Entry]</code><br> <code>Categories=Games;</code><br>
+<code>Encoding=UTF-8</code><br> <code>Exec=env
+WINEPREFIX=/home/&lt;user&gt;/.sswine/test/wine_env wine exec\ with\
+spaces.exe</code><br> <code>Hidden=false</code><br>
+<code>Icon=/home/&lt;user&gt;/.sswine/test/icons/global_icon.png</code><br>
+<code>Name=Other/Program</code><br> <code>NoDisplay=false</code><br>
+<code>Path=/home/&lt;user&gt;/.sswine/test/wine_env/drive_c/global/path</code><br>
+<code>Terminal=false</code><br> <code>Type=Application</code><br>
+<code>Version=1.0</code></p>
 </blockquote>
 </main>
 
