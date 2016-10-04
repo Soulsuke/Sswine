@@ -31,7 +31,6 @@ class Ham
     @config_global = Hash.new
     @config_entries = Hash.new
     @verbose = options[:verbose]
-    puts @folder, @verbose
 
     # If there's no wine_env folder, it's not edible.
     unless Pathname.new( "#{@folder}/wine_env" ).directory? then
