@@ -18,8 +18,9 @@ class Sswine
   @hams     # Each Ham is a sub-directory of @main_dir.
   @verbose  # Verbose logs enabled/disabled.
 
-  # Constructor: takes the verbosity (true/false) is needed as .
-  def initialize( verbose )
+  # Constructor: takes the verbosity (true/false) as a parameter (defaults to
+  # false)..
+  def initialize( verbose = false )
     @main_dir = Pathname.new "#{ENV["HOME"]}/.sswine"
     @hams = Array.new
     @verbose = verbose

@@ -96,17 +96,17 @@ if 1 == ARGV.size then
 
   # Kill all hams:
   elsif [ "-k", "--kill" ].include? ARGV[0] then
-    s = Sswine.new false
+    s = Sswine.new
     s.killAllHams
 
   # Run a shell for a ham:
   elsif [ "-s", "--shell" ].include? ARGV[0] then
-    s = Sswine.new false
+    s = Sswine.new
     s.openShell
 
   # Update all hams:
   elsif [ "-u", "--update" ].include? ARGV[0] then
-    s = Sswine.new false
+    s = Sswine.new
     s.updateAllHams
   end
 
