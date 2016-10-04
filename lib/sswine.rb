@@ -18,12 +18,12 @@ class Sswine
   @hams     # Each Ham is a sub-directory of @main_dir.
   @verbose  # Verbose logs enabled/disabled.
 
-  # Constructor: takes the verbosity (true/false) as a parameter (defaults to
-  # false)..
-  def initialize( verbose = false )
+  # Constructor. To work properly, the following should be provided:
+  # :verbose => true/false, to enable or disable logs.
+  def initialize( options = { :verbose => false } )
     @main_dir = Pathname.new "#{ENV["HOME"]}/.sswine"
     @hams = Array.new
-    @verbose = verbose
+    @verbose = options[:verbose]
 
     # If the main folder does not exist, create it.
     unless @main_dir.directory? then
@@ -37,7 +37,7 @@ class Sswine
     else
       # In alphabetical order.
       @main_dir.children.sort.each do |entry|
-        pork = Ham.new entry, @verbose
+        pork = Ham.new :path => entry, :verbose => @verbose
 
         # No error message is printed here, because Ham's constructor already
         # does so.

@@ -83,11 +83,11 @@ if 1 == ARGV.size then
 
   # Check Hams and their entries for errors:
   if [ "-c", "--check" ].include? ARGV[0] then
-    s = Sswine.new true
+    s = Sswine.new :verbose => true
 
   # Create desktop files:
   elsif [ "-d", "--desktop" ].include? ARGV[0] then
-    s = Sswine.new true
+    s = Sswine.new :verbose => true
     s.writeMenuEntries
 
   # Help reference:

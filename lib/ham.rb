@@ -21,15 +21,17 @@ class Ham
   # Set to true if the Ham is usable, false otherwise.
   attr_reader :edible
 
-  # Constructor: takes the path of the ham's folder and the verbosity mode
-  # (true/false) as parameters.
-  def initialize( path, verbose )
+  # Constructor. To work properly, the following should be provided:
+  # :path => path to the folder which should become a Ham.
+  # :verbose => true/false, to enable or disable logs.
+  def initialize( options = {} )
     # Initialize instance variables:
-    @folder = Pathname.new path
+    @folder = Pathname.new options[:path]
     @edible = true
     @config_global = Hash.new
     @config_entries = Hash.new
-    @verbose = verbose
+    @verbose = options[:verbose]
+    puts @folder, @verbose
 
     # If there's no wine_env folder, it's not edible.
     unless Pathname.new( "#{@folder}/wine_env" ).directory? then
