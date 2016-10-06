@@ -276,7 +276,7 @@ class Ham
   public
   def killHam
     # Kill command:
-    `#{getHamEnv} winekill -k`
+    `#{getHamEnv} wineserver -k`
   end
 
   # Runs wineboot, to attempt to update this Ham's wine bottle without making
