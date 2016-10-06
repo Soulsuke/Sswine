@@ -14,6 +14,7 @@ dir = Pathname.new $0
 Dir.chdir dir.realpath.dirname
 
 # Finally, require Sswine:
+require "./lib/gilt.rb"
 require "./lib/sswine.rb"
 
 ###############################################################################
@@ -26,12 +27,14 @@ def showHelpReference
   # Header:
   lines.push "\e[33mSswine: split wine."
   lines.push "\e[33mUsage:\e[0m"
-
-  # Write .desktop files:
+  # Check hams:
   lines.push "\e[34msswine -c/--check\e[0m: checks each entry of each Ham " +
              "for errors. No output means that everything is ok."
+  # Write .desktop files:
   lines.push "\e[34msswine -d/--desktop\e[0m: writes .desktop files for each" +
              " valid entry of each edible Ham."
+  # GTK3 GUI:
+  lines.push "\e[34msswine -g/--gui\e[0m: launches the GTK3 GUI."
   # Help reference:
   lines.push "\e[34msswine -h/--help\e[0m: shows this help reference."
   # Kill all hams:
@@ -89,6 +92,11 @@ if 1 == ARGV.size then
   elsif [ "-d", "--desktop" ].include? ARGV[0] then
     s = Sswine.new :verbose => true
     s.writeMenuEntries
+
+  # Launch the GTK3 GUI:
+  elsif [ "-g", "--gui" ].include? ARGV[0] then
+    g = Gilt.new
+    g.start
 
   # Help reference:
   elsif [ "-h", "--help" ].include? ARGV[0] then

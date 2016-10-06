@@ -21,7 +21,8 @@ Sswine's current functionalities are (as shown in its help reference):
 sswine -c/--check: checks each entry of each Ham for errors. No output means
                    that everything is ok.  
 sswine -d/--desktop: writes .desktop files for each valid entry of each
-                     edible Ham.  
+                     edible Ham. 
+sswine -g/--gui: launches the GTK3 GUI. 
 sswine -h/--help: shows this help reference.  
 sswine -k/--kill: runs 'wineserver -k' for each Ham.  
 sswine -s/--shell: prompts the user to choose an edible Ham. Then, the user's
