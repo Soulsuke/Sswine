@@ -16,14 +16,14 @@ custom_wine:: Folder containing a Ham-specific version of wine to be used.
 class Sswine
   @main_dir # Main Sswine directory, located in $HOME/.sswine.
   @hams     # Each Ham is a sub-directory of @main_dir.
-  @verbose  # Verbose logs enabled/disabled.
+  @logs     # Logs modality, either on, off or gui.
 
   # Constructor. To work properly, the following should be provided:
-  # :verbose => true/false, to enable or disable logs.
-  def initialize( options = { :verbose => false } )
+  # :logs => on/off/gui, modality to use for logging.
+  def initialize( options = { :logs => "off" } )
     @main_dir = Pathname.new "#{ENV["HOME"]}/.sswine"
     @hams = Array.new
-    @verbose = options[:verbose]
+    @logs = "#{options[:logs]}".downcase
 
     # If the main folder does not exist, create it.
     unless @main_dir.directory? then
@@ -37,7 +37,7 @@ class Sswine
     else
       # In alphabetical order.
       @main_dir.children.sort.each do |entry|
-        pork = Ham.new :path => entry, :verbose => @verbose
+        pork = Ham.new :path => entry, :logs => @logs
 
         # No error message is printed here, because Ham's constructor already
         # does so.
@@ -131,8 +131,8 @@ class Sswine
       f.puts "</Menu>"
     end
 
-    # If verbose, show the processed Hams and the relative entries:
-    if true == @verbose then
+    # If logs are on, show the processed Hams and the relative entries:
+    if "on" == @logs then
       # Header:
       puts "Created entries in \e[33m#{desktop_files_folder.realpath}\e[0m " +
            "for:"

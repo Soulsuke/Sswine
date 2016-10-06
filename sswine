@@ -86,17 +86,16 @@ if 1 == ARGV.size then
 
   # Check Hams and their entries for errors:
   if [ "-c", "--check" ].include? ARGV[0] then
-    s = Sswine.new :verbose => true
+    s = Sswine.new :logs => "on"
 
   # Create desktop files:
   elsif [ "-d", "--desktop" ].include? ARGV[0] then
-    s = Sswine.new :verbose => true
+    s = Sswine.new :logs => "on"
     s.writeMenuEntries
 
   # Launch the GTK3 GUI:
   elsif [ "-g", "--gui" ].include? ARGV[0] then
-    g = Gilt.new
-    g.start
+    Gilt.new
 
   # Help reference:
   elsif [ "-h", "--help" ].include? ARGV[0] then

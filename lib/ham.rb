@@ -13,7 +13,7 @@ class Ham
   @edible         # Set to true if the config file is ok, false otherwise.
   @config_global  # Global options for all entries (if not overridden).
   @config_entries # Entry-specific options, which override global ones.
-  @verbose        # Verbose logs enabled/disabled
+  @logs           # Logs modality, either on, off or gui.
 
   # Folder of the Ham.
   attr_reader :folder
@@ -23,19 +23,19 @@ class Ham
 
   # Constructor. To work properly, the following should be provided:
   # :path => path to the folder which should become a Ham.
-  # :verbose => true/false, to enable or disable logs.
+  # :logs => on/off/gui, modality to use for logging.
   def initialize( options = {} )
     # Initialize instance variables:
     @folder = Pathname.new options[:path]
     @edible = true
     @config_global = Hash.new
     @config_entries = Hash.new
-    @verbose = options[:verbose]
+    @logs = "#{options[:logs]}".downcase
 
     # If there's no wine_env folder, it's not edible.
     unless Pathname.new( "#{@folder}/wine_env" ).directory? then
       @edible = false
-      if true == @verbose then
+      if "on" == @logs then
         puts "\e[31m!!! Ignored:\e[0m #{@folder.basename}"
         puts " > Sub-folder wine_env not found."
       end
@@ -46,7 +46,7 @@ class Ham
 
     unless !@edible or config_file.file? or config_file.readable? then
       @edible = false
-      if true == @verbose then
+      if "on" == @logs then
         puts "\e[31m!!! Ignored:\e[0m #{@folder.basename}"
         puts " > Config.yaml not found."
       end
@@ -84,7 +84,7 @@ class Ham
       # If there are no entries, it is not edible.
       if 0 == @config_entries.size then
         @edible = false
-        if true == @verbose then
+        if "on" == @logs then
           puts "\e[31m!!! Ignored:\e[0m #{@folder.basename}"
           puts " > Not enough entries in config.yaml."
         end
@@ -107,20 +107,20 @@ class Ham
       if entry["Path"].nil? and @config_global["Path"].nil? then
         ret = Hash.new
 
-        # Log for verbose mode:
-        if true == @verbose then
+        # If we are supposed to log:
+        if "on" == @logs then
           puts "\e[31m!!! Ignored entry of #{@folder.basename}:\e[0m " +
                "\"#{key}\""
           puts " > No valud value for \"Path\" key in neither \"#{key}\" " +
                "nor \"Global Values\"."
         end
 
-      # Second: it must have an "Exec" key:
+      # If we are supposed to log:
       elsif entry["Exec"].nil? then
         ret = Hash.new
 
-        # Log for verbose mode:
-        if true == @verbose then
+        # If we are supposed to log:
+        if "on" == @logs then
           puts "\e[31m!!! Ignored entry of #{@folder.basename}:\e[0m " +
                "\"#{key}\""
           puts " > No value for \"Exec\" key."
@@ -144,8 +144,8 @@ class Ham
       else
         ret = Hash.new
 
-        # Log for verbose mode:
-        if true == @verbose then
+        # If we are supposed to log:
+        if "on" == @logs then
           puts "\e[31m!!! Ignored entry of #{@folder.basename}:\e[0m " +
                "\"#{key}\""
           puts " > \"Path\" key points to a non existing location."
