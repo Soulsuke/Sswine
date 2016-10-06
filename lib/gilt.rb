@@ -24,7 +24,7 @@ class Gilt < Gtk::Window
     # Window properties:
     set_title "Sswine"
     set_border_width 10
-    set_default_size 350, 300
+    set_default_size 290, 290
     set_window_position :center
 
     # Main grid container:
@@ -40,14 +40,12 @@ class Gilt < Gtk::Window
     commands = Gtk::ComboBoxText.new
     # List of available commands:
     commands_list = Hash.new
-    commands_list["check"] = "Check Sswine folder"
-    commands_list["desktop"] = "Write menu entries"
-    commands_list["gui"] = "GUI"
+    commands_list["check"] = "Check for invalid Hams"
+    commands_list["desktop"] = "Create menu entries"
     commands_list["help"] = "Help"
-    commands_list["kill"] = "Kill"
-    commands_list["shell"] = "Shell"
-    commands_list["update"] = "Update"
-    commands_list["egg"] = "World domination"
+    commands_list["kill"] = "Kill all Hams"
+    commands_list["shell"] = "Open a shell for a Ham"
+    commands_list["update"] = "Update all Hams"
     # Set the listener for the "changed" event:
     commands.signal_connect "changed" do |sender|
       # Use the key, not the name.
@@ -81,8 +79,35 @@ class Gilt < Gtk::Window
   # Private method. Handles the logic of the "Execute!" button.
   private
   def executeCommand
-    # Will execute @command.
-    puts "Command: #{@command}"
+    # Depending on the command, do the right thing:
+    case @command
+    when "check" then
+      s = Sswine.new :logs => "gui"
+
+    when "desktop" then
+      s = Sswine.new :logs => "gui"
+      s.writeMenuEntries
+
+    when "help" then
+      # Is it really necessary??
+
+    when "kill" then
+      s = Sswine.new
+      s.killAllHams
+      # Print an "all done" message.
+
+    when "shell" then
+      s = Sswine.new
+      # s.openShell
+      # Should this be done at all? Maybe open a terminal emulator?
+
+    when "update" then
+      s = Sswine.new
+      s.updateAllHams
+      # Print an "all done" message.
+    end
+
+    puts "Executed command for: #{@command}"
   end
 
 end
