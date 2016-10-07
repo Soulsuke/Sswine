@@ -104,10 +104,10 @@ class Sswine
     # Write the folder file:
     File.open folder_file, "w" do |f|
       f.puts "[Desktop Entry]"
-      f.puts "Version=1.0"
-      f.puts "Type=Directory"
-      f.puts "Name=Sswine"
       f.puts "Icon=wine"
+      f.puts "Name=Sswine"
+      f.puts "Type=Directory"
+      f.puts "Version=1.0"
     end
 
     # Ensure the menu file exists:
@@ -115,17 +115,20 @@ class Sswine
                              "applications-merged/sswine.menu"
     menu_file.dirname.mkpath
 
-    # If we are in gui mode, create Sswine's launcher as well:
-    if "gui" == @logs then
+    # If we are in gui mode or there already is a GUI menu entry present,
+    # be sure to update it:
+    if "gui" == @logs or gui_desktop_entry.exist? then
       File.open gui_desktop_entry, "w" do |f|
         f.puts "[Desktop Entry]"
         f.puts "Categories=Games"
+        f.puts "Comment=Sswine: split wine"
         f.puts "Encoding=UTF-8"
         f.puts "Exec=#{$0} -g"
         f.puts "Icon=wine"
         f.puts "Name=Sswine"
         f.puts "Terminal=false"
         f.puts "Type=Application"
+        f.puts ""
       end
     end
 
