@@ -217,6 +217,7 @@ designing them, so here we are.</p>
   <span class="ruby-identifier">output_scroller</span> = <span class="ruby-constant">Gtk</span><span class="ruby-operator">::</span><span class="ruby-constant">ScrolledWindow</span>.<span class="ruby-identifier">new</span>
   <span class="ruby-identifier">output_view</span> = <span class="ruby-constant">Gtk</span><span class="ruby-operator">::</span><span class="ruby-constant">TextView</span>.<span class="ruby-identifier">new</span> <span class="ruby-identifier">output_buffer</span>
   <span class="ruby-identifier">output_view</span>.<span class="ruby-identifier">editable</span> = <span class="ruby-keyword">false</span>
+  <span class="ruby-identifier">output_view</span>.<span class="ruby-identifier">set_monospace</span>  <span class="ruby-keyword">true</span>
   <span class="ruby-identifier">output_scroller</span>.<span class="ruby-identifier">add</span> <span class="ruby-identifier">output_view</span>
   <span class="ruby-identifier">grid</span>.<span class="ruby-identifier">attach</span> <span class="ruby-identifier">output_scroller</span>, <span class="ruby-value">0</span>, <span class="ruby-value">2</span>, <span class="ruby-value">3</span>, <span class="ruby-value">5</span>
 
@@ -273,7 +274,7 @@ text to show on the GUI.</p>
 
           
           <div class="method-source-code" id="executeCommand-source">
-            <pre><span class="ruby-comment"># File lib/gilt.rb, line 116</span>
+            <pre><span class="ruby-comment"># File lib/gilt.rb, line 117</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">executeCommand</span>
   <span class="ruby-identifier">s</span> = <span class="ruby-keyword">nil</span>
   <span class="ruby-identifier">ret</span> = <span class="ruby-string">&quot;&quot;</span>
@@ -299,12 +300,39 @@ text to show on the GUI.</p>
         <span class="ruby-identifier">ret</span> = <span class="ruby-string">&quot;No Hams found. Nothing to do.&quot;</span>
 
       <span class="ruby-keyword">else</span>
-        <span class="ruby-comment"># gnome-terminal is mandatory for now:</span>
-        <span class="ruby-keyword">if</span> <span class="ruby-value">%x`which gnome-terminal 2&gt; /dev/null`</span>.<span class="ruby-identifier">empty?</span> <span class="ruby-keyword">then</span>
-          <span class="ruby-identifier">ret</span> = <span class="ruby-string">&quot;Please install gnome-terminal and try again.&quot;</span>
+        <span class="ruby-comment"># I found no way to get the default terminal emulator in a distro</span>
+        <span class="ruby-comment"># independant way, so this is the best I came up with.</span>
 
-        <span class="ruby-keyword">else</span>
-          <span class="ruby-value">%x`gnome-terminal -e &quot;/home/arch/Sswine/sswine -s&quot;`</span>
+        <span class="ruby-comment"># 1. Put all the terminal emulators known to wikipedia into an </span>
+        <span class="ruby-comment">#    array.</span>
+        <span class="ruby-identifier">terminal_emulators</span> = [
+          <span class="ruby-string">&quot;aterm&quot;</span>,
+          <span class="ruby-string">&quot;eterm&quot;</span>,
+          <span class="ruby-string">&quot;gnome-terminal&quot;</span>,
+          <span class="ruby-string">&quot;konsole&quot;</span>,
+          <span class="ruby-string">&quot;mrxvt&quot;</span>,
+          <span class="ruby-string">&quot;terminator&quot;</span>,
+          <span class="ruby-string">&quot;terminology&quot;</span>,
+          <span class="ruby-string">&quot;rxvt&quot;</span>,
+          <span class="ruby-string">&quot;rxvt-unicode&quot;</span>,
+          <span class="ruby-string">&quot;wterm&quot;</span>,
+          <span class="ruby-string">&quot;xfce4-terminal&quot;</span>,
+          <span class="ruby-string">&quot;xterm&quot;</span>
+        ]
+
+        <span class="ruby-comment"># 2. Check which one is installed:</span>
+        <span class="ruby-identifier">terminal_emulators</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">term</span><span class="ruby-operator">|</span>
+          <span class="ruby-comment"># 3. If a terminal has been found, use it:</span>
+          <span class="ruby-keyword">unless</span> <span class="ruby-node">%x`which #{term} 2&gt; /dev/null`</span>.<span class="ruby-identifier">empty?</span> <span class="ruby-keyword">then</span>
+            <span class="ruby-node">%x`#{term} -e &quot;sswine -s&quot; &amp;&gt; /dev/null`</span>
+            <span class="ruby-keyword">return</span> <span class="ruby-node">&quot;Used terminal emulator: #{`which #{term}`}&quot;</span> <span class="ruby-operator">+</span>
+                   <span class="ruby-string">&quot;Operation completed.&quot;</span>
+          <span class="ruby-keyword">end</span>
+
+          <span class="ruby-comment"># 4. If no terminal has been found, return an error:</span>
+          <span class="ruby-identifier">ret</span> = <span class="ruby-string">&quot;No terminal emulator found in the system&#39;s path.\n&quot;</span> <span class="ruby-operator">+</span>
+                <span class="ruby-string">&quot;Please, install one of the following:\n&quot;</span> <span class="ruby-operator">+</span>
+                <span class="ruby-identifier">terminal_emulators</span>.<span class="ruby-identifier">join</span>( <span class="ruby-string">&quot;\n&quot;</span> )
         <span class="ruby-keyword">end</span>
       <span class="ruby-keyword">end</span>
 
@@ -320,11 +348,17 @@ text to show on the GUI.</p>
       <span class="ruby-identifier">ret</span> = <span class="ruby-string">&quot;No errors occurred, everything is fine.&quot;</span>
 
     <span class="ruby-keyword">else</span>
-      <span class="ruby-identifier">ret</span> = <span class="ruby-identifier">s</span>.<span class="ruby-identifier">logs_gui</span>.<span class="ruby-identifier">join</span> <span class="ruby-string">&quot;\n&quot;</span>
+      <span class="ruby-comment"># Gotta add some extra spaces because of scroll widgets covering the</span>
+      <span class="ruby-comment"># last characters with some themes:</span>
+      <span class="ruby-identifier">s</span>.<span class="ruby-identifier">logs_gui</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">entry</span><span class="ruby-operator">|</span>
+        <span class="ruby-identifier">ret</span> = <span class="ruby-node">&quot;#{ret}#{entry}  \n&quot;</span>
+      <span class="ruby-keyword">end</span>
     <span class="ruby-keyword">end</span>
   <span class="ruby-keyword">end</span>
 
-  <span class="ruby-keyword">return</span> <span class="ruby-identifier">ret</span>
+  <span class="ruby-comment"># Gotta add an extra newline because of scroll widgets covering the last </span>
+  <span class="ruby-comment"># line of text with some themes:</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-node">&quot;#{ret}\n&quot;</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           

@@ -75,15 +75,25 @@ class Sswine
     # DEs' menu triggers, apparently. So... We gotta ensure the directory 
     # exists, then remove every file it contains.
     desktop_files_folder = Pathname.new "#{ENV["HOME"]}/.local/share/" +
-                                      "applications/sswine"
+                                        "applications/sswine"
+
+    # This is the potential name of the GTK2 GUI's entry:
+    gui_desktop_entry = Pathname.new "#{desktop_files_folder.realpath}/" +
+                                     "SswineGTKGUI.desktop"
+
     if desktop_files_folder.exist? then
       desktop_files_folder.each_child do |entry|
-        FileUtils.rm_r entry
+        # Do not remove the GUI's file, if there's one!
+        unless entry == gui_desktop_entry then
+          FileUtils.rm_r entry
+        end
       end
 
     else
       desktop_files_folder.mkpath
     end
+
+#{desktop_files_folder.realpath}/SswineGTKGUI.desktop"
 
     # Ensure the folder file exists:
     folder_file = Pathname.new "#{ENV["HOME"]}/.local/share/" +
@@ -104,6 +114,20 @@ class Sswine
                              "applications-merged/sswine.menu"
     menu_file.dirname.mkpath
 
+    # If we are in gui mode, create Sswine's launcher as well:
+    if "gui" == @logs then
+      File.open gui_desktop_entry, "w" do |f|
+        f.puts "[Desktop Entry]"
+        f.puts "Categories=Games"
+        f.puts "Encoding=UTF-8"
+        f.puts "Exec=#{$0} -g"
+        f.puts "Icon=wine"
+        f.puts "Name=Sswine"
+        f.puts "Terminal=false"
+        f.puts "Type=Application"
+      end
+    end
+
     # Write the first part of the menu file:
     File.open menu_file, "w" do |f|
       f.puts "<Menu>"
@@ -113,6 +137,11 @@ class Sswine
       f.puts "    <Name>Sswine</Name>"
       f.puts "    <Directory>#{folder_file.basename}</Directory>"
       f.puts "    <Include>"
+
+      # If the gui's desktop file is present, then add it first:
+      if gui_desktop_entry.exist? then
+        f.puts "      <Filename>#{gui_desktop_entry.basename}</Filename>"
+      end
     end
 
     # Now, process each Ham...
