@@ -79,7 +79,7 @@ class Sswine
 
     # This is the potential name of the GTK2 GUI's entry:
     gui_desktop_entry = Pathname.new "#{desktop_files_folder.realpath}/" +
-                                     "SswineGTKGUI.desktop"
+                                     "SswineGTK3GUI.desktop"
 
     if desktop_files_folder.exist? then
       desktop_files_folder.each_child do |entry|
