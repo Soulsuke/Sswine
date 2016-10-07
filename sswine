@@ -10,15 +10,20 @@ There are no other requirements, really.
 require "fiddle"
 require "pathname"
 
-# First off, set the process name:
-handle = defined?(DL::Handle) ? DL::Handle : Fiddle::Handle
-Fiddle::Function.new(
-  handle['prctl'.freeze],
-  [ Fiddle::TYPE_INT, Fiddle::TYPE_VOIDP, Fiddle::TYPE_LONG, Fiddle::TYPE_LONG,
-    Fiddle::TYPE_LONG
-  ],
-  Fiddle::TYPE_INT
-).call(15, "sswine", 0, 0, 0)
+# First off, attempt to set the process name:
+begin
+  handle = defined?(DL::Handle) ? DL::Handle : Fiddle::Handle
+  Fiddle::Function.new(
+    handle['prctl'.freeze],
+    [ Fiddle::TYPE_INT, Fiddle::TYPE_VOIDP, Fiddle::TYPE_LONG,
+      Fiddle::TYPE_LONG, Fiddle::TYPE_LONG
+    ],
+    Fiddle::TYPE_INT
+  ).call(15, "sswine", 0, 0, 0)
+rescue
+  # I really don't want to put a warning message here, really... It'd be quite
+  # annoying to see it everytime on systems where prctl isn't supported, right?
+end
 
 # Then into Sswine's directory:
 dir = Pathname.new $0
