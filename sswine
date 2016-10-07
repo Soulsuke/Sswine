@@ -7,9 +7,20 @@ There are no other requirements, really.
 =end
 
 # System requirements:
+require "fiddle"
 require "pathname"
 
-# Move into Sswine's directory:
+# First off, set the process name:
+handle = defined?(DL::Handle) ? DL::Handle : Fiddle::Handle
+Fiddle::Function.new(
+  handle['prctl'.freeze],
+  [ Fiddle::TYPE_INT, Fiddle::TYPE_VOIDP, Fiddle::TYPE_LONG, Fiddle::TYPE_LONG,
+    Fiddle::TYPE_LONG
+  ],
+  Fiddle::TYPE_INT
+).call(15, "sswine", 0, 0, 0)
+
+# Then into Sswine's directory:
 dir = Pathname.new $0
 Dir.chdir dir.realpath.dirname
 

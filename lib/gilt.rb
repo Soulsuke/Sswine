@@ -3,10 +3,9 @@ require "./lib/sswine.rb"
 
 =begin
 Gilt: a GTK3 GUI for Sswine.
-I'm doing this against my better judgement. I do not like GUIs, i believe they
-are buggy, slow and, most importantly, hard to design. But I sort of have to
-lose my Ruby-GUI anal virginity, so here it goes.  
-For the record: a gilt is a female pig at the age of breeding.
+I'm doing this against my better judgement. I do not like GUIs, I believe they
+are buggy, slow and, most importantly, inefficient. But I sort of have to get
+used to designing them, so here we are.
 =end
 
 class Gilt < Gtk::Window
