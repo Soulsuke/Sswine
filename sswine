@@ -114,6 +114,7 @@ if 1 == ARGV.size then
       puts "\e[31m!!! Error:\e[0m gem `gtk3` is required to run the GTK3 GUI."
       exit -1
     end
+
     Gilt.new
 
   # Help reference:
