@@ -179,14 +179,15 @@ class Sswine
 
     # If logs are on, show the processed Hams and the relative entries:
     if "on" == @logs then
-      # Header:
-      puts "Created entries in \e[33m#{desktop_files_folder.realpath}\e[0m " +
-           "for:"
-
+      # Special message in case there are no valid Hams:
       if created.empty? then
-        puts " > No Hams found, no menu entries have been added."
+        puts "No Hams found, no menu entries have been added."
 
       else
+        # Header:
+        puts "Created entries in \e[33m#{desktop_files_folder.realpath}\e[0m " +
+             "for:"
+
         created.each do |key, entries|
           # Show the Ham's name:
           puts " > \e[34m#{key}\e[0m"
@@ -199,14 +200,16 @@ class Sswine
       end
 
     elsif "gui" == @logs then
-      # Header:
-      @logs_gui.push "Created entries in " +
-                     "#{desktop_files_folder.realpath} for:"
 
+      # Special message in case there are no valid Hams:
       if created.empty? then
-        @logs_gui.push " > No Hams found, no menu entries have been added."
+        @logs_gui.push "No Hams found, no menu entries have been added."
 
       else
+        # Header:
+        @logs_gui.push "Created entries in " +
+                       "#{desktop_files_folder.realpath} for:"
+
         created.each do |key, entries|
           # Show the Ham's name:
           @logs_gui.push " > #{key}"
