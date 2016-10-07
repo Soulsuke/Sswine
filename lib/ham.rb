@@ -14,12 +14,16 @@ class Ham
   @config_global  # Global options for all entries (if not overridden).
   @config_entries # Entry-specific options, which override global ones.
   @logs           # Logs modality, either on, off or gui.
+  @logs_gui       # Logs to be used by the GUI.
 
   # Folder of the Ham.
   attr_reader :folder
 
   # Set to true if the Ham is usable, false otherwise.
   attr_reader :edible
+
+  # Logs to be used by the GUI.
+  attr_reader :logs_gui
 
   # Constructor. To work properly, the following should be provided:
   # :path => path to the folder which should become a Ham.
@@ -31,6 +35,7 @@ class Ham
     @config_global = Hash.new
     @config_entries = Hash.new
     @logs = "#{options[:logs]}".downcase
+    @logs_gui = Array.new
 
     # If there's no wine_env folder, it's not edible.
     unless Pathname.new( "#{@folder}/wine_env" ).directory? then
@@ -38,6 +43,10 @@ class Ham
       if "on" == @logs then
         puts "\e[31m!!! Ignored:\e[0m #{@folder.basename}"
         puts " > Sub-folder wine_env not found."
+
+      elsif "gui" == @logs then
+        @logs_gui.push "!!! Ignored: #{@folder.basename}" 
+        @logs_gui.push " > Sub-folder wine_env not found."
       end
     end
 
@@ -49,6 +58,10 @@ class Ham
       if "on" == @logs then
         puts "\e[31m!!! Ignored:\e[0m #{@folder.basename}"
         puts " > Config.yaml not found."
+
+      elsif "gui" == @logs then
+        @logs_gui.push "!!! Ignored: #{@folder.basename}"
+        @logs_gui.push " > Config.yaml not found."
       end
     end
 
@@ -87,6 +100,10 @@ class Ham
         if "on" == @logs then
           puts "\e[31m!!! Ignored:\e[0m #{@folder.basename}"
           puts " > Not enough entries in config.yaml."
+
+        elsif "gui" == @logs then
+          @logs_gui.push "!!! Ignored: #{@folder.basename}"
+          @logs_gui.push " > Not enough entries in config.yaml."
         end
       end
     end
@@ -113,6 +130,12 @@ class Ham
                "\"#{key}\""
           puts " > No valud value for \"Path\" key in neither \"#{key}\" " +
                "nor \"Global Values\"."
+
+        elsif "gui" == @logs then
+          @logs_gui.push "!!! Ignored entry of #{@folder.basename}:" +
+                         " \"#{key}\""
+          @logs_gui.push " > No valud value for \"Path\" key in neither " +
+                         "\"#{key}\" nor \"Global Values\"."
         end
 
       # If we are supposed to log:
@@ -124,6 +147,11 @@ class Ham
           puts "\e[31m!!! Ignored entry of #{@folder.basename}:\e[0m " +
                "\"#{key}\""
           puts " > No value for \"Exec\" key."
+
+        elsif "gui" == @logs then
+          @logs_gui.push "!!! Ignored entry of #{@folder.basename}:" +
+                         " \"#{key}\""
+          @logs_gui.push " > No value for \"Exec\" key."
         end
 
       # Last but not least: if there is no "Name" key, the desired .desktop
@@ -149,6 +177,11 @@ class Ham
           puts "\e[31m!!! Ignored entry of #{@folder.basename}:\e[0m " +
                "\"#{key}\""
           puts " > \"Path\" key points to a non existing location."
+
+        elsif "gui" == @logs then
+          @logs_gui.push "!!! Ignored entry of #{@folder.basename}:" +
+                         " \"#{key}\""
+          @logs_gui.push " > \"Path\" key points to a non existing location."
         end
       end
     end

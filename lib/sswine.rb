@@ -14,16 +14,26 @@ custom_wine:: Folder containing a Ham-specific version of wine to be used.
 =end
 
 class Sswine
-  @main_dir # Main Sswine directory, located in $HOME/.sswine.
-  @hams     # Each Ham is a sub-directory of @main_dir.
-  @logs     # Logs modality, either on, off or gui.
+  @main_dir  # Main Sswine directory, located in $HOME/.sswine.
+  @hams      # Each Ham is a sub-directory of @main_dir.
+  @invisible # An invisible Sswine is one with no Hams.
+  @logs      # Logs modality, either on, off or gui.
+  @logs_gui  # Logs to be used by the GUI.
+
+  # An invisible Sswine is one with no Hams.
+  attr_reader :invisible
+
+  # Logs to be used by the GUI.
+  attr_reader :logs_gui
 
   # Constructor. To work properly, the following should be provided:
   # :logs => on/off/gui, modality to use for logging.
   def initialize( options = { :logs => "off" } )
     @main_dir = Pathname.new "#{ENV["HOME"]}/.sswine"
     @hams = Array.new
+    @innvisible = false
     @logs = "#{options[:logs]}".downcase
+    @logs_gui = Array.new
 
     # If the main folder does not exist, create it.
     unless @main_dir.directory? then
@@ -38,6 +48,7 @@ class Sswine
       # In alphabetical order.
       @main_dir.children.sort.each do |entry|
         pork = Ham.new :path => entry, :logs => @logs
+        @logs_gui += pork.logs_gui
 
         # No error message is printed here, because Ham's constructor already
         # does so.
@@ -45,6 +56,11 @@ class Sswine
           @hams.push pork
         end
       end
+    end
+
+    # Is it an invisible Ham?
+    if 0 == @hams.size then
+      @invisible = true
     end
   end
 
@@ -100,12 +116,12 @@ class Sswine
     end
 
     # Now, process each Ham...
-    @hams.each do |h|
+    @hams.each do |ham|
       # Note down the name of this Ham:
-      created[h.folder.basename] = Array.new
+      created[ham.folder.basename] = Array.new
 
       # For each entry it contains...
-      h.getDesktopEntries.each do |key, entry|
+      ham.getDesktopEntries.each do |key, entry|
         # Write the relative.desktop file:
         File.open "#{desktop_files_folder.realpath}/#{key}", "w" do |f|
           f.puts entry
@@ -120,7 +136,7 @@ class Sswine
         end
 
         # Note down what this Ham has generated:
-        created[h.folder.basename].push key
+        created[ham.folder.basename].push key
       end
     end
 
@@ -137,13 +153,38 @@ class Sswine
       puts "Created entries in \e[33m#{desktop_files_folder.realpath}\e[0m " +
            "for:"
 
-      created.each do |key, entries|
-        # Show the Ham's name:
-        puts " > \e[34m#{key}\e[0m"
+      if created.empty? then
+        puts " > No Hams found, no menu entries have been added."
 
-        # Show what this Ham has generated:
-        entries.each do |entry|
-          puts "    #{entry}"
+      else
+        created.each do |key, entries|
+          # Show the Ham's name:
+          puts " > \e[34m#{key}\e[0m"
+
+          # Show what this Ham has generated:
+          entries.each do |entry|
+            puts "    #{entry}"
+          end
+        end
+      end
+
+    elsif "gui" == @logs then
+      # Header:
+      @logs_gui.push "Created entries in " +
+                     "#{desktop_files_folder.realpath} for:"
+
+      if created.empty? then
+        @logs_gui.push " > No Hams found, no menu entries have been added."
+
+      else
+        created.each do |key, entries|
+          # Show the Ham's name:
+          @logs_gui.push " > #{key}"
+
+          # Show what this Ham has generated:
+          entries.each do |entry|
+            @logs_gui.push "    #{entry}"
+          end
         end
       end
     end
@@ -173,7 +214,7 @@ class Sswine
     # This will store the user input:
     choice = -1
 
-    unless @hams.size > 0 then
+    if @invisible then
       puts "No Hams found. Nothing to do."
 
     else
