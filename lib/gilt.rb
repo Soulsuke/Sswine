@@ -91,6 +91,7 @@ class Gilt < Gtk::Window
     output_scroller = Gtk::ScrolledWindow.new
     output_view = Gtk::TextView.new output_buffer
     output_view.editable = false
+    output_view.set_monospace  true
     output_scroller.add output_view
     grid.attach output_scroller, 0, 2, 3, 5
 
@@ -138,12 +139,39 @@ class Gilt < Gtk::Window
           ret = "No Hams found. Nothing to do."
 
         else
-          # gnome-terminal is mandatory for now:
-          if `which gnome-terminal 2> /dev/null`.empty? then
-            ret = "Please install gnome-terminal and try again."
+          # I found no way to get the default terminal emulator in a distro
+          # independant way, so this is the best I came up with.
 
-          else
-            `gnome-terminal -e "/home/arch/Sswine/sswine -s"`
+          # 1. Put all the terminal emulators known to wikipedia into an 
+          #    array.
+          terminal_emulators = [
+            "aterm",
+            "eterm",
+            "gnome-terminal",
+            "konsole",
+            "mrxvt",
+            "terminator",
+            "terminology",
+            "rxvt",
+            "rxvt-unicode",
+            "wterm",
+            "xfce4-terminal",
+            "xterm"
+          ]
+
+          # 2. Check which one is installed:
+          terminal_emulators.each do |term|
+            # 3. If a terminal has been found, use it:
+            unless `which #{term} 2> /dev/null`.empty? then
+              `#{term} -e "sswine -s" &> /dev/null`
+              return "Used terminal emulator: #{`which #{term}`}" +
+                     "Operation completed."
+            end
+
+            # 4. If no terminal has been found, return an error:
+            ret = "No terminal emulator found in the system's path.\n" +
+                  "Please, install one of the following:\n" +
+                  terminal_emulators.join( "\n" )
           end
         end
 
@@ -159,11 +187,17 @@ class Gilt < Gtk::Window
         ret = "No errors occurred, everything is fine."
 
       else
-        ret = s.logs_gui.join "\n"
+        # Gotta add some extra spaces because of scroll widgets covering the
+        # last characters with some themes:
+        s.logs_gui.each do |entry|
+          ret = "#{ret}#{entry}  \n"
+        end
       end
     end
 
-    return ret
+    # Gotta add an extra newline because of scroll widgets covering the last 
+    # line of text with some themes:
+    return "#{ret}\n"
   end
 
 end
