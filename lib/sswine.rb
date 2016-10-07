@@ -77,8 +77,9 @@ class Sswine
     desktop_files_folder = Pathname.new "#{ENV["HOME"]}/.local/share/" +
                                         "applications/sswine"
 
-    # This is the potential name of the GTK2 GUI's entry:
-    gui_desktop_entry = Pathname.new "#{desktop_files_folder.realpath}/" +
+    # This is the potential name of the GTK3 GUI's entry:
+    gui_desktop_entry = Pathname.new "#{ENV["HOME"]}/.local/share/" +
+                                     "applications/sswine/" +
                                      "SswineGTK3GUI.desktop"
 
     if desktop_files_folder.exist? then
