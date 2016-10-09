@@ -164,8 +164,7 @@ class Gilt < Gtk::Window
             # 3. If a terminal has been found, use it:
             unless `which #{term} 2> /dev/null`.empty? then
               `#{term} -e "sswine -s" &> /dev/null`
-              return "Used terminal emulator: #{`which #{term}`}" +
-                     "Operation completed."
+              return "Used terminal emulator: #{`which #{term}`}"
             end
 
             # 4. If no terminal has been found, return an error:
@@ -195,9 +194,7 @@ class Gilt < Gtk::Window
       end
     end
 
-    # Gotta add an extra newline because of scroll widgets covering the last 
-    # line of text with some themes:
-    return "#{ret}\n"
+    return ret
   end
 
 end

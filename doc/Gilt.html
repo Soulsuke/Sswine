@@ -325,8 +325,7 @@ text to show on the GUI.</p>
           <span class="ruby-comment"># 3. If a terminal has been found, use it:</span>
           <span class="ruby-keyword">unless</span> <span class="ruby-node">%x`which #{term} 2&gt; /dev/null`</span>.<span class="ruby-identifier">empty?</span> <span class="ruby-keyword">then</span>
             <span class="ruby-node">%x`#{term} -e &quot;sswine -s&quot; &amp;&gt; /dev/null`</span>
-            <span class="ruby-keyword">return</span> <span class="ruby-node">&quot;Used terminal emulator: #{`which #{term}`}&quot;</span> <span class="ruby-operator">+</span>
-                   <span class="ruby-string">&quot;Operation completed.&quot;</span>
+            <span class="ruby-keyword">return</span> <span class="ruby-node">&quot;Used terminal emulator: #{`which #{term}`}&quot;</span>
           <span class="ruby-keyword">end</span>
 
           <span class="ruby-comment"># 4. If no terminal has been found, return an error:</span>
@@ -356,9 +355,7 @@ text to show on the GUI.</p>
     <span class="ruby-keyword">end</span>
   <span class="ruby-keyword">end</span>
 
-  <span class="ruby-comment"># Gotta add an extra newline because of scroll widgets covering the last </span>
-  <span class="ruby-comment"># line of text with some themes:</span>
-  <span class="ruby-keyword">return</span> <span class="ruby-node">&quot;#{ret}\n&quot;</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">ret</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           

@@ -77,24 +77,14 @@ class Sswine
     desktop_files_folder = Pathname.new "#{ENV["HOME"]}/.local/share/" +
                                         "applications/sswine"
 
-    # This is the potential name of the GTK3 GUI's entry:
-    gui_desktop_entry = Pathname.new "#{ENV["HOME"]}/.local/share/" +
-                                     "applications/sswine/" +
-                                     "SswineGTK3GUI.desktop"
-
     if desktop_files_folder.exist? then
       desktop_files_folder.each_child do |entry|
-        # Do not remove the GUI's file, if there's one!
-        unless entry == gui_desktop_entry then
-          FileUtils.rm_r entry
-        end
+        FileUtils.rm_r entry
       end
 
     else
       desktop_files_folder.mkpath
     end
-
-#{desktop_files_folder.realpath}/SswineGTKGUI.desktop"
 
     # Ensure the folder file exists:
     folder_file = Pathname.new "#{ENV["HOME"]}/.local/share/" +
@@ -115,9 +105,20 @@ class Sswine
                              "applications-merged/sswine.menu"
     menu_file.dirname.mkpath
 
-    # If we are in gui mode or there already is a GUI menu entry present,
-    # be sure to update it:
-    if "gui" == @logs or gui_desktop_entry.exist? then
+    # GTK3 GUI .desktop file:
+    gui_desktop_entry = Pathname.new "#{desktop_files_folder.realpath}/" +
+                                     "SswineGTK3GUI.desktop"
+
+    # If GTK3 library is available, go on:
+    begin
+      require "gtk3"
+
+    # If it is not, avoid creating such entry:
+    rescue LoadError
+      gui_desktop_entry = nil
+    end
+
+    unless gui_desktop_entry.nil? then
       File.open gui_desktop_entry, "w" do |f|
         f.puts "[Desktop Entry]"
         f.puts "Categories=Games"
@@ -143,7 +144,7 @@ class Sswine
       f.puts "    <Include>"
 
       # If the gui's desktop file is present, then add it first:
-      if gui_desktop_entry.exist? then
+      unless gui_desktop_entry.nil? then
         f.puts "      <Filename>#{gui_desktop_entry.basename}</Filename>"
       end
     end
@@ -191,6 +192,12 @@ class Sswine
         puts "Created entries in \e[33m#{desktop_files_folder.realpath}\e[0m " +
              "for:"
 
+        # If the GUI entry has been created, print it first:
+        unless gui_desktop_entry.nil? then
+          puts " > \e[34mSswine\e[0m"
+          puts "    #{gui_desktop_entry.basename}"
+        end
+
         created.each do |key, entries|
           # Show the Ham's name:
           puts " > \e[34m#{key}\e[0m"
@@ -212,6 +219,12 @@ class Sswine
         # Header:
         @logs_gui.push "Created entries in " +
                        "#{desktop_files_folder.realpath} for:"
+
+        # If the GUI entry has been created, print it first:
+        unless gui_desktop_entry.nil? then
+          @logs_gui.push " > Sswine"
+          @logs_gui.push "    #{gui_desktop_entry.basename}"
+        end
 
         created.each do |key, entries|
           # Show the Ham's name:
