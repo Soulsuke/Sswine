@@ -30,6 +30,7 @@ Sswine's current functionalities are (as shown in its help reference):
                      with the WINEPREFIX variable correctly set.  
 - sswine -u/--update: runs 'wineboot' for each edible Ham. This is supposed to
                       update wine files on each of them.  
+
 **WARNING:** Although it's already implied, I'd like to state that to use the
 GTK3 GUI, the ruby gem "gtk3" has to be installed.  
 
