@@ -18,18 +18,18 @@ Optionally, it can also contain:
 
 ### Usage
 Sswine's current functionalities are (as shown in its help reference):  
-sswine -c/--check: checks each entry of each Ham for errors. No output means
-                   that everything is ok.  
-sswine -d/--desktop: writes .desktop files for each valid entry of each
-                     edible Ham.  
-sswine -g/--gui: launches the GTK3 GUI.  
-sswine -h/--help: shows this help reference.  
-sswine -k/--kill: runs 'wineserver -k' for each Ham.  
-sswine -s/--shell: prompts the user to choose an edible Ham. Then, the user's
-                   default shell is opened in the choosen entry's folder, with
-                   the WINEPREFIX variable correctly set.  
-sswine -u/--update: runs 'wineboot' for each edible Ham. This is supposed to
-                    update wine files on each of them.  
+- sswine -c/--check: checks each entry of each Ham for errors. No output means
+                     that everything is ok.  
+- sswine -d/--desktop: writes .desktop files for each valid entry of each
+                       edible Ham.  
+- sswine -g/--gui: launches the GTK3 GUI.  
+- sswine -h/--help: shows this help reference.  
+- sswine -k/--kill: runs 'wineserver -k' for each Ham.  
+- sswine -s/--shell: prompts the user to choose an edible Ham. Then, the user's
+                     default shell is opened in the choosen entry's folder,
+                     with the WINEPREFIX variable correctly set.  
+- sswine -u/--update: runs 'wineboot' for each edible Ham. This is supposed to
+                      update wine files on each of them.  
 **WARNING:** Although it's already implied, I'd like to state that to use the
 GTK3 GUI, the ruby gem "gtk3" has to be installed.  
 
