@@ -62,7 +62,18 @@
   
 </div>
 
-    
+    <div id="includes-section" class="nav-section">
+  <h3>Included Modules</h3>
+
+  <ul class="link-list">
+  
+  
+    <li><a class="include" href="Oink.html">Oink</a>
+  
+  
+  </ul>
+</div>
+
     
     <!-- Method Quickref -->
 <div id="method-list-section" class="nav-section">
@@ -192,7 +203,7 @@ usable config file contain a wine_env folder.</p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/ham.rb, line 31</span>
+            <pre><span class="ruby-comment"># File lib/ham.rb, line 35</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>( <span class="ruby-identifier">options</span> = {} )
   <span class="ruby-comment"># Initialize instance variables:</span>
   <span class="ruby-ivar">@folder</span> = <span class="ruby-constant">Pathname</span>.<span class="ruby-identifier">new</span> <span class="ruby-identifier">options</span>[<span class="ruby-value">:path</span>]
@@ -205,14 +216,10 @@ usable config file contain a wine_env folder.</p>
   <span class="ruby-comment"># If there&#39;s no wine_env folder, it&#39;s not edible.</span>
   <span class="ruby-keyword">unless</span> <span class="ruby-constant">Pathname</span>.<span class="ruby-identifier">new</span>( <span class="ruby-node">&quot;#{@folder}/wine_env&quot;</span> ).<span class="ruby-identifier">directory?</span> <span class="ruby-keyword">then</span>
     <span class="ruby-ivar">@edible</span> = <span class="ruby-keyword">false</span>
-    <span class="ruby-keyword">if</span> <span class="ruby-string">&quot;on&quot;</span> <span class="ruby-operator">==</span> <span class="ruby-ivar">@logs</span> <span class="ruby-keyword">then</span>
-      <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;\e[31m!!! Ignored:\e[0m #{@folder.basename}&quot;</span>
-      <span class="ruby-identifier">puts</span> <span class="ruby-string">&quot; &gt; Sub-folder wine_env not found.&quot;</span>
 
-    <span class="ruby-keyword">elsif</span> <span class="ruby-string">&quot;gui&quot;</span> <span class="ruby-operator">==</span> <span class="ruby-ivar">@logs</span> <span class="ruby-keyword">then</span>
-      <span class="ruby-ivar">@logs_gui</span>.<span class="ruby-identifier">push</span> <span class="ruby-node">&quot;!!! Ignored: #{@folder.basename}&quot;</span> 
-      <span class="ruby-ivar">@logs_gui</span>.<span class="ruby-identifier">push</span> <span class="ruby-string">&quot; &gt; Sub-folder wine_env not found.&quot;</span>
-    <span class="ruby-keyword">end</span>
+    <span class="ruby-identifier">oink</span> <span class="ruby-node">&quot;#{@@colors[:shell][:red]}!!! Ignored:&quot;</span> <span class="ruby-operator">+</span>
+         <span class="ruby-node">&quot;#{@@colors[:shell][:default]} #{@folder.basename}&quot;</span>,
+         <span class="ruby-string">&quot; &gt; Sub-folder wine_env not found.&quot;</span>
   <span class="ruby-keyword">end</span>
 
   <span class="ruby-comment"># If there&#39;s no config file, it&#39;s not edible:</span>
@@ -220,14 +227,10 @@ usable config file contain a wine_env folder.</p>
 
   <span class="ruby-keyword">unless</span> <span class="ruby-operator">!</span><span class="ruby-ivar">@edible</span> <span class="ruby-keyword">or</span> <span class="ruby-identifier">config_file</span>.<span class="ruby-identifier">file?</span> <span class="ruby-keyword">or</span> <span class="ruby-identifier">config_file</span>.<span class="ruby-identifier">readable?</span> <span class="ruby-keyword">then</span>
     <span class="ruby-ivar">@edible</span> = <span class="ruby-keyword">false</span>
-    <span class="ruby-keyword">if</span> <span class="ruby-string">&quot;on&quot;</span> <span class="ruby-operator">==</span> <span class="ruby-ivar">@logs</span> <span class="ruby-keyword">then</span>
-      <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;\e[31m!!! Ignored:\e[0m #{@folder.basename}&quot;</span>
-      <span class="ruby-identifier">puts</span> <span class="ruby-string">&quot; &gt; Config.yaml not found.&quot;</span>
 
-    <span class="ruby-keyword">elsif</span> <span class="ruby-string">&quot;gui&quot;</span> <span class="ruby-operator">==</span> <span class="ruby-ivar">@logs</span> <span class="ruby-keyword">then</span>
-      <span class="ruby-ivar">@logs_gui</span>.<span class="ruby-identifier">push</span> <span class="ruby-node">&quot;!!! Ignored: #{@folder.basename}&quot;</span>
-      <span class="ruby-ivar">@logs_gui</span>.<span class="ruby-identifier">push</span> <span class="ruby-string">&quot; &gt; Config.yaml not found.&quot;</span>
-    <span class="ruby-keyword">end</span>
+    <span class="ruby-identifier">oink</span> <span class="ruby-node">&quot;#{@@colors[:shell][:red]}!!! Ignored:&quot;</span> <span class="ruby-operator">+</span>
+         <span class="ruby-node">&quot;#{@@colors[:shell][:default]} #{@folder.basename}&quot;</span>,
+         <span class="ruby-string">&quot; &gt; Config.yaml not found.&quot;</span>
   <span class="ruby-keyword">end</span>
 
   <span class="ruby-comment"># Now, if the Ham is stll edible, go ahead!</span>
@@ -262,14 +265,10 @@ usable config file contain a wine_env folder.</p>
     <span class="ruby-comment"># If there are no entries, it is not edible.</span>
     <span class="ruby-keyword">if</span> <span class="ruby-value">0</span> <span class="ruby-operator">==</span> <span class="ruby-ivar">@config_entries</span>.<span class="ruby-identifier">size</span> <span class="ruby-keyword">then</span>
       <span class="ruby-ivar">@edible</span> = <span class="ruby-keyword">false</span>
-      <span class="ruby-keyword">if</span> <span class="ruby-string">&quot;on&quot;</span> <span class="ruby-operator">==</span> <span class="ruby-ivar">@logs</span> <span class="ruby-keyword">then</span>
-        <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;\e[31m!!! Ignored:\e[0m #{@folder.basename}&quot;</span>
-        <span class="ruby-identifier">puts</span> <span class="ruby-string">&quot; &gt; Not enough entries in config.yaml.&quot;</span>
 
-      <span class="ruby-keyword">elsif</span> <span class="ruby-string">&quot;gui&quot;</span> <span class="ruby-operator">==</span> <span class="ruby-ivar">@logs</span> <span class="ruby-keyword">then</span>
-        <span class="ruby-ivar">@logs_gui</span>.<span class="ruby-identifier">push</span> <span class="ruby-node">&quot;!!! Ignored: #{@folder.basename}&quot;</span>
-        <span class="ruby-ivar">@logs_gui</span>.<span class="ruby-identifier">push</span> <span class="ruby-string">&quot; &gt; Not enough entries in config.yaml.&quot;</span>
-      <span class="ruby-keyword">end</span>
+      <span class="ruby-identifier">oink</span> <span class="ruby-node">&quot;#{@@colors[:shell][:red]}!!! Ignored:&quot;</span> <span class="ruby-operator">+</span>
+           <span class="ruby-node">&quot;#{@@colors[:shell][:default]} #{@folder.basename}&quot;</span>,
+           <span class="ruby-string">&quot; &gt; Not enough entries in config.yaml.&quot;</span>
     <span class="ruby-keyword">end</span>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
@@ -312,7 +311,7 @@ the key, and the file&#39;s content as its value.</p>
 
           
           <div class="method-source-code" id="getDesktopEntries-source">
-            <pre><span class="ruby-comment"># File lib/ham.rb, line 232</span>
+            <pre><span class="ruby-comment"># File lib/ham.rb, line 198</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">getDesktopEntries</span>
   <span class="ruby-comment"># This will contain all the .desktop files to write for this Ham. </span>
   <span class="ruby-comment"># The key will be the file name, and the value the contentit should have.</span>
@@ -405,7 +404,7 @@ bottle.</p>
 
           
           <div class="method-source-code" id="killHam-source">
-            <pre><span class="ruby-comment"># File lib/ham.rb, line 310</span>
+            <pre><span class="ruby-comment"># File lib/ham.rb, line 276</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">killHam</span>
   <span class="ruby-comment"># Kill command:</span>
   <span class="ruby-node">%x`#{getHamEnv} wineserver -k`</span>
@@ -440,7 +439,7 @@ folder.</p>
 
           
           <div class="method-source-code" id="openShell-source">
-            <pre><span class="ruby-comment"># File lib/ham.rb, line 297</span>
+            <pre><span class="ruby-comment"># File lib/ham.rb, line 263</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">openShell</span>
   <span class="ruby-comment"># Directory to start the shell in:</span>
   <span class="ruby-constant">Dir</span>.<span class="ruby-identifier">chdir</span> <span class="ruby-node">&quot;#{@folder.realpath}/wine_env/drive_c&quot;</span>
@@ -481,7 +480,7 @@ making other changes.</p>
 
           
           <div class="method-source-code" id="updateHam-source">
-            <pre><span class="ruby-comment"># File lib/ham.rb, line 318</span>
+            <pre><span class="ruby-comment"># File lib/ham.rb, line 284</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">updateHam</span>
   <span class="ruby-comment"># Update command:</span>
   <span class="ruby-node">%x`#{getHamEnv} wineboot`</span>
@@ -525,7 +524,7 @@ tweaked entry on success, or an empty one otherwise.</p>
 
           
           <div class="method-source-code" id="checkEntry-source">
-            <pre><span class="ruby-comment"># File lib/ham.rb, line 116</span>
+            <pre><span class="ruby-comment"># File lib/ham.rb, line 108</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">checkEntry</span>( <span class="ruby-identifier">entry</span>, <span class="ruby-identifier">key</span> )
   <span class="ruby-comment"># This will be the container of the return value:</span>
   <span class="ruby-identifier">ret</span> = <span class="ruby-identifier">entry</span>.<span class="ruby-identifier">sort</span>.<span class="ruby-identifier">to_h</span>
@@ -537,35 +536,17 @@ tweaked entry on success, or an empty one otherwise.</p>
     <span class="ruby-keyword">if</span> <span class="ruby-identifier">entry</span>[<span class="ruby-string">&quot;Path&quot;</span>].<span class="ruby-identifier">nil?</span> <span class="ruby-keyword">and</span> <span class="ruby-ivar">@config_global</span>[<span class="ruby-string">&quot;Path&quot;</span>].<span class="ruby-identifier">nil?</span> <span class="ruby-keyword">then</span>
       <span class="ruby-identifier">ret</span> = <span class="ruby-constant">Hash</span>.<span class="ruby-identifier">new</span>
 
-      <span class="ruby-comment"># If we are supposed to log:</span>
-      <span class="ruby-keyword">if</span> <span class="ruby-string">&quot;on&quot;</span> <span class="ruby-operator">==</span> <span class="ruby-ivar">@logs</span> <span class="ruby-keyword">then</span>
-        <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;\e[31m!!! Ignored entry of #{@folder.basename}:\e[0m &quot;</span> <span class="ruby-operator">+</span>
-             <span class="ruby-node">&quot;\&quot;#{key}\&quot;&quot;</span>
-        <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot; &gt; No valud value for \&quot;Path\&quot; key in neither \&quot;#{key}\&quot; &quot;</span> <span class="ruby-operator">+</span>
-             <span class="ruby-string">&quot;nor \&quot;Global Values\&quot;.&quot;</span>
+      <span class="ruby-identifier">oink</span> <span class="ruby-node">&quot;#{@@colors[:shell][:red]}!!! Ignored entry of &quot;</span> <span class="ruby-operator">+</span>
+           <span class="ruby-node">&quot;#{@folder.basename}:#{@@colors[:shell][:default]} \&quot;#{key}\&quot;&quot;</span>,
+           <span class="ruby-node">&quot; &gt; No valud value for \&quot;Path\&quot; key in neither \&quot;#{key}\&quot; nor &quot;</span> <span class="ruby-operator">+</span>
+           <span class="ruby-string">&quot;\&quot;Global Values\&quot;.&quot;</span>
 
-      <span class="ruby-keyword">elsif</span> <span class="ruby-string">&quot;gui&quot;</span> <span class="ruby-operator">==</span> <span class="ruby-ivar">@logs</span> <span class="ruby-keyword">then</span>
-        <span class="ruby-ivar">@logs_gui</span>.<span class="ruby-identifier">push</span> <span class="ruby-node">&quot;!!! Ignored entry of #{@folder.basename}:&quot;</span> <span class="ruby-operator">+</span>
-                       <span class="ruby-node">&quot; \&quot;#{key}\&quot;&quot;</span>
-        <span class="ruby-ivar">@logs_gui</span>.<span class="ruby-identifier">push</span> <span class="ruby-string">&quot; &gt; No valud value for \&quot;Path\&quot; key in neither &quot;</span> <span class="ruby-operator">+</span>
-                       <span class="ruby-node">&quot;\&quot;#{key}\&quot; nor \&quot;Global Values\&quot;.&quot;</span>
-      <span class="ruby-keyword">end</span>
-
-    <span class="ruby-comment"># If we are supposed to log:</span>
     <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">entry</span>[<span class="ruby-string">&quot;Exec&quot;</span>].<span class="ruby-identifier">nil?</span> <span class="ruby-keyword">then</span>
       <span class="ruby-identifier">ret</span> = <span class="ruby-constant">Hash</span>.<span class="ruby-identifier">new</span>
 
-      <span class="ruby-comment"># If we are supposed to log:</span>
-      <span class="ruby-keyword">if</span> <span class="ruby-string">&quot;on&quot;</span> <span class="ruby-operator">==</span> <span class="ruby-ivar">@logs</span> <span class="ruby-keyword">then</span>
-        <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;\e[31m!!! Ignored entry of #{@folder.basename}:\e[0m &quot;</span> <span class="ruby-operator">+</span>
-             <span class="ruby-node">&quot;\&quot;#{key}\&quot;&quot;</span>
-        <span class="ruby-identifier">puts</span> <span class="ruby-string">&quot; &gt; No value for \&quot;Exec\&quot; key.&quot;</span>
-
-      <span class="ruby-keyword">elsif</span> <span class="ruby-string">&quot;gui&quot;</span> <span class="ruby-operator">==</span> <span class="ruby-ivar">@logs</span> <span class="ruby-keyword">then</span>
-        <span class="ruby-ivar">@logs_gui</span>.<span class="ruby-identifier">push</span> <span class="ruby-node">&quot;!!! Ignored entry of #{@folder.basename}:&quot;</span> <span class="ruby-operator">+</span>
-                       <span class="ruby-node">&quot; \&quot;#{key}\&quot;&quot;</span>
-        <span class="ruby-ivar">@logs_gui</span>.<span class="ruby-identifier">push</span> <span class="ruby-string">&quot; &gt; No value for \&quot;Exec\&quot; key.&quot;</span>
-      <span class="ruby-keyword">end</span>
+      <span class="ruby-identifier">oink</span> <span class="ruby-node">&quot;#{@@colors[:shell][:red]}!!! Ignored entry of &quot;</span> <span class="ruby-operator">+</span>
+           <span class="ruby-node">&quot;#{@folder.basename}:#{@@colors[:shell][:default]} \&quot;#{key}\&quot;&quot;</span>,
+           <span class="ruby-string">&quot; &gt; No value for \&quot;Exec\&quot; key.&quot;</span>
 
     <span class="ruby-comment"># Last but not least: if there is no &quot;Name&quot; key, the desired .desktop</span>
     <span class="ruby-comment"># is used as the menu entry name.</span>
@@ -585,17 +566,9 @@ tweaked entry on success, or an empty one otherwise.</p>
     <span class="ruby-keyword">else</span>
       <span class="ruby-identifier">ret</span> = <span class="ruby-constant">Hash</span>.<span class="ruby-identifier">new</span>
 
-      <span class="ruby-comment"># If we are supposed to log:</span>
-      <span class="ruby-keyword">if</span> <span class="ruby-string">&quot;on&quot;</span> <span class="ruby-operator">==</span> <span class="ruby-ivar">@logs</span> <span class="ruby-keyword">then</span>
-        <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;\e[31m!!! Ignored entry of #{@folder.basename}:\e[0m &quot;</span> <span class="ruby-operator">+</span>
-             <span class="ruby-node">&quot;\&quot;#{key}\&quot;&quot;</span>
-        <span class="ruby-identifier">puts</span> <span class="ruby-string">&quot; &gt; \&quot;Path\&quot; key points to a non existing location.&quot;</span>
-
-      <span class="ruby-keyword">elsif</span> <span class="ruby-string">&quot;gui&quot;</span> <span class="ruby-operator">==</span> <span class="ruby-ivar">@logs</span> <span class="ruby-keyword">then</span>
-        <span class="ruby-ivar">@logs_gui</span>.<span class="ruby-identifier">push</span> <span class="ruby-node">&quot;!!! Ignored entry of #{@folder.basename}:&quot;</span> <span class="ruby-operator">+</span>
-                       <span class="ruby-node">&quot; \&quot;#{key}\&quot;&quot;</span>
-        <span class="ruby-ivar">@logs_gui</span>.<span class="ruby-identifier">push</span> <span class="ruby-string">&quot; &gt; \&quot;Path\&quot; key points to a non existing location.&quot;</span>
-      <span class="ruby-keyword">end</span>
+      <span class="ruby-identifier">oink</span> <span class="ruby-node">&quot;#{@@colors[:shell][:red]}!!! Ignored entry of &quot;</span> <span class="ruby-operator">+</span>
+           <span class="ruby-node">&quot;#{@folder.basename}:#{@@colors[:shell][:default]} \&quot;#{key}\&quot;&quot;</span>,
+           <span class="ruby-string">&quot; &gt; \&quot;Path\&quot; key points to a non existing location.&quot;</span>
     <span class="ruby-keyword">end</span>
   <span class="ruby-keyword">end</span>
 
@@ -642,7 +615,7 @@ run wine binaries without issues, to avoid code duplication.</p>
 
           
           <div class="method-source-code" id="getHamEnv-source">
-            <pre><span class="ruby-comment"># File lib/ham.rb, line 206</span>
+            <pre><span class="ruby-comment"># File lib/ham.rb, line 172</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">getHamEnv</span>
   <span class="ruby-comment"># This will be the container of the return value:</span>
   <span class="ruby-identifier">ret</span> = <span class="ruby-string">&quot;env &quot;</span>

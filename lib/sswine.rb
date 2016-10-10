@@ -1,6 +1,7 @@
 require "fileutils"
 require "pathname"
 require "./lib/ham.rb"
+require "./lib/oink.rb"
 
 =begin
 Sswine stands for "Sswine: split wine".
@@ -19,6 +20,9 @@ class Sswine
   @invisible # An invisible Sswine is one with no Hams.
   @logs      # Logs modality, either on, off or gui.
   @logs_gui  # Logs to be used by the GUI.
+
+  # Our logger:
+  include Oink
 
   # An invisible Sswine is one with no Hams.
   attr_reader :invisible
@@ -48,6 +52,8 @@ class Sswine
       # In alphabetical order.
       @main_dir.children.sort.each do |entry|
         pork = Ham.new :path => entry, :logs => @logs
+
+        # Add any entry in @logs_gui of every Ham:
         @logs_gui += pork.logs_gui
 
         # No error message is printed here, because Ham's constructor already
@@ -124,7 +130,7 @@ class Sswine
         f.puts "Categories=Games"
         f.puts "Comment=Sswine: split wine"
         f.puts "Encoding=UTF-8"
-        f.puts "Exec=#{$0} -g"
+        f.puts "Exec=#{Pathname.new( $0 ).realpath} -g"
         f.puts "Icon=wine"
         f.puts "Name=Sswine"
         f.puts "Terminal=false"
@@ -181,59 +187,29 @@ class Sswine
       f.puts "</Menu>"
     end
 
-    # If logs are on, show the processed Hams and the relative entries:
-    if "on" == @logs then
-      # Special message in case there are no valid Hams:
-      if created.empty? then
-        puts "No Hams found, no menu entries have been added."
+    # Special message in case there are no valid Hams:
+    if created.empty? and gui_desktop_entry.nil? then
+      oink "No Hams found, no menu entries have been added."
 
-      else
-        # Header:
-        puts "Created entries in \e[33m#{desktop_files_folder.realpath}\e[0m " +
-             "for:"
+    else
+      # Header:
+      oink "Created entries in #{@@colors[:shell][:yellow]}" +
+           "#{desktop_files_folder.realpath}#{@@colors[:shell][:default]} for:"
 
-        # If the GUI entry has been created, print it first:
-        unless gui_desktop_entry.nil? then
-          puts " > \e[34mSswine\e[0m"
-          puts "    #{gui_desktop_entry.basename}"
-        end
-
-        created.each do |key, entries|
-          # Show the Ham's name:
-          puts " > \e[34m#{key}\e[0m"
-
-          # Show what this Ham has generated:
-          entries.each do |entry|
-            puts "    #{entry}"
-          end
-        end
+      # If the GUI entry has been created, print it first:
+      unless gui_desktop_entry.nil? then
+        oink " > #{@@colors[:shell][:blue]}Sswine" +
+             "#{@@colors[:shell][:default]}",
+             "    #{gui_desktop_entry.basename}"
       end
 
-    elsif "gui" == @logs then
+      created.each do |key, entries|
+        # Show the Ham's name:
+        oink " > #{@@colors[:shell][:blue]}#{key}#{@@colors[:shell][:default]}"
 
-      # Special message in case there are no valid Hams:
-      if created.empty? then
-        @logs_gui.push "No Hams found, no menu entries have been added."
-
-      else
-        # Header:
-        @logs_gui.push "Created entries in " +
-                       "#{desktop_files_folder.realpath} for:"
-
-        # If the GUI entry has been created, print it first:
-        unless gui_desktop_entry.nil? then
-          @logs_gui.push " > Sswine"
-          @logs_gui.push "    #{gui_desktop_entry.basename}"
-        end
-
-        created.each do |key, entries|
-          # Show the Ham's name:
-          @logs_gui.push " > #{key}"
-
-          # Show what this Ham has generated:
-          entries.each do |entry|
-            @logs_gui.push "    #{entry}"
-          end
+        # Show what this Ham has generated:
+        entries.each do |entry|
+          oink "    #{entry}"
         end
       end
     end

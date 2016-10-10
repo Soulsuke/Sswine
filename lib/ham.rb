@@ -1,5 +1,6 @@
 require "pathname"
 require "yaml"
+require "./lib/oink.rb"
 
 =begin
 Ham class.  
@@ -15,6 +16,9 @@ class Ham
   @config_entries # Entry-specific options, which override global ones.
   @logs           # Logs modality, either on, off or gui.
   @logs_gui       # Logs to be used by the GUI.
+
+  # Our logger: 
+  include Oink
 
   # Folder of the Ham.
   attr_reader :folder
@@ -40,14 +44,10 @@ class Ham
     # If there's no wine_env folder, it's not edible.
     unless Pathname.new( "#{@folder}/wine_env" ).directory? then
       @edible = false
-      if "on" == @logs then
-        puts "\e[31m!!! Ignored:\e[0m #{@folder.basename}"
-        puts " > Sub-folder wine_env not found."
 
-      elsif "gui" == @logs then
-        @logs_gui.push "!!! Ignored: #{@folder.basename}" 
-        @logs_gui.push " > Sub-folder wine_env not found."
-      end
+      oink "#{@@colors[:shell][:red]}!!! Ignored:" +
+           "#{@@colors[:shell][:default]} #{@folder.basename}",
+           " > Sub-folder wine_env not found."
     end
 
     # If there's no config file, it's not edible:
@@ -55,14 +55,10 @@ class Ham
 
     unless !@edible or config_file.file? or config_file.readable? then
       @edible = false
-      if "on" == @logs then
-        puts "\e[31m!!! Ignored:\e[0m #{@folder.basename}"
-        puts " > Config.yaml not found."
 
-      elsif "gui" == @logs then
-        @logs_gui.push "!!! Ignored: #{@folder.basename}"
-        @logs_gui.push " > Config.yaml not found."
-      end
+      oink "#{@@colors[:shell][:red]}!!! Ignored:" +
+           "#{@@colors[:shell][:default]} #{@folder.basename}",
+           " > Config.yaml not found."
     end
 
     # Now, if the Ham is stll edible, go ahead!
@@ -97,14 +93,10 @@ class Ham
       # If there are no entries, it is not edible.
       if 0 == @config_entries.size then
         @edible = false
-        if "on" == @logs then
-          puts "\e[31m!!! Ignored:\e[0m #{@folder.basename}"
-          puts " > Not enough entries in config.yaml."
 
-        elsif "gui" == @logs then
-          @logs_gui.push "!!! Ignored: #{@folder.basename}"
-          @logs_gui.push " > Not enough entries in config.yaml."
-        end
+        oink "#{@@colors[:shell][:red]}!!! Ignored:" +
+             "#{@@colors[:shell][:default]} #{@folder.basename}",
+             " > Not enough entries in config.yaml."
       end
     end
   end
@@ -124,35 +116,17 @@ class Ham
       if entry["Path"].nil? and @config_global["Path"].nil? then
         ret = Hash.new
 
-        # If we are supposed to log:
-        if "on" == @logs then
-          puts "\e[31m!!! Ignored entry of #{@folder.basename}:\e[0m " +
-               "\"#{key}\""
-          puts " > No valud value for \"Path\" key in neither \"#{key}\" " +
-               "nor \"Global Values\"."
+        oink "#{@@colors[:shell][:red]}!!! Ignored entry of " +
+             "#{@folder.basename}:#{@@colors[:shell][:default]} \"#{key}\"",
+             " > No valud value for \"Path\" key in neither \"#{key}\" nor " +
+             "\"Global Values\"."
 
-        elsif "gui" == @logs then
-          @logs_gui.push "!!! Ignored entry of #{@folder.basename}:" +
-                         " \"#{key}\""
-          @logs_gui.push " > No valud value for \"Path\" key in neither " +
-                         "\"#{key}\" nor \"Global Values\"."
-        end
-
-      # If we are supposed to log:
       elsif entry["Exec"].nil? then
         ret = Hash.new
 
-        # If we are supposed to log:
-        if "on" == @logs then
-          puts "\e[31m!!! Ignored entry of #{@folder.basename}:\e[0m " +
-               "\"#{key}\""
-          puts " > No value for \"Exec\" key."
-
-        elsif "gui" == @logs then
-          @logs_gui.push "!!! Ignored entry of #{@folder.basename}:" +
-                         " \"#{key}\""
-          @logs_gui.push " > No value for \"Exec\" key."
-        end
+        oink "#{@@colors[:shell][:red]}!!! Ignored entry of " +
+             "#{@folder.basename}:#{@@colors[:shell][:default]} \"#{key}\"",
+             " > No value for \"Exec\" key."
 
       # Last but not least: if there is no "Name" key, the desired .desktop
       # is used as the menu entry name.
@@ -172,17 +146,9 @@ class Ham
       else
         ret = Hash.new
 
-        # If we are supposed to log:
-        if "on" == @logs then
-          puts "\e[31m!!! Ignored entry of #{@folder.basename}:\e[0m " +
-               "\"#{key}\""
-          puts " > \"Path\" key points to a non existing location."
-
-        elsif "gui" == @logs then
-          @logs_gui.push "!!! Ignored entry of #{@folder.basename}:" +
-                         " \"#{key}\""
-          @logs_gui.push " > \"Path\" key points to a non existing location."
-        end
+        oink "#{@@colors[:shell][:red]}!!! Ignored entry of " +
+             "#{@folder.basename}:#{@@colors[:shell][:default]} \"#{key}\"",
+             " > \"Path\" key points to a non existing location."
       end
     end
 

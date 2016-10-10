@@ -62,7 +62,18 @@
   
 </div>
 
-    
+    <div id="includes-section" class="nav-section">
+  <h3>Included Modules</h3>
+
+  <ul class="link-list">
+  
+  
+    <li><a class="include" href="Oink.html">Oink</a>
+  
+  
+  </ul>
+</div>
+
     
     <!-- Method Quickref -->
 <div id="method-list-section" class="nav-section">
@@ -188,7 +199,7 @@ href="Ham.html">Ham</a> must be composed of:</p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/sswine.rb, line 31</span>
+            <pre><span class="ruby-comment"># File lib/sswine.rb, line 35</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>( <span class="ruby-identifier">options</span> = { <span class="ruby-value">:logs</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;off&quot;</span> } )
   <span class="ruby-ivar">@main_dir</span> = <span class="ruby-constant">Pathname</span>.<span class="ruby-identifier">new</span> <span class="ruby-node">&quot;#{ENV[&quot;HOME&quot;]}/.sswine&quot;</span>
   <span class="ruby-ivar">@hams</span> = <span class="ruby-constant">Array</span>.<span class="ruby-identifier">new</span>
@@ -209,6 +220,8 @@ href="Ham.html">Ham</a> must be composed of:</p>
     <span class="ruby-comment"># In alphabetical order.</span>
     <span class="ruby-ivar">@main_dir</span>.<span class="ruby-identifier">children</span>.<span class="ruby-identifier">sort</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">entry</span><span class="ruby-operator">|</span>
       <span class="ruby-identifier">pork</span> = <span class="ruby-constant">Ham</span>.<span class="ruby-identifier">new</span> <span class="ruby-value">:path</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">entry</span>, <span class="ruby-value">:logs</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@logs</span>
+
+      <span class="ruby-comment"># Add any entry in @logs_gui of every Ham:</span>
       <span class="ruby-ivar">@logs_gui</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">pork</span>.<span class="ruby-identifier">logs_gui</span>
 
       <span class="ruby-comment"># No error message is printed here, because Ham&#39;s constructor already</span>
@@ -261,7 +274,7 @@ href="Ham.html">Ham</a> must be composed of:</p>
 
           
           <div class="method-source-code" id="killAllHams-source">
-            <pre><span class="ruby-comment"># File lib/sswine.rb, line 244</span>
+            <pre><span class="ruby-comment"># File lib/sswine.rb, line 220</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">killAllHams</span>
   <span class="ruby-ivar">@hams</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">h</span><span class="ruby-operator">|</span>
     <span class="ruby-identifier">h</span>.<span class="ruby-identifier">killHam</span>
@@ -299,7 +312,7 @@ one.</p>
 
           
           <div class="method-source-code" id="openShell-source">
-            <pre><span class="ruby-comment"># File lib/sswine.rb, line 262</span>
+            <pre><span class="ruby-comment"># File lib/sswine.rb, line 238</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">openShell</span>
   <span class="ruby-comment"># This will store the user input:</span>
   <span class="ruby-identifier">choice</span> = <span class="ruby-value">-1</span>
@@ -364,7 +377,7 @@ one.</p>
 
           
           <div class="method-source-code" id="updateAllHams-source">
-            <pre><span class="ruby-comment"># File lib/sswine.rb, line 252</span>
+            <pre><span class="ruby-comment"># File lib/sswine.rb, line 228</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">updateAllHams</span>
   <span class="ruby-ivar">@hams</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">h</span><span class="ruby-operator">|</span>
     <span class="ruby-identifier">h</span>.<span class="ruby-identifier">updateHam</span>
@@ -400,7 +413,7 @@ an entry for each valid one of each <a href="Ham.html">Ham</a>.</p>
 
           
           <div class="method-source-code" id="writeMenuEntries-source">
-            <pre><span class="ruby-comment"># File lib/sswine.rb, line 70</span>
+            <pre><span class="ruby-comment"># File lib/sswine.rb, line 76</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">writeMenuEntries</span>
   <span class="ruby-comment"># This is to make a decent log:</span>
   <span class="ruby-identifier">created</span> = <span class="ruby-constant">Hash</span>.<span class="ruby-identifier">new</span>
@@ -458,7 +471,7 @@ an entry for each valid one of each <a href="Ham.html">Ham</a>.</p>
       <span class="ruby-identifier">f</span>.<span class="ruby-identifier">puts</span> <span class="ruby-string">&quot;Categories=Games&quot;</span>
       <span class="ruby-identifier">f</span>.<span class="ruby-identifier">puts</span> <span class="ruby-string">&quot;Comment=Sswine: split wine&quot;</span>
       <span class="ruby-identifier">f</span>.<span class="ruby-identifier">puts</span> <span class="ruby-string">&quot;Encoding=UTF-8&quot;</span>
-      <span class="ruby-identifier">f</span>.<span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;Exec=#{$0} -g&quot;</span>
+      <span class="ruby-identifier">f</span>.<span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;Exec=#{Pathname.new( $0 ).realpath} -g&quot;</span>
       <span class="ruby-identifier">f</span>.<span class="ruby-identifier">puts</span> <span class="ruby-string">&quot;Icon=wine&quot;</span>
       <span class="ruby-identifier">f</span>.<span class="ruby-identifier">puts</span> <span class="ruby-string">&quot;Name=Sswine&quot;</span>
       <span class="ruby-identifier">f</span>.<span class="ruby-identifier">puts</span> <span class="ruby-string">&quot;Terminal=false&quot;</span>
@@ -515,59 +528,29 @@ an entry for each valid one of each <a href="Ham.html">Ham</a>.</p>
     <span class="ruby-identifier">f</span>.<span class="ruby-identifier">puts</span> <span class="ruby-string">&quot;&lt;/Menu&gt;&quot;</span>
   <span class="ruby-keyword">end</span>
 
-  <span class="ruby-comment"># If logs are on, show the processed Hams and the relative entries:</span>
-  <span class="ruby-keyword">if</span> <span class="ruby-string">&quot;on&quot;</span> <span class="ruby-operator">==</span> <span class="ruby-ivar">@logs</span> <span class="ruby-keyword">then</span>
-    <span class="ruby-comment"># Special message in case there are no valid Hams:</span>
-    <span class="ruby-keyword">if</span> <span class="ruby-identifier">created</span>.<span class="ruby-identifier">empty?</span> <span class="ruby-keyword">then</span>
-      <span class="ruby-identifier">puts</span> <span class="ruby-string">&quot;No Hams found, no menu entries have been added.&quot;</span>
+  <span class="ruby-comment"># Special message in case there are no valid Hams:</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">created</span>.<span class="ruby-identifier">empty?</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">gui_desktop_entry</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-keyword">then</span>
+    <span class="ruby-identifier">oink</span> <span class="ruby-string">&quot;No Hams found, no menu entries have been added.&quot;</span>
 
-    <span class="ruby-keyword">else</span>
-      <span class="ruby-comment"># Header:</span>
-      <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;Created entries in \e[33m#{desktop_files_folder.realpath}\e[0m &quot;</span> <span class="ruby-operator">+</span>
-           <span class="ruby-string">&quot;for:&quot;</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-comment"># Header:</span>
+    <span class="ruby-identifier">oink</span> <span class="ruby-node">&quot;Created entries in #{@@colors[:shell][:yellow]}&quot;</span> <span class="ruby-operator">+</span>
+         <span class="ruby-node">&quot;#{desktop_files_folder.realpath}#{@@colors[:shell][:default]} for:&quot;</span>
 
-      <span class="ruby-comment"># If the GUI entry has been created, print it first:</span>
-      <span class="ruby-keyword">unless</span> <span class="ruby-identifier">gui_desktop_entry</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-keyword">then</span>
-        <span class="ruby-identifier">puts</span> <span class="ruby-string">&quot; &gt; \e[34mSswine\e[0m&quot;</span>
-        <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;    #{gui_desktop_entry.basename}&quot;</span>
-      <span class="ruby-keyword">end</span>
-
-      <span class="ruby-identifier">created</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">key</span>, <span class="ruby-identifier">entries</span><span class="ruby-operator">|</span>
-        <span class="ruby-comment"># Show the Ham&#39;s name:</span>
-        <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot; &gt; \e[34m#{key}\e[0m&quot;</span>
-
-        <span class="ruby-comment"># Show what this Ham has generated:</span>
-        <span class="ruby-identifier">entries</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">entry</span><span class="ruby-operator">|</span>
-          <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;    #{entry}&quot;</span>
-        <span class="ruby-keyword">end</span>
-      <span class="ruby-keyword">end</span>
+    <span class="ruby-comment"># If the GUI entry has been created, print it first:</span>
+    <span class="ruby-keyword">unless</span> <span class="ruby-identifier">gui_desktop_entry</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-keyword">then</span>
+      <span class="ruby-identifier">oink</span> <span class="ruby-node">&quot; &gt; #{@@colors[:shell][:blue]}Sswine&quot;</span> <span class="ruby-operator">+</span>
+           <span class="ruby-node">&quot;#{@@colors[:shell][:default]}&quot;</span>,
+           <span class="ruby-node">&quot;    #{gui_desktop_entry.basename}&quot;</span>
     <span class="ruby-keyword">end</span>
 
-  <span class="ruby-keyword">elsif</span> <span class="ruby-string">&quot;gui&quot;</span> <span class="ruby-operator">==</span> <span class="ruby-ivar">@logs</span> <span class="ruby-keyword">then</span>
+    <span class="ruby-identifier">created</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">key</span>, <span class="ruby-identifier">entries</span><span class="ruby-operator">|</span>
+      <span class="ruby-comment"># Show the Ham&#39;s name:</span>
+      <span class="ruby-identifier">oink</span> <span class="ruby-node">&quot; &gt; #{@@colors[:shell][:blue]}#{key}#{@@colors[:shell][:default]}&quot;</span>
 
-    <span class="ruby-comment"># Special message in case there are no valid Hams:</span>
-    <span class="ruby-keyword">if</span> <span class="ruby-identifier">created</span>.<span class="ruby-identifier">empty?</span> <span class="ruby-keyword">then</span>
-      <span class="ruby-ivar">@logs_gui</span>.<span class="ruby-identifier">push</span> <span class="ruby-string">&quot;No Hams found, no menu entries have been added.&quot;</span>
-
-    <span class="ruby-keyword">else</span>
-      <span class="ruby-comment"># Header:</span>
-      <span class="ruby-ivar">@logs_gui</span>.<span class="ruby-identifier">push</span> <span class="ruby-string">&quot;Created entries in &quot;</span> <span class="ruby-operator">+</span>
-                     <span class="ruby-node">&quot;#{desktop_files_folder.realpath} for:&quot;</span>
-
-      <span class="ruby-comment"># If the GUI entry has been created, print it first:</span>
-      <span class="ruby-keyword">unless</span> <span class="ruby-identifier">gui_desktop_entry</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-keyword">then</span>
-        <span class="ruby-ivar">@logs_gui</span>.<span class="ruby-identifier">push</span> <span class="ruby-string">&quot; &gt; Sswine&quot;</span>
-        <span class="ruby-ivar">@logs_gui</span>.<span class="ruby-identifier">push</span> <span class="ruby-node">&quot;    #{gui_desktop_entry.basename}&quot;</span>
-      <span class="ruby-keyword">end</span>
-
-      <span class="ruby-identifier">created</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">key</span>, <span class="ruby-identifier">entries</span><span class="ruby-operator">|</span>
-        <span class="ruby-comment"># Show the Ham&#39;s name:</span>
-        <span class="ruby-ivar">@logs_gui</span>.<span class="ruby-identifier">push</span> <span class="ruby-node">&quot; &gt; #{key}&quot;</span>
-
-        <span class="ruby-comment"># Show what this Ham has generated:</span>
-        <span class="ruby-identifier">entries</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">entry</span><span class="ruby-operator">|</span>
-          <span class="ruby-ivar">@logs_gui</span>.<span class="ruby-identifier">push</span> <span class="ruby-node">&quot;    #{entry}&quot;</span>
-        <span class="ruby-keyword">end</span>
+      <span class="ruby-comment"># Show what this Ham has generated:</span>
+      <span class="ruby-identifier">entries</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">entry</span><span class="ruby-operator">|</span>
+        <span class="ruby-identifier">oink</span> <span class="ruby-node">&quot;    #{entry}&quot;</span>
       <span class="ruby-keyword">end</span>
     <span class="ruby-keyword">end</span>
   <span class="ruby-keyword">end</span>
