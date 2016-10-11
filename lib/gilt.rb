@@ -2,7 +2,7 @@ require "gtk3"
 require "./lib/sswine.rb"
 
 =begin
-Gilt: a GTK3 GUI for Sswine.
+Gilt: a GTK3 GUI for Sswine.  
 I'm doing this against my better judgement. I do not like GUIs, I believe they
 are buggy, slow and, most importantly, inefficient. But I sort of have to get
 used to designing them, so here we are.

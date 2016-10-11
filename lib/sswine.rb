@@ -4,7 +4,7 @@ require "./lib/ham.rb"
 require "./lib/oink.rb"
 
 =begin
-Sswine stands for "Sswine: split wine".
+Sswine stands for "Sswine: split wine".  
 This class is designed to handle Hams located in $HOME/.sswine. Each Ham must
 be composed of:  
 config.yaml:: Ham configuration file.  

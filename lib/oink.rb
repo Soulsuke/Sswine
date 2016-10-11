@@ -1,5 +1,7 @@
 =begin
-This module's purpose is handling logs for the other classes.
+This module's purpose to handle logs on behalf of the other classes.  
+To work as intended, it requires the class which implements it to have 
+instance variables called @logs and @logs_gui.
 =end
 
 module Oink
@@ -33,7 +35,7 @@ module Oink
           # GUI logs: save them into @logs_gui
           when "gui" then
             # Replace shell colors with GUI ones:
-            @@colors[:shell].keys.each do |color|
+            @@colors[:shell].each_key do |color|
               entry.gsub! @@colors[:shell][color], @@colors[:gui][color]
             end
 

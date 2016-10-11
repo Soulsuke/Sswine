@@ -78,7 +78,10 @@
 
   <section class="description">
     
-<p>This module&#39;s purpose is handling logs for the other classes.</p>
+<p>This module&#39;s purpose to handle logs on behalf of the other classes.</p>
+
+<p>To work as intended, it requires the class which implements it to have 
+instance variables called @logs and @logs_gui.</p>
 
   </section>
 
@@ -120,7 +123,7 @@
 
           
           <div class="method-source-code" id="oink-source">
-            <pre><span class="ruby-comment"># File lib/oink.rb, line 27</span>
+            <pre><span class="ruby-comment"># File lib/oink.rb, line 29</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">oink</span>( <span class="ruby-operator">*</span><span class="ruby-identifier">logs</span> )
   <span class="ruby-comment"># This only has a meaning if logs are not disabled:</span>
   <span class="ruby-keyword">unless</span> <span class="ruby-string">&quot;off&quot;</span> <span class="ruby-operator">==</span> <span class="ruby-ivar">@logs</span> <span class="ruby-keyword">then</span>
@@ -130,7 +133,7 @@
         <span class="ruby-comment"># GUI logs: save them into @logs_gui</span>
         <span class="ruby-keyword">when</span> <span class="ruby-string">&quot;gui&quot;</span> <span class="ruby-keyword">then</span>
           <span class="ruby-comment"># Replace shell colors with GUI ones:</span>
-          <span class="ruby-identifier">@@colors</span>[<span class="ruby-value">:shell</span>].<span class="ruby-identifier">keys</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">color</span><span class="ruby-operator">|</span>
+          <span class="ruby-identifier">@@colors</span>[<span class="ruby-value">:shell</span>].<span class="ruby-identifier">each_key</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">color</span><span class="ruby-operator">|</span>
             <span class="ruby-identifier">entry</span>.<span class="ruby-identifier">gsub!</span> <span class="ruby-identifier">@@colors</span>[<span class="ruby-value">:shell</span>][<span class="ruby-identifier">color</span>], <span class="ruby-identifier">@@colors</span>[<span class="ruby-value">:gui</span>][<span class="ruby-identifier">color</span>]
           <span class="ruby-keyword">end</span>
 
