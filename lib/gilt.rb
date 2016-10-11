@@ -121,10 +121,10 @@ class Gilt < Gtk::Window
     # Depending on the command, do the right thing:
     case @command
       when "check" then
-        s = Sswine.new :logs => "gui"
+        s = Sswine.new :logs => :gui
 
       when "desktop" then
-        s = Sswine.new :logs => "gui"
+        s = Sswine.new :logs => :gui
         s.writeMenuEntries
 
       when "kill" then

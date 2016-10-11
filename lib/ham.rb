@@ -31,14 +31,14 @@ class Ham
 
   # Constructor. To work properly, the following should be provided:
   # :path => path to the folder which should become a Ham.
-  # :logs => on/off/gui, modality to use for logging.
+  # :logs => :off/:on/:gui, modality to use for logging.
   def initialize( options = {} )
     # Initialize instance variables:
     @folder = Pathname.new options[:path]
     @edible = true
     @config_global = Hash.new
     @config_entries = Hash.new
-    @logs = "#{options[:logs]}".downcase
+    @logs = options[:logs]
     @logs_gui = Array.new
 
     # If there's no wine_env folder, it's not edible.
@@ -101,8 +101,8 @@ class Ham
     end
   end
 
-  # Checks if the given entry is valid, and makes sure the Path and Icon 
-  # keys will point to, respectively, an existing folder or file.
+  # Private method. Checks if the given entry is valid, and makes sure the Path
+  # and Icon keys will point to, respectively, an existing folder or file.
   # Returns a valid tweaked entry on success, or an empty one otherwise.
   private
   def checkEntry( entry, key )
@@ -166,8 +166,8 @@ class Ham
     return ret
   end
 
-  # Returns a string containing the "env <variables>" command needed to run
-  # wine binaries without issues, to avoid code duplication.
+  # Private method. Returns a string containing the "env <variables>" command
+  # needed to run wine binaries without issues, to avoid code duplication.
   private
   def getHamEnv
     # This will be the container of the return value:

@@ -184,7 +184,7 @@ href="Ham.html">Ham</a> must be composed of:</p>
         
         <div class="method-heading">
           <span class="method-name">new</span><span
-            class="method-args">( options = { :logs => "off" } )</span>
+            class="method-args">( options = { :logs => :off } )</span>
           
           <span class="method-click-advice">click to toggle source</span>
           
@@ -201,11 +201,11 @@ href="Ham.html">Ham</a> must be composed of:</p>
           
           <div class="method-source-code" id="new-source">
             <pre><span class="ruby-comment"># File lib/sswine.rb, line 35</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>( <span class="ruby-identifier">options</span> = { <span class="ruby-value">:logs</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;off&quot;</span> } )
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>( <span class="ruby-identifier">options</span> = { <span class="ruby-value">:logs</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">:off</span> } )
   <span class="ruby-ivar">@main_dir</span> = <span class="ruby-constant">Pathname</span>.<span class="ruby-identifier">new</span> <span class="ruby-node">&quot;#{ENV[&quot;HOME&quot;]}/.sswine&quot;</span>
   <span class="ruby-ivar">@hams</span> = <span class="ruby-constant">Array</span>.<span class="ruby-identifier">new</span>
   <span class="ruby-ivar">@innvisible</span> = <span class="ruby-keyword">false</span>
-  <span class="ruby-ivar">@logs</span> = <span class="ruby-node">&quot;#{options[:logs]}&quot;</span>.<span class="ruby-identifier">downcase</span>
+  <span class="ruby-ivar">@logs</span> = <span class="ruby-identifier">options</span>[<span class="ruby-value">:logs</span>]
   <span class="ruby-ivar">@logs_gui</span> = <span class="ruby-constant">Array</span>.<span class="ruby-identifier">new</span>
 
   <span class="ruby-comment"># If the main folder does not exist, create it.</span>

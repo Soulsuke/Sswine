@@ -32,11 +32,11 @@ class Sswine
 
   # Constructor. To work properly, the following should be provided:
   # :logs => on/off/gui, modality to use for logging.
-  def initialize( options = { :logs => "off" } )
+  def initialize( options = { :logs => :off } )
     @main_dir = Pathname.new "#{ENV["HOME"]}/.sswine"
     @hams = Array.new
     @innvisible = false
-    @logs = "#{options[:logs]}".downcase
+    @logs = options[:logs]
     @logs_gui = Array.new
 
     # If the main folder does not exist, create it.

@@ -63,6 +63,8 @@
 
   <ul class="link-list" role="directory">
     
+    <li ><a href="#method-i-digest">#digest</a>
+    
     <li ><a href="#method-i-oink">#oink</a>
     
   </ul>
@@ -123,15 +125,15 @@ instance variables called @logs and @logs_gui.</p>
 
           
           <div class="method-source-code" id="oink-source">
-            <pre><span class="ruby-comment"># File lib/oink.rb, line 29</span>
+            <pre><span class="ruby-comment"># File lib/oink.rb, line 88</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">oink</span>( <span class="ruby-operator">*</span><span class="ruby-identifier">logs</span> )
   <span class="ruby-comment"># This only has a meaning if logs are not disabled:</span>
-  <span class="ruby-keyword">unless</span> <span class="ruby-string">&quot;off&quot;</span> <span class="ruby-operator">==</span> <span class="ruby-ivar">@logs</span> <span class="ruby-keyword">then</span>
+  <span class="ruby-keyword">unless</span> <span class="ruby-value">:off</span> <span class="ruby-operator">==</span> <span class="ruby-ivar">@logs</span> <span class="ruby-keyword">then</span>
     <span class="ruby-comment"># For each given log...</span>
     <span class="ruby-identifier">logs</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">entry</span><span class="ruby-operator">|</span>
       <span class="ruby-keyword">case</span> <span class="ruby-ivar">@logs</span>
         <span class="ruby-comment"># GUI logs: save them into @logs_gui</span>
-        <span class="ruby-keyword">when</span> <span class="ruby-string">&quot;gui&quot;</span> <span class="ruby-keyword">then</span>
+        <span class="ruby-keyword">when</span> <span class="ruby-value">:gui</span> <span class="ruby-keyword">then</span>
           <span class="ruby-comment"># Replace shell colors with GUI ones:</span>
           <span class="ruby-identifier">@@colors</span>[<span class="ruby-value">:shell</span>].<span class="ruby-identifier">each_key</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">color</span><span class="ruby-operator">|</span>
             <span class="ruby-identifier">entry</span>.<span class="ruby-identifier">gsub!</span> <span class="ruby-identifier">@@colors</span>[<span class="ruby-value">:shell</span>][<span class="ruby-identifier">color</span>], <span class="ruby-identifier">@@colors</span>[<span class="ruby-value">:gui</span>][<span class="ruby-identifier">color</span>]
@@ -140,11 +142,103 @@ instance variables called @logs and @logs_gui.</p>
           <span class="ruby-ivar">@logs_gui</span>.<span class="ruby-identifier">push</span> <span class="ruby-identifier">entry</span>
 
         <span class="ruby-comment"># Normal logs: simply print them</span>
-        <span class="ruby-keyword">when</span> <span class="ruby-string">&quot;on&quot;</span> <span class="ruby-keyword">then</span>
-          <span class="ruby-identifier">puts</span> <span class="ruby-identifier">entry</span>
+        <span class="ruby-keyword">when</span> <span class="ruby-value">:on</span> <span class="ruby-keyword">then</span>
+          <span class="ruby-identifier">puts</span> <span class="ruby-identifier">digest</span>( <span class="ruby-value">:entry</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">entry</span>, <span class="ruby-value">:cap</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">%x`tput cols`</span> )
       <span class="ruby-keyword">end</span>
     <span class="ruby-keyword">end</span>
   <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+     <section id="private-instance-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Private Instance Methods</h3>
+       </header>
+
+    
+      <div id="method-i-digest" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">digest</span><span
+            class="method-args">( options = {} )</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Private method. Caps a single line to the given length. To work properly,
+the following should be provided: :entry =&gt; line of text to split (if
+needed). :cap =&gt; max characters per single line.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="digest-source">
+            <pre><span class="ruby-comment"># File lib/oink.rb, line 33</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">digest</span>( <span class="ruby-identifier">options</span> = {} )
+  <span class="ruby-comment"># Complete container of all composed lines:</span>
+  <span class="ruby-identifier">composed_container</span> = <span class="ruby-constant">Array</span>.<span class="ruby-identifier">new</span>
+
+  <span class="ruby-comment"># To preserve formatting, gotta check how many spaces there are at the</span>
+  <span class="ruby-comment"># beginning of the line, and add them back to the first composed line:</span>
+  <span class="ruby-identifier">spaces</span> = <span class="ruby-node">&quot;#{options[:entry]}&quot;</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">-</span> <span class="ruby-node">&quot;#{options[:entry]}&quot;</span>.<span class="ruby-identifier">lstrip</span>.<span class="ruby-identifier">length</span>
+  <span class="ruby-identifier">composed_line</span> = <span class="ruby-string">&quot; &quot;</span> <span class="ruby-operator">*</span> <span class="ruby-identifier">spaces</span>
+
+  <span class="ruby-comment"># Split each message string on spaces:</span>
+  <span class="ruby-node">&quot;#{options[:entry]}&quot;</span>.<span class="ruby-identifier">split</span>( <span class="ruby-string">&quot; &quot;</span> ).<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">word</span><span class="ruby-operator">|</span>
+    <span class="ruby-comment"># This is needed to avoid counting colors escape sequences for the max</span>
+    <span class="ruby-comment"># length:</span>
+    <span class="ruby-identifier">composed_bare</span> = <span class="ruby-string">&quot;&quot;</span>
+
+    <span class="ruby-comment"># Do not add a space right after another one:</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-string">&quot; &quot;</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">composed_line</span>[<span class="ruby-value">-1</span>] <span class="ruby-keyword">then</span>
+      <span class="ruby-identifier">composed_bare</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">word</span>
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-identifier">composed_bare</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">composed_line</span> <span class="ruby-operator">+</span> <span class="ruby-string">&quot; &quot;</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">word</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-identifier">@@colors</span>[<span class="ruby-value">:shell</span>].<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">key</span>, <span class="ruby-identifier">entry</span><span class="ruby-operator">|</span>
+      <span class="ruby-identifier">composed_bare</span>.<span class="ruby-identifier">gsub!</span> <span class="ruby-identifier">entry</span>, <span class="ruby-string">&quot;&quot;</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-comment"># If composed_bare exceeds is within term_size, keep composing:</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-node">&quot;#{options[:cap]}&quot;</span>.<span class="ruby-identifier">to_i</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-identifier">composed_bare</span>.<span class="ruby-identifier">length</span> <span class="ruby-keyword">then</span>
+      <span class="ruby-comment"># Add a space if needed:</span>
+      <span class="ruby-keyword">unless</span> <span class="ruby-identifier">composed_line</span>.<span class="ruby-identifier">empty?</span> <span class="ruby-keyword">then</span>
+        <span class="ruby-identifier">composed_line</span> <span class="ruby-operator">+=</span> <span class="ruby-string">&quot; &quot;</span>
+      <span class="ruby-keyword">end</span>
+
+      <span class="ruby-comment"># Always add the word:</span>
+      <span class="ruby-identifier">composed_line</span> <span class="ruby-operator">+=</span> <span class="ruby-node">&quot;#{word}&quot;</span>
+
+    <span class="ruby-comment"># If the current word would not fit in within term_size, add the</span>
+    <span class="ruby-comment"># current composed_line to the composed_container.push, and start</span>
+    <span class="ruby-comment"># composing the next one with an indentation of 1 space.</span>
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-identifier">composed_container</span>.<span class="ruby-identifier">push</span> <span class="ruby-identifier">composed_line</span>
+
+      <span class="ruby-identifier">composed_line</span> = <span class="ruby-string">&quot; &quot;</span> <span class="ruby-operator">*</span> (<span class="ruby-identifier">spaces</span> <span class="ruby-operator">+</span> <span class="ruby-value">1</span>) <span class="ruby-operator">+</span> <span class="ruby-node">&quot;#{word}&quot;</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-comment"># Be sure not to skip the last one:</span>
+  <span class="ruby-identifier">composed_container</span>.<span class="ruby-identifier">push</span> <span class="ruby-identifier">composed_line</span>
+
+  <span class="ruby-comment"># Finally, return the composed message:</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">composed_container</span>.<span class="ruby-identifier">join</span> <span class="ruby-string">&quot;\n&quot;</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           

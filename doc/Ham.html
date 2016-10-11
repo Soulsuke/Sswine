@@ -197,7 +197,7 @@ usable config file contain a wine_env folder.</p>
           
           <p>Constructor. To work properly, the following should be provided: :path
 =&gt; path to the folder which should become a <a href="Ham.html">Ham</a>.
-:logs =&gt; on/off/gui, modality to use for logging.</p>
+:logs =&gt; :off/:on/:gui, modality to use for logging.</p>
           
           
 
@@ -210,7 +210,7 @@ usable config file contain a wine_env folder.</p>
   <span class="ruby-ivar">@edible</span> = <span class="ruby-keyword">true</span>
   <span class="ruby-ivar">@config_global</span> = <span class="ruby-constant">Hash</span>.<span class="ruby-identifier">new</span>
   <span class="ruby-ivar">@config_entries</span> = <span class="ruby-constant">Hash</span>.<span class="ruby-identifier">new</span>
-  <span class="ruby-ivar">@logs</span> = <span class="ruby-node">&quot;#{options[:logs]}&quot;</span>.<span class="ruby-identifier">downcase</span>
+  <span class="ruby-ivar">@logs</span> = <span class="ruby-identifier">options</span>[<span class="ruby-value">:logs</span>]
   <span class="ruby-ivar">@logs_gui</span> = <span class="ruby-constant">Array</span>.<span class="ruby-identifier">new</span>
 
   <span class="ruby-comment"># If there&#39;s no wine_env folder, it&#39;s not edible.</span>
@@ -516,9 +516,9 @@ making other changes.</p>
 
         <div class="method-description">
           
-          <p>Checks if the given entry is valid, and makes sure the Path and Icon  keys
-will point to, respectively, an existing folder or file. Returns a valid
-tweaked entry on success, or an empty one otherwise.</p>
+          <p>Private method. Checks if the given entry is valid, and makes sure the Path
+and Icon keys will point to, respectively, an existing folder or file.
+Returns a valid tweaked entry on success, or an empty one otherwise.</p>
           
           
 
@@ -608,8 +608,9 @@ tweaked entry on success, or an empty one otherwise.</p>
 
         <div class="method-description">
           
-          <p>Returns a string containing the “env &lt;variables&gt;” command needed to
-run wine binaries without issues, to avoid code duplication.</p>
+          <p>Private method. Returns a string containing the “env &lt;variables&gt;”
+command needed to run wine binaries without issues, to avoid code
+duplication.</p>
           
           
 

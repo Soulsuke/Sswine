@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>class SswineLauncher - RDoc Documentation</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "./";
+</script>
+
+<script src="./js/jquery.js"></script>
+<script src="./js/darkfish.js"></script>
+
+<link href="./css/fonts.css" rel="stylesheet">
+<link href="./css/rdoc.css" rel="stylesheet">
+
+
+
+<body id="top" role="document" class="class">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="./index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="./table_of_contents.html#pages">Pages</a>
+    <a href="./table_of_contents.html#classes">Classes</a>
+    <a href="./table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+
+  <div id="class-metadata">
+    
+    <div id="parent-class-section" class="nav-section">
+  <h3>Parent</h3>
+
+  
+  <p class="link">Object
+  
+</div>
+
+    <div id="includes-section" class="nav-section">
+  <h3>Included Modules</h3>
+
+  <ul class="link-list">
+  
+  
+    <li><a class="include" href="Oink.html">Oink</a>
+  
+  
+  </ul>
+</div>
+
+    
+    <!-- Method Quickref -->
+<div id="method-list-section" class="nav-section">
+  <h3>Methods</h3>
+
+  <ul class="link-list" role="directory">
+    
+    <li ><a href="#method-c-new">::new</a>
+    
+    <li ><a href="#method-i-showHelp">#showHelp</a>
+    
+    <li ><a href="#method-i-squealForMe">#squealForMe</a>
+    
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-labelledby="class-SswineLauncher">
+  <h1 id="class-SswineLauncher" class="class">
+    class SswineLauncher
+  </h1>
+
+  <section class="description">
+    
+<p>A simple launcher for <a href="Sswine.html">Sswine</a>!</p>
+
+<p>This file must remain within Sswine&#39;s folder, but it can be symlinked
+anywhere. There are no other requirements, really.</p>
+
+<p>It uses a class so it can include the <a href="Oink.html">Oink</a> module
+without any issue.</p>
+
+  </section>
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+
+    
+     <section id="public-class-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Class Methods</h3>
+       </header>
+
+    
+      <div id="method-c-new" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">new</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Constructor. It does nothing, really.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="new-source">
+            <pre><span class="ruby-comment"># File sswine, line 30</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>
+  <span class="ruby-ivar">@logs</span> = <span class="ruby-value">:on</span>
+  <span class="ruby-ivar">@logs_gui</span> = <span class="ruby-constant">Array</span>.<span class="ruby-identifier">new</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Instance Methods</h3>
+       </header>
+
+    
+      <div id="method-i-squealForMe" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">squealForMe</span><span
+            class="method-args">( args )</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Depending on command line arguments, starts <a
+href="Sswine.html">Sswine</a> in a different way.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="squealForMe-source">
+            <pre><span class="ruby-comment"># File sswine, line 86</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">squealForMe</span>( <span class="ruby-identifier">args</span> )
+  <span class="ruby-comment"># First off, attempt to set the process name:</span>
+  <span class="ruby-keyword">begin</span>
+    <span class="ruby-identifier">handle</span> = <span class="ruby-keyword">defined?</span>(<span class="ruby-constant">DL</span><span class="ruby-operator">::</span><span class="ruby-constant">Handle</span>) <span class="ruby-operator">?</span> <span class="ruby-constant">DL</span><span class="ruby-operator">::</span><span class="ruby-constant">Handle</span> <span class="ruby-operator">:</span> <span class="ruby-constant">Fiddle</span><span class="ruby-operator">::</span><span class="ruby-constant">Handle</span>
+    <span class="ruby-constant">Fiddle</span><span class="ruby-operator">::</span><span class="ruby-constant">Function</span>.<span class="ruby-identifier">new</span>(
+      <span class="ruby-identifier">handle</span>[<span class="ruby-string">&#39;prctl&#39;</span>.<span class="ruby-identifier">freeze</span>],
+      [ <span class="ruby-constant">Fiddle</span><span class="ruby-operator">::</span><span class="ruby-constant">TYPE_INT</span>, <span class="ruby-constant">Fiddle</span><span class="ruby-operator">::</span><span class="ruby-constant">TYPE_VOIDP</span>, <span class="ruby-constant">Fiddle</span><span class="ruby-operator">::</span><span class="ruby-constant">TYPE_LONG</span>,
+        <span class="ruby-constant">Fiddle</span><span class="ruby-operator">::</span><span class="ruby-constant">TYPE_LONG</span>, <span class="ruby-constant">Fiddle</span><span class="ruby-operator">::</span><span class="ruby-constant">TYPE_LONG</span>
+      ],
+      <span class="ruby-constant">Fiddle</span><span class="ruby-operator">::</span><span class="ruby-constant">TYPE_INT</span>
+    ).<span class="ruby-identifier">call</span>(<span class="ruby-value">15</span>, <span class="ruby-string">&quot;sswine&quot;</span>, <span class="ruby-value">0</span>, <span class="ruby-value">0</span>, <span class="ruby-value">0</span>)
+  <span class="ruby-keyword">rescue</span>
+    <span class="ruby-comment"># I really don&#39;t want to put a warning message here, really... It&#39;d be</span>
+    <span class="ruby-comment"># quite annoying to see it everytime on systems where prctl isn&#39;t</span>
+    <span class="ruby-comment"># supported, right?</span>
+  <span class="ruby-keyword">end</span>
+ 
+  <span class="ruby-keyword">if</span> <span class="ruby-value">1</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">args</span>.<span class="ruby-identifier">size</span> <span class="ruby-keyword">then</span>
+  
+    <span class="ruby-comment"># Check Hams and their entries for errors:</span>
+    <span class="ruby-keyword">if</span> [ <span class="ruby-string">&quot;-c&quot;</span>, <span class="ruby-string">&quot;--check&quot;</span> ].<span class="ruby-identifier">include?</span> <span class="ruby-identifier">args</span>[<span class="ruby-value">0</span>] <span class="ruby-keyword">then</span>
+      <span class="ruby-identifier">s</span> = <span class="ruby-constant">Sswine</span>.<span class="ruby-identifier">new</span> <span class="ruby-value">:logs</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">:on</span>
+  
+    <span class="ruby-comment"># Create desktop files:</span>
+    <span class="ruby-keyword">elsif</span> [ <span class="ruby-string">&quot;-d&quot;</span>, <span class="ruby-string">&quot;--desktop&quot;</span> ].<span class="ruby-identifier">include?</span> <span class="ruby-identifier">args</span>[<span class="ruby-value">0</span>] <span class="ruby-keyword">then</span>
+      <span class="ruby-identifier">s</span> = <span class="ruby-constant">Sswine</span>.<span class="ruby-identifier">new</span> <span class="ruby-value">:logs</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">:on</span>
+      <span class="ruby-identifier">s</span>.<span class="ruby-identifier">writeMenuEntries</span>
+  
+    <span class="ruby-comment"># Launch the GTK3 GUI:</span>
+    <span class="ruby-keyword">elsif</span> [ <span class="ruby-string">&quot;-g&quot;</span>, <span class="ruby-string">&quot;--gui&quot;</span> ].<span class="ruby-identifier">include?</span> <span class="ruby-identifier">args</span>[<span class="ruby-value">0</span>] <span class="ruby-keyword">then</span>
+      <span class="ruby-comment"># It gets required here, so that GTK3 is not a mandatory dependency</span>
+      <span class="ruby-comment"># to run Sswine.</span>
+      <span class="ruby-keyword">begin</span>
+        <span class="ruby-identifier">require</span> <span class="ruby-string">&quot;./lib/gilt.rb&quot;</span>
+  
+      <span class="ruby-keyword">rescue</span> <span class="ruby-constant">LoadError</span>
+        <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;#{@colors[:red]}!!! Error:#{@colors[:default]} &quot;</span> <span class="ruby-operator">+</span>
+             <span class="ruby-string">&quot;gem `gtk3` is required to run the GTK3 GUI.&quot;</span>
+        <span class="ruby-identifier">exit</span> <span class="ruby-value">-1</span>
+      <span class="ruby-keyword">end</span>
+  
+      <span class="ruby-constant">Gilt</span>.<span class="ruby-identifier">new</span>
+  
+    <span class="ruby-comment"># Help reference:</span>
+    <span class="ruby-keyword">elsif</span> [ <span class="ruby-string">&quot;-h&quot;</span>, <span class="ruby-string">&quot;--help&quot;</span> ].<span class="ruby-identifier">include?</span> <span class="ruby-identifier">args</span>[<span class="ruby-value">0</span>] <span class="ruby-keyword">then</span>
+      <span class="ruby-identifier">showHelp</span>
+  
+    <span class="ruby-comment"># Kill all hams:</span>
+    <span class="ruby-keyword">elsif</span> [ <span class="ruby-string">&quot;-k&quot;</span>, <span class="ruby-string">&quot;--kill&quot;</span> ].<span class="ruby-identifier">include?</span> <span class="ruby-identifier">args</span>[<span class="ruby-value">0</span>] <span class="ruby-keyword">then</span>
+      <span class="ruby-identifier">s</span> = <span class="ruby-constant">Sswine</span>.<span class="ruby-identifier">new</span>
+      <span class="ruby-identifier">s</span>.<span class="ruby-identifier">killAllHams</span>
+  
+    <span class="ruby-comment"># Run a shell for a ham:</span>
+    <span class="ruby-keyword">elsif</span> [ <span class="ruby-string">&quot;-s&quot;</span>, <span class="ruby-string">&quot;--shell&quot;</span> ].<span class="ruby-identifier">include?</span> <span class="ruby-identifier">args</span>[<span class="ruby-value">0</span>] <span class="ruby-keyword">then</span>
+      <span class="ruby-identifier">s</span> = <span class="ruby-constant">Sswine</span>.<span class="ruby-identifier">new</span>
+      <span class="ruby-identifier">s</span>.<span class="ruby-identifier">openShell</span>
+  
+    <span class="ruby-comment"># Update all hams:</span>
+    <span class="ruby-keyword">elsif</span> [ <span class="ruby-string">&quot;-u&quot;</span>, <span class="ruby-string">&quot;--update&quot;</span> ].<span class="ruby-identifier">include?</span> <span class="ruby-identifier">args</span>[<span class="ruby-value">0</span>] <span class="ruby-keyword">then</span>
+      <span class="ruby-identifier">s</span> = <span class="ruby-constant">Sswine</span>.<span class="ruby-identifier">new</span>
+      <span class="ruby-identifier">s</span>.<span class="ruby-identifier">updateAllHams</span>
+    <span class="ruby-keyword">end</span>
+  
+    <span class="ruby-identifier">exit</span> <span class="ruby-value">0</span>
+  
+  <span class="ruby-comment"># Wrong number of parameters:</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">showHelp</span>
+    <span class="ruby-identifier">exit</span> <span class="ruby-value">-1</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+     <section id="private-instance-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Private Instance Methods</h3>
+       </header>
+
+    
+      <div id="method-i-showHelp" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">showHelp</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Private method. Contains the help reference of command line <a
+href="Sswine.html">Sswine</a>.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="showHelp-source">
+            <pre><span class="ruby-comment"># File sswine, line 37</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">showHelp</span>
+  <span class="ruby-comment"># Array containing various lines of the help reference:</span>
+  <span class="ruby-identifier">lines</span> = <span class="ruby-constant">Array</span>.<span class="ruby-identifier">new</span>
+
+  <span class="ruby-comment"># Help reference lines:</span>
+  <span class="ruby-comment"># Header:</span>
+  <span class="ruby-identifier">lines</span>.<span class="ruby-identifier">push</span> <span class="ruby-node">&quot;#{@@colors[:shell][:yellow]}Sswine: split wine. &quot;</span> <span class="ruby-operator">+</span>
+             <span class="ruby-node">&quot;#{@@colors[:shell][:default]}&quot;</span>
+  <span class="ruby-identifier">lines</span>.<span class="ruby-identifier">push</span> <span class="ruby-node">&quot;#{@@colors[:shell][:yellow]}Usage:&quot;</span> <span class="ruby-operator">+</span>
+             <span class="ruby-node">&quot;#{@@colors[:shell][:default]}&quot;</span>
+  <span class="ruby-comment"># Check hams:</span>
+  <span class="ruby-identifier">lines</span>.<span class="ruby-identifier">push</span> <span class="ruby-node">&quot;#{@@colors[:shell][:blue]}#{$0} -c/--check&quot;</span> <span class="ruby-operator">+</span>
+             <span class="ruby-node">&quot;#{@@colors[:shell][:default]}: &quot;</span> <span class="ruby-operator">+</span>
+             <span class="ruby-string">&quot;checks each entry of each Ham for errors. No output means &quot;</span> <span class="ruby-operator">+</span>
+             <span class="ruby-string">&quot;that everything is ok.&quot;</span>
+  <span class="ruby-comment"># Write .desktop files:</span>
+  <span class="ruby-identifier">lines</span>.<span class="ruby-identifier">push</span> <span class="ruby-node">&quot;#{@@colors[:shell][:blue]}#{$0} -d/--desktop&quot;</span> <span class="ruby-operator">+</span>
+             <span class="ruby-node">&quot;#{@@colors[:shell][:default]}: &quot;</span> <span class="ruby-operator">+</span>
+             <span class="ruby-string">&quot;writes .desktop files for each valid entry of each edible Ham.&quot;</span>
+  <span class="ruby-comment"># GTK3 GUI:</span>
+  <span class="ruby-identifier">lines</span>.<span class="ruby-identifier">push</span> <span class="ruby-node">&quot;#{@@colors[:shell][:blue]}#{$0} -g/--gui&quot;</span> <span class="ruby-operator">+</span>
+             <span class="ruby-node">&quot;#{@@colors[:shell][:default]}: &quot;</span> <span class="ruby-operator">+</span>
+             <span class="ruby-string">&quot;launches the GTK3 GUI.&quot;</span>
+  <span class="ruby-comment"># Help reference:</span>
+  <span class="ruby-identifier">lines</span>.<span class="ruby-identifier">push</span> <span class="ruby-node">&quot;#{@@colors[:shell][:blue]}#{$0} -h/--help&quot;</span> <span class="ruby-operator">+</span>
+             <span class="ruby-node">&quot;#{@@colors[:shell][:default]}: &quot;</span> <span class="ruby-operator">+</span>
+             <span class="ruby-string">&quot;shows this help reference.&quot;</span>
+  <span class="ruby-comment"># Kill all hams:</span>
+  <span class="ruby-identifier">lines</span>.<span class="ruby-identifier">push</span> <span class="ruby-node">&quot;#{@@colors[:shell][:blue]}#{$0} -k/--kill&quot;</span> <span class="ruby-operator">+</span>
+             <span class="ruby-node">&quot;#{@@colors[:shell][:default]}: &quot;</span> <span class="ruby-operator">+</span>
+             <span class="ruby-string">&quot;runs &#39;wineserver -k&#39; for each Ham.&quot;</span>
+  <span class="ruby-comment"># Open shell:</span>
+  <span class="ruby-identifier">lines</span>.<span class="ruby-identifier">push</span> <span class="ruby-node">&quot;#{@@colors[:shell][:blue]}#{$0} -s/--shell&quot;</span> <span class="ruby-operator">+</span>
+             <span class="ruby-node">&quot;#{@@colors[:shell][:default]}: &quot;</span> <span class="ruby-operator">+</span>
+             <span class="ruby-string">&quot;prompts the user to choose an edible Ham. Then, the user&#39;s &quot;</span> <span class="ruby-operator">+</span>
+             <span class="ruby-string">&quot;default shell is opened in the choosen entry&#39;s folder, with &quot;</span> <span class="ruby-operator">+</span>
+             <span class="ruby-string">&quot;the WINEPREFIX variable correctly set.&quot;</span>
+  <span class="ruby-comment"># Update all hams:</span>
+  <span class="ruby-identifier">lines</span>.<span class="ruby-identifier">push</span> <span class="ruby-node">&quot;#{@@colors[:shell][:blue]}#{$0} -u/--update&quot;</span> <span class="ruby-operator">+</span>
+             <span class="ruby-node">&quot;#{@@colors[:shell][:default]}: &quot;</span> <span class="ruby-operator">+</span>
+             <span class="ruby-string">&quot;runs &#39;wineboot&#39; for each edible Ham. This is supposed to &quot;</span> <span class="ruby-operator">+</span>
+             <span class="ruby-string">&quot;update wine files on each of them.&quot;</span>
+
+  <span class="ruby-comment"># Finally, log everything!</span>
+  <span class="ruby-identifier">oink</span> <span class="ruby-operator">*</span><span class="ruby-identifier">lines</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+  </section>
+</main>
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="http://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.1.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+

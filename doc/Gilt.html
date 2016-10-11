@@ -283,10 +283,10 @@ text to show on the GUI.</p>
   <span class="ruby-comment"># Depending on the command, do the right thing:</span>
   <span class="ruby-keyword">case</span> <span class="ruby-ivar">@command</span>
     <span class="ruby-keyword">when</span> <span class="ruby-string">&quot;check&quot;</span> <span class="ruby-keyword">then</span>
-      <span class="ruby-identifier">s</span> = <span class="ruby-constant">Sswine</span>.<span class="ruby-identifier">new</span> <span class="ruby-value">:logs</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;gui&quot;</span>
+      <span class="ruby-identifier">s</span> = <span class="ruby-constant">Sswine</span>.<span class="ruby-identifier">new</span> <span class="ruby-value">:logs</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">:gui</span>
 
     <span class="ruby-keyword">when</span> <span class="ruby-string">&quot;desktop&quot;</span> <span class="ruby-keyword">then</span>
-      <span class="ruby-identifier">s</span> = <span class="ruby-constant">Sswine</span>.<span class="ruby-identifier">new</span> <span class="ruby-value">:logs</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;gui&quot;</span>
+      <span class="ruby-identifier">s</span> = <span class="ruby-constant">Sswine</span>.<span class="ruby-identifier">new</span> <span class="ruby-value">:logs</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">:gui</span>
       <span class="ruby-identifier">s</span>.<span class="ruby-identifier">writeMenuEntries</span>
 
     <span class="ruby-keyword">when</span> <span class="ruby-string">&quot;kill&quot;</span> <span class="ruby-keyword">then</span>

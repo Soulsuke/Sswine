@@ -1,179 +1,162 @@
 #! /usr/bin/env ruby
 
-=begin
-A simple wrapper for Sswine!
-This file must remain within Sswine's folder, but it can be symlinked anywhere.
-There are no other requirements, really.
-=end
-
-# System requirements:
+# System requires:
 require "fiddle"
 require "pathname"
 
-# First off, attempt to set the process name:
-begin
-  handle = defined?(DL::Handle) ? DL::Handle : Fiddle::Handle
-  Fiddle::Function.new(
-    handle['prctl'.freeze],
-    [ Fiddle::TYPE_INT, Fiddle::TYPE_VOIDP, Fiddle::TYPE_LONG,
-      Fiddle::TYPE_LONG, Fiddle::TYPE_LONG
-    ],
-    Fiddle::TYPE_INT
-  ).call(15, "sswine", 0, 0, 0)
-rescue
-  # I really don't want to put a warning message here, really... It'd be quite
-  # annoying to see it everytime on systems where prctl isn't supported, right?
-end
+# cd into Sswine's directory to be able to require its libraries without any
+# issue:
+Dir.chdir Pathname.new( $0 ).realpath.dirname
 
-# Then into Sswine's directory:
-dir = Pathname.new $0
-Dir.chdir dir.realpath.dirname
-
-# Finally, require Sswine:
+# Sswine requires:
+require "./lib/oink.rb"
 require "./lib/sswine.rb"
 
-###############################################################################
-### Variables                                                               ###
-###############################################################################
-@colors = {
- :blue => "\e[34m",
- :cyan => "",
- :default => "\e[0m",
- :red => "\e[31m",
- :yellow => "\e[33m"
-}
+=begin
+A simple launcher for Sswine!  
+This file must remain within Sswine's folder, but it can be symlinked anywhere.
+There are no other requirements, really.  
+It uses a class so it can include the Oink module without any issue.  
+=end
 
-###############################################################################
-### Functions                                                               ###
-###############################################################################
-def showHelpReference
-  # Array containing various lines of the help reference:
-  lines = Array.new
+class SswineLauncher
+  @logs      # Logs modality, either on, off or gui.
+  @logs_gui  # Logs to be used by the GUI.
 
-  # Terminal size:
-  term_size = `tput cols`.to_i
+  # Our logger:
+  include Oink
 
-  # Help reference lines:
-  # Header:
-  lines.push "#{@colors[:yellow]}Sswine: split wine.#{@colors[:default]}"
-  lines.push "#{@colors[:yellow]}Usage:#{@colors[:default]}"
-  # Check hams:
-  lines.push "#{@colors[:blue]}#{$0} -c/--check#{@colors[:default]}: " +
-             "checks each entry of each Ham for errors. No output means " +
-             "that everything is ok."
-  # Write .desktop files:
-  lines.push "#{@colors[:blue]}#{$0} -d/--desktop#{@colors[:default]}: " +
-             "writes .desktop files for each valid entry of each edible Ham."
-  # GTK3 GUI:
-  lines.push "#{@colors[:blue]}#{$0} -g/--gui#{@colors[:default]}: " +
-             "launches the GTK3 GUI."
-  # Help reference:
-  lines.push "#{@colors[:blue]}#{$0} -h/--help#{@colors[:default]}: " +
-             "shows this help reference."
-  # Kill all hams:
-  lines.push "#{@colors[:blue]}#{$0} -k/--kill#{@colors[:default]}: " +
-             "runs 'wineserver -k' for each Ham."
-  # Open shell:
-  lines.push "#{@colors[:blue]}#{$0} -s/--shell#{@colors[:default]}: " +
-             "prompts the user to choose an edible Ham. Then, the user's " +
-             "default shell is opened in the choosen entry's folder, with " +
-             "the WINEPREFIX variable correctly set."
-  # Update all hams:
-  lines.push "#{@colors[:blue]}#{$0} -u/--update#{@colors[:default]}: " +
-             "runs 'wineboot' for each edible Ham. This is supposed to " +
-             "update wine files on each of them."
-
-
-  # Max 80 characters per line, but preserving words integrity! :3
-  lines.each do |entry|
-    # Composed line container, will not exceed term_size:
-    composed = ""
-
-    # Split each message string on spaces:
-    entry.split( " " ).each do |word|
-      # This is needed to avoid counting colors espace sequences for the max
-      # length:
-      composed_bare = composed + " " + word
-      @colors.each do |key, entry|
-        composed_bare.gsub! entry, ""
-      end
-
-      # If composed_bare exceeds is within term_size, keep composing:
-      if term_size >= composed_bare.length then
-        # Add a space when needed:
-        unless composed.empty? then
-          composed += " "
-        end
-        composed += "#{word}"
-
-      # If the current word would not fit in within term_size, print the
-      # current composed message, and start composing the next one with an
-      # indentation of 2 spaces.
-      else
-        puts composed
-        composed = "  #{word}"
-      end
-    end
-
-    # Finally, print the last line:
-    puts composed
+  # Constructor. It does nothing, really.
+  def initialize
+    @logs = :on
+    @logs_gui = Array.new
   end
-end
 
-###############################################################################
-### Main wrapper                                                            ###
-###############################################################################
-if 1 == ARGV.size then
+  # Private method. Contains the help reference of command line Sswine.
+  private
+  def showHelp
+    # Array containing various lines of the help reference:
+    lines = Array.new
+  
+    # Help reference lines:
+    # Header:
+    lines.push "#{@@colors[:shell][:yellow]}Sswine: split wine. " +
+               "#{@@colors[:shell][:default]}"
+    lines.push "#{@@colors[:shell][:yellow]}Usage:" +
+               "#{@@colors[:shell][:default]}"
+    # Check hams:
+    lines.push "#{@@colors[:shell][:blue]}#{$0} -c/--check" +
+               "#{@@colors[:shell][:default]}: " +
+               "checks each entry of each Ham for errors. No output means " +
+               "that everything is ok."
+    # Write .desktop files:
+    lines.push "#{@@colors[:shell][:blue]}#{$0} -d/--desktop" +
+               "#{@@colors[:shell][:default]}: " +
+               "writes .desktop files for each valid entry of each edible Ham."
+    # GTK3 GUI:
+    lines.push "#{@@colors[:shell][:blue]}#{$0} -g/--gui" +
+               "#{@@colors[:shell][:default]}: " +
+               "launches the GTK3 GUI."
+    # Help reference:
+    lines.push "#{@@colors[:shell][:blue]}#{$0} -h/--help" +
+               "#{@@colors[:shell][:default]}: " +
+               "shows this help reference."
+    # Kill all hams:
+    lines.push "#{@@colors[:shell][:blue]}#{$0} -k/--kill" +
+               "#{@@colors[:shell][:default]}: " +
+               "runs 'wineserver -k' for each Ham."
+    # Open shell:
+    lines.push "#{@@colors[:shell][:blue]}#{$0} -s/--shell" +
+               "#{@@colors[:shell][:default]}: " +
+               "prompts the user to choose an edible Ham. Then, the user's " +
+               "default shell is opened in the choosen entry's folder, with " +
+               "the WINEPREFIX variable correctly set."
+    # Update all hams:
+    lines.push "#{@@colors[:shell][:blue]}#{$0} -u/--update" +
+               "#{@@colors[:shell][:default]}: " +
+               "runs 'wineboot' for each edible Ham. This is supposed to " +
+               "update wine files on each of them."
 
-  # Check Hams and their entries for errors:
-  if [ "-c", "--check" ].include? ARGV[0] then
-    s = Sswine.new :logs => "on"
+    # Finally, log everything!
+    oink *lines
+  end
 
-  # Create desktop files:
-  elsif [ "-d", "--desktop" ].include? ARGV[0] then
-    s = Sswine.new :logs => "on"
-    s.writeMenuEntries
-
-  # Launch the GTK3 GUI:
-  elsif [ "-g", "--gui" ].include? ARGV[0] then
-    # It gets required here, so that GTK3 is not a mandatory dependency
-    # to run Sswine.
+  # Depending on command line arguments, starts Sswine in a different way.
+  public
+  def squealForMe( args )
+    # First off, attempt to set the process name:
     begin
-      require "./lib/gilt.rb"
-
-    rescue LoadError
-      puts "#{@colors[:red]}!!! Error:#{@colors[:default]} " +
-           "gem `gtk3` is required to run the GTK3 GUI."
+      handle = defined?(DL::Handle) ? DL::Handle : Fiddle::Handle
+      Fiddle::Function.new(
+        handle['prctl'.freeze],
+        [ Fiddle::TYPE_INT, Fiddle::TYPE_VOIDP, Fiddle::TYPE_LONG,
+          Fiddle::TYPE_LONG, Fiddle::TYPE_LONG
+        ],
+        Fiddle::TYPE_INT
+      ).call(15, "sswine", 0, 0, 0)
+    rescue
+      # I really don't want to put a warning message here, really... It'd be
+      # quite annoying to see it everytime on systems where prctl isn't
+      # supported, right?
+    end
+ 
+    if 1 == args.size then
+    
+      # Check Hams and their entries for errors:
+      if [ "-c", "--check" ].include? args[0] then
+        s = Sswine.new :logs => :on
+    
+      # Create desktop files:
+      elsif [ "-d", "--desktop" ].include? args[0] then
+        s = Sswine.new :logs => :on
+        s.writeMenuEntries
+    
+      # Launch the GTK3 GUI:
+      elsif [ "-g", "--gui" ].include? args[0] then
+        # It gets required here, so that GTK3 is not a mandatory dependency
+        # to run Sswine.
+        begin
+          require "./lib/gilt.rb"
+    
+        rescue LoadError
+          puts "#{@colors[:red]}!!! Error:#{@colors[:default]} " +
+               "gem `gtk3` is required to run the GTK3 GUI."
+          exit -1
+        end
+    
+        Gilt.new
+    
+      # Help reference:
+      elsif [ "-h", "--help" ].include? args[0] then
+        showHelp
+    
+      # Kill all hams:
+      elsif [ "-k", "--kill" ].include? args[0] then
+        s = Sswine.new
+        s.killAllHams
+    
+      # Run a shell for a ham:
+      elsif [ "-s", "--shell" ].include? args[0] then
+        s = Sswine.new
+        s.openShell
+    
+      # Update all hams:
+      elsif [ "-u", "--update" ].include? args[0] then
+        s = Sswine.new
+        s.updateAllHams
+      end
+    
+      exit 0
+    
+    # Wrong number of parameters:
+    else
+      showHelp
       exit -1
     end
-
-    Gilt.new
-
-  # Help reference:
-  elsif [ "-h", "--help" ].include? ARGV[0] then
-    showHelpReference
-
-  # Kill all hams:
-  elsif [ "-k", "--kill" ].include? ARGV[0] then
-    s = Sswine.new
-    s.killAllHams
-
-  # Run a shell for a ham:
-  elsif [ "-s", "--shell" ].include? ARGV[0] then
-    s = Sswine.new
-    s.openShell
-
-  # Update all hams:
-  elsif [ "-u", "--update" ].include? ARGV[0] then
-    s = Sswine.new
-    s.updateAllHams
   end
 
-  exit 0
-
-# Wrong number of parameters:
-else
-  showHelpReference
-  exit -1
 end
+
+sl = SswineLauncher.new
+sl.squealForMe ARGV
 
