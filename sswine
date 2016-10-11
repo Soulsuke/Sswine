@@ -33,53 +33,80 @@ Dir.chdir dir.realpath.dirname
 require "./lib/sswine.rb"
 
 ###############################################################################
+### Variables                                                               ###
+###############################################################################
+@colors = {
+ :blue => "\e[34m",
+ :cyan => "",
+ :default => "\e[0m",
+ :red => "\e[31m",
+ :yellow => "\e[33m"
+}
+
+###############################################################################
 ### Functions                                                               ###
 ###############################################################################
 def showHelpReference
+  # Array containing various lines of the help reference:
   lines = Array.new
+
+  # Terminal size:
+  term_size = `tput cols`.to_i
 
   # Help reference lines:
   # Header:
-  lines.push "\e[33mSswine: split wine."
-  lines.push "\e[33mUsage:\e[0m"
+  lines.push "#{@colors[:yellow]}Sswine: split wine.#{@colors[:default]}"
+  lines.push "#{@colors[:yellow]}Usage:#{@colors[:default]}"
   # Check hams:
-  lines.push "\e[34msswine -c/--check\e[0m: checks each entry of each Ham " +
-             "for errors. No output means that everything is ok."
+  lines.push "#{@colors[:blue]}#{$0} -c/--check#{@colors[:default]}: " +
+             "checks each entry of each Ham for errors. No output means " +
+             "that everything is ok."
   # Write .desktop files:
-  lines.push "\e[34msswine -d/--desktop\e[0m: writes .desktop files for each" +
-             " valid entry of each edible Ham."
+  lines.push "#{@colors[:blue]}#{$0} -d/--desktop#{@colors[:default]}: " +
+             "writes .desktop files for each valid entry of each edible Ham."
   # GTK3 GUI:
-  lines.push "\e[34msswine -g/--gui\e[0m: launches the GTK3 GUI."
+  lines.push "#{@colors[:blue]}#{$0} -g/--gui#{@colors[:default]}: " +
+             "launches the GTK3 GUI."
   # Help reference:
-  lines.push "\e[34msswine -h/--help\e[0m: shows this help reference."
+  lines.push "#{@colors[:blue]}#{$0} -h/--help#{@colors[:default]}: " +
+             "shows this help reference."
   # Kill all hams:
-  lines.push "\e[34msswine -k/--kill\e[0m: runs 'wineserver -k' for each Ham."
+  lines.push "#{@colors[:blue]}#{$0} -k/--kill#{@colors[:default]}: " +
+             "runs 'wineserver -k' for each Ham."
   # Open shell:
-  lines.push "\e[34msswine -s/--shell\e[0m: prompts the user to choose an " +
-             "edible Ham. Then, the user's default shell is opened in the " +
-             "choosen entry's folder, with the WINEPREFIX variable correctly" +
-             " set."
+  lines.push "#{@colors[:blue]}#{$0} -s/--shell#{@colors[:default]}: " +
+             "prompts the user to choose an edible Ham. Then, the user's " +
+             "default shell is opened in the choosen entry's folder, with " +
+             "the WINEPREFIX variable correctly set."
   # Update all hams:
-  lines.push "\e[34msswine -u/--update\e[0m: runs 'wineboot' for each edible" +
-             " Ham. This is supposed to update wine files on each of them."
+  lines.push "#{@colors[:blue]}#{$0} -u/--update#{@colors[:default]}: " +
+             "runs 'wineboot' for each edible Ham. This is supposed to " +
+             "update wine files on each of them."
+
 
   # Max 80 characters per line, but preserving words integrity! :3
   lines.each do |entry|
-    # 80 characters line container:
+    # Composed line container, will not exceed term_size:
     composed = ""
 
     # Split each message string on spaces:
     entry.split( " " ).each do |word|
-      # If the current composed message plus the current word exceeds 80 is
-      # within 80 characters, keep composing:
-      if 80 >= "#{composed + " " + word}".length then
+      # This is needed to avoid counting colors espace sequences for the max
+      # length:
+      composed_bare = composed + " " + word
+      @colors.each do |key, entry|
+        composed_bare.gsub! entry, ""
+      end
+
+      # If composed_bare exceeds is within term_size, keep composing:
+      if term_size >= composed_bare.length then
         # Add a space when needed:
         unless composed.empty? then
           composed += " "
         end
         composed += "#{word}"
 
-      # If the current word would not fit in an 80 characters line, print the
+      # If the current word would not fit in within term_size, print the
       # current composed message, and start composing the next one with an
       # indentation of 2 spaces.
       else
@@ -115,7 +142,8 @@ if 1 == ARGV.size then
       require "./lib/gilt.rb"
 
     rescue LoadError
-      puts "\e[31m!!! Error:\e[0m gem `gtk3` is required to run the GTK3 GUI."
+      puts "#{@colors[:red]}!!! Error:#{@colors[:default]} " +
+           "gem `gtk3` is required to run the GTK3 GUI."
       exit -1
     end
 
