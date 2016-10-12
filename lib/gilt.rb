@@ -1,5 +1,5 @@
 require "gtk3"
-require "./lib/sswine.rb"
+require "#{Pathname.new( $0 ).realpath.dirname}/lib/sswine.rb"
 
 =begin
 Gilt: a GTK3 GUI for Sswine.  

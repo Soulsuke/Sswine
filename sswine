@@ -1,16 +1,9 @@
 #! /usr/bin/env ruby
 
-# System requires:
 require "fiddle"
 require "pathname"
-
-# cd into Sswine's directory to be able to require its libraries without any
-# issue:
-Dir.chdir Pathname.new( $0 ).realpath.dirname
-
-# Sswine requires:
-require "./lib/oink.rb"
-require "./lib/sswine.rb"
+require "#{Pathname.new( $0 ).realpath.dirname}/lib/oink.rb"
+require "#{Pathname.new( $0 ).realpath.dirname}/lib/sswine.rb"
 
 =begin
 A simple launcher for Sswine!  
@@ -116,11 +109,13 @@ class SswineLauncher
         # It gets required here, so that GTK3 is not a mandatory dependency
         # to run Sswine.
         begin
-          require "./lib/gilt.rb"
+          require "#{Pathname.new( $0 ).realpath.dirname}/lib/gilt.rb"
     
         rescue LoadError
-          puts "#{@colors[:red]}!!! Error:#{@colors[:default]} " +
-               "gem `gtk3` is required to run the GTK3 GUI."
+          puts "#{@@colors[:shell][:red]}!!! Error:" +
+               "#{@@colors[:shell][:default]} " +
+               "Failed to start the GUI! Is the gem `gtk3` correctly " +
+               "installed?"
           exit -1
         end
     

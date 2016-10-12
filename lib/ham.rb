@@ -1,6 +1,6 @@
 require "pathname"
 require "yaml"
-require "./lib/oink.rb"
+require "#{Pathname.new( $0 ).realpath.dirname}/lib/oink.rb"
 
 =begin
 Ham class.  

@@ -1,7 +1,7 @@
 require "fileutils"
 require "pathname"
-require "./lib/ham.rb"
-require "./lib/oink.rb"
+require "#{Pathname.new( $0 ).realpath.dirname}/lib/ham.rb"
+require "#{Pathname.new( $0 ).realpath.dirname}/lib/oink.rb"
 
 =begin
 Sswine stands for "Sswine: split wine".  
