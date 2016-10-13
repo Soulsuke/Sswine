@@ -219,16 +219,23 @@ class Gilt < Gtk::Window
           ]
 
           # 2. Check which one is installed:
+          success = false
+
           terminal_emulators.each do |term|
             # 3. If a terminal has been found, use it:
             unless `which #{term} 2> /dev/null`.empty? then
               `#{term} -e "#{$0} -s" &> /dev/null`
-              oink "Used terminal emulator: #{`which #{term}`}"
+              oink "Used terminal emulator: #{@colors[:yellow]}" +
+                   "#{`which #{term}`}#{@colors[:default]}"
+              success = true
               break
             end
+          end
 
-            # 4. If no terminal has been found, return an error:
-            oink "No terminal emulator found in the system's path.\n" +
+          # 4. If no terminal has been found, return an error:
+          unless success then
+            oink "#{@colors[:red]}No terminal emulator found in the " +
+                 "system's path.#{@colors[:default]}\n" +
                  "Please, install one of the following:\n" +
                  terminal_emulators.join( "\n" )
           end
@@ -245,7 +252,7 @@ class Gilt < Gtk::Window
       # If even the Sswine instance contains no logs, then show a "no errors"
       # message:
       if sswine.nil? or sswine.logs_gui.empty? then
-        oink "No errors occurred, everything is fine."
+        oink "No errors occurred, everything went fine."
 
       # Else, appende the logs of our Sswine instance:
       else
