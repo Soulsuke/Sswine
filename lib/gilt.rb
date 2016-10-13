@@ -125,14 +125,42 @@ class Gilt < Gtk::Window
     # This will countain the TextBuffer to show:
     buffer = Gtk::TextBuffer.new
 
-    # This will contain the tags to apply to the buffer:
-    tags = Array.new
+    # This is the list of tags to use:
+    tags = Hash.new
+    @colors.each_key do |key|
+      unless :default == key then
+        tags["#{key}"] = buffer.create_tag "#{key}"
+        tags["#{key}"].set_foreground "#{key}"
+      end
+    end
 
     # Now, for each entry of logs_gui....
-    @logs_gui.each do |entry|
+    @logs_gui.each_with_index do |entry, idx|
+      prev_length = buffer.text.length
+
       # Text part: this is easy!
-      buffer.text = buffer.text + entry[:text] + "    \n"
+      buffer.text += entry[:text] + "    \n"
+
+      # First, handle tags:
+      entry[:tags].each do |tag|
+        # Extra check for malformed tags:
+        if tag.key? :color and tag.key? :begin and tag.key? :end then
+          # Begin iter:
+          iter_begin = buffer.get_iter_at :offset => prev_length + tag[:begin]
+
+          # End iter:
+          iter_end = buffer.get_iter_at :offset => prev_length + tag[:begin]
+
+          # Apply tag:
+          buffer.apply_tag tags[tag[:color]], iter_begin, iter_end
+        end
+      end
     end
+
+    # TODO: add all the tags here. They must be added here for them to work.
+    b = buffer.get_iter_at :offset => 9
+    e = buffer.get_iter_at :offset => 28
+    buffer.apply_tag tags["red"], b, e
 
     return buffer
   end

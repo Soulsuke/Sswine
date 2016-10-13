@@ -20,7 +20,7 @@ module Oink
   def oink_initialize
     @colors = {
       :blue => "\e[34m",
-      :cyan => "",
+      :cyan => "\e[36m",
       :red => "\e[31m",
       :yellow => "\e[33m",
       # Always keep this one last:

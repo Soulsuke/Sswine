@@ -194,14 +194,14 @@ class Sswine
 
       # If the GUI entry has been created, print it first:
       unless gui_desktop_entry.nil? then
-        oink " > #{@colors[:blue]}Sswine" +
+        oink " > #{@colors[:cyan]}Sswine" +
              "#{@colors[:default]}",
              "    #{gui_desktop_entry.basename}"
       end
 
       created.each do |key, entries|
         # Show the Ham's name:
-        oink " > #{@colors[:blue]}#{key}#{@colors[:default]}"
+        oink " > #{@colors[:cyan]}#{key}#{@colors[:default]}"
 
         # Show what this Ham has generated:
         entries.each do |entry|
