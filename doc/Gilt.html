@@ -290,7 +290,7 @@ of have to get used to designing them, so here we are.</p>
 
           
           <div class="method-source-code" id="executeCommand-source">
-            <pre><span class="ruby-comment"># File lib/gilt.rb, line 173</span>
+            <pre><span class="ruby-comment"># File lib/gilt.rb, line 187</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">executeCommand</span>
   <span class="ruby-comment"># This is to clear logs:</span>
   <span class="ruby-identifier">logs_gui_clear</span>
@@ -415,44 +415,58 @@ of have to get used to designing them, so here we are.</p>
   <span class="ruby-comment"># This will countain the TextBuffer to show:</span>
   <span class="ruby-identifier">buffer</span> = <span class="ruby-constant">Gtk</span><span class="ruby-operator">::</span><span class="ruby-constant">TextBuffer</span>.<span class="ruby-identifier">new</span>
 
-  <span class="ruby-comment"># This is the list of tags to use, ideally one per color:</span>
-  <span class="ruby-identifier">tags</span> = <span class="ruby-constant">Hash</span>.<span class="ruby-identifier">new</span>
-  <span class="ruby-ivar">@colors</span>.<span class="ruby-identifier">each_key</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">key</span><span class="ruby-operator">|</span>
-    <span class="ruby-keyword">unless</span> <span class="ruby-value">:default</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">key</span> <span class="ruby-keyword">then</span>
-      <span class="ruby-identifier">tags</span>[<span class="ruby-node">&quot;#{key}&quot;</span>] = <span class="ruby-identifier">buffer</span>.<span class="ruby-identifier">create_tag</span> <span class="ruby-node">&quot;#{key}&quot;</span>
-      <span class="ruby-identifier">tags</span>[<span class="ruby-node">&quot;#{key}&quot;</span>].<span class="ruby-identifier">set_foreground</span> <span class="ruby-node">&quot;#{key}&quot;</span>
-    <span class="ruby-keyword">end</span>
-  <span class="ruby-keyword">end</span>
-
-  <span class="ruby-comment"># These will be the places where to apply each tag once the final buffer</span>
-  <span class="ruby-comment"># text has been composed:</span>
-  <span class="ruby-identifier">tags_to_apply</span> = <span class="ruby-constant">Array</span>.<span class="ruby-identifier">new</span>
-
-  <span class="ruby-comment"># Now, for each entry of logs_gui....</span>
-  <span class="ruby-ivar">@logs_gui</span>.<span class="ruby-identifier">each_with_index</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">entry</span>, <span class="ruby-identifier">idx</span><span class="ruby-operator">|</span>
-    <span class="ruby-comment"># First, let&#39;s handle the tag:</span>
-    <span class="ruby-comment"># Be sure this is not a malformed tag due to some kind of error:</span>
-    <span class="ruby-keyword">if</span> <span class="ruby-identifier">entry</span>[<span class="ruby-value">:tag</span>].<span class="ruby-identifier">key?</span> <span class="ruby-value">:color</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">entry</span>[<span class="ruby-value">:tag</span>].<span class="ruby-identifier">key?</span> <span class="ruby-value">:begin</span> <span class="ruby-keyword">and</span> 
-       <span class="ruby-identifier">entry</span>[<span class="ruby-value">:tag</span>].<span class="ruby-identifier">key?</span> <span class="ruby-value">:end</span> <span class="ruby-keyword">then</span>
-      <span class="ruby-comment"># Turn the relative :begin and :end informations into absolute ones</span>
-      <span class="ruby-comment"># regarding the current buffer:</span>
-      <span class="ruby-identifier">tags_to_apply</span>.<span class="ruby-identifier">push</span> <span class="ruby-value">:begin</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">buffer</span>.<span class="ruby-identifier">text</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">entry</span>[<span class="ruby-value">:tag</span>][<span class="ruby-value">:begin</span>],
-                         <span class="ruby-value">:end</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">buffer</span>.<span class="ruby-identifier">text</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">entry</span>[<span class="ruby-value">:tag</span>][<span class="ruby-value">:end</span>],
-                         <span class="ruby-value">:tag</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">tags</span>[<span class="ruby-identifier">entry</span>[<span class="ruby-value">:tag</span>][<span class="ruby-value">:color</span>]]
+  <span class="ruby-comment"># Apparently something can always go wrong with GTK3 stuff, so...</span>
+  <span class="ruby-keyword">begin</span>
+    <span class="ruby-comment"># This is the list of tags to use, ideally one per color:</span>
+    <span class="ruby-identifier">tags</span> = <span class="ruby-constant">Hash</span>.<span class="ruby-identifier">new</span>
+    <span class="ruby-ivar">@colors</span>.<span class="ruby-identifier">each_key</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">key</span><span class="ruby-operator">|</span>
+      <span class="ruby-keyword">unless</span> <span class="ruby-value">:default</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">key</span> <span class="ruby-keyword">then</span>
+        <span class="ruby-identifier">tags</span>[<span class="ruby-node">&quot;#{key}&quot;</span>] = <span class="ruby-identifier">buffer</span>.<span class="ruby-identifier">create_tag</span> <span class="ruby-node">&quot;#{key}&quot;</span>
+        <span class="ruby-identifier">tags</span>[<span class="ruby-node">&quot;#{key}&quot;</span>].<span class="ruby-identifier">set_foreground</span> <span class="ruby-node">&quot;#{key}&quot;</span>
+      <span class="ruby-keyword">end</span>
     <span class="ruby-keyword">end</span>
 
-    <span class="ruby-comment"># Text part: this is easy, simply append it.</span>
+    <span class="ruby-comment"># These will be the places where to apply each tag once the final buffer</span>
+    <span class="ruby-comment"># text has been composed:</span>
+    <span class="ruby-identifier">tags_to_apply</span> = <span class="ruby-constant">Array</span>.<span class="ruby-identifier">new</span>
+
+    <span class="ruby-comment"># Now, for each entry of logs_gui....</span>
+    <span class="ruby-ivar">@logs_gui</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">entry</span><span class="ruby-operator">|</span>
+      <span class="ruby-comment"># First, let&#39;s handle the tag:</span>
+      <span class="ruby-comment"># Be sure this is not a malformed tag due to some kind of error:</span>
+      <span class="ruby-keyword">if</span> <span class="ruby-identifier">entry</span>[<span class="ruby-value">:tag</span>].<span class="ruby-identifier">key?</span> <span class="ruby-value">:color</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">entry</span>[<span class="ruby-value">:tag</span>].<span class="ruby-identifier">key?</span> <span class="ruby-value">:begin</span> <span class="ruby-keyword">and</span> 
+        <span class="ruby-identifier">entry</span>[<span class="ruby-value">:tag</span>].<span class="ruby-identifier">key?</span> <span class="ruby-value">:end</span> <span class="ruby-keyword">then</span>
+        <span class="ruby-comment"># Turn the relative :begin and :end informations into absolute ones</span>
+        <span class="ruby-comment"># regarding the current buffer:</span>
+        <span class="ruby-identifier">tags_to_apply</span>.<span class="ruby-identifier">push</span> <span class="ruby-value">:begin</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">buffer</span>.<span class="ruby-identifier">text</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">+</span>
+                                     <span class="ruby-identifier">entry</span>[<span class="ruby-value">:tag</span>][<span class="ruby-value">:begin</span>],
+                           <span class="ruby-value">:end</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">buffer</span>.<span class="ruby-identifier">text</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">entry</span>[<span class="ruby-value">:tag</span>][<span class="ruby-value">:end</span>],
+                           <span class="ruby-value">:tag</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">tags</span>[<span class="ruby-identifier">entry</span>[<span class="ruby-value">:tag</span>][<span class="ruby-value">:color</span>]]
+      <span class="ruby-keyword">end</span>
+
+      <span class="ruby-comment"># Text part: this is easy, simply append it.</span>
+      <span class="ruby-comment"># NOTE: gotta add an extra &quot;  &quot; at the end of each line, plus a &quot;\n&quot;</span>
+      <span class="ruby-comment"># at the end of the last line, to avoid some text being obscured by</span>
+      <span class="ruby-comment"># the window scrollers in some GTK3 themes.</span>
+      <span class="ruby-identifier">buffer</span>.<span class="ruby-identifier">text</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">entry</span>[<span class="ruby-value">:text</span>] <span class="ruby-operator">+</span> <span class="ruby-string">&quot;  \n&quot;</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-comment"># Finally, apply each tag that we have processed!</span>
+    <span class="ruby-identifier">tags_to_apply</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">tag</span><span class="ruby-operator">|</span>
+      <span class="ruby-identifier">iter_begin</span> = <span class="ruby-identifier">buffer</span>.<span class="ruby-identifier">get_iter_at</span> <span class="ruby-value">:offset</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">tag</span>[<span class="ruby-value">:begin</span>]
+      <span class="ruby-identifier">iter_end</span> = <span class="ruby-identifier">buffer</span>.<span class="ruby-identifier">get_iter_at</span> <span class="ruby-value">:offset</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">tag</span>[<span class="ruby-value">:end</span>]
+      <span class="ruby-identifier">buffer</span>.<span class="ruby-identifier">apply_tag</span> <span class="ruby-identifier">tag</span>[<span class="ruby-value">:tag</span>], <span class="ruby-identifier">iter_begin</span>, <span class="ruby-identifier">iter_end</span>
+    <span class="ruby-keyword">end</span>
+
+  <span class="ruby-comment"># In the worst case scenario, simply create a buffer with plain text:</span>
+  <span class="ruby-keyword">rescue</span>
     <span class="ruby-comment"># NOTE: gotta add an extra &quot;  &quot; at the end of each line, plus a &quot;\n&quot;</span>
     <span class="ruby-comment"># at the end of the last line, to avoid some text being obscured by</span>
     <span class="ruby-comment"># the window scrollers in some GTK3 themes.</span>
-    <span class="ruby-identifier">buffer</span>.<span class="ruby-identifier">text</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">entry</span>[<span class="ruby-value">:text</span>] <span class="ruby-operator">+</span> <span class="ruby-string">&quot;  \n&quot;</span>
-  <span class="ruby-keyword">end</span>
-
-  <span class="ruby-comment"># Finally, apply each tag that we have processed!</span>
-  <span class="ruby-identifier">tags_to_apply</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">tag</span><span class="ruby-operator">|</span>
-    <span class="ruby-identifier">iter_begin</span> = <span class="ruby-identifier">buffer</span>.<span class="ruby-identifier">get_iter_at</span> <span class="ruby-value">:offset</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">tag</span>[<span class="ruby-value">:begin</span>]
-    <span class="ruby-identifier">iter_end</span> = <span class="ruby-identifier">buffer</span>.<span class="ruby-identifier">get_iter_at</span> <span class="ruby-value">:offset</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">tag</span>[<span class="ruby-value">:end</span>]
-    <span class="ruby-identifier">buffer</span>.<span class="ruby-identifier">apply_tag</span> <span class="ruby-identifier">tag</span>[<span class="ruby-value">:tag</span>], <span class="ruby-identifier">iter_begin</span>, <span class="ruby-identifier">iter_end</span>
+   
+    <span class="ruby-ivar">@logs_gui</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">entry</span><span class="ruby-operator">|</span>
+      <span class="ruby-identifier">buffer</span>.<span class="ruby-identifier">text</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">entry</span>[<span class="ruby-value">:text</span>] <span class="ruby-operator">+</span> <span class="ruby-string">&quot;  \n&quot;</span>
+    <span class="ruby-keyword">end</span>
   <span class="ruby-keyword">end</span>
 
   <span class="ruby-keyword">return</span> <span class="ruby-identifier">buffer</span>

@@ -125,44 +125,58 @@ class Gilt < Gtk::Window
     # This will countain the TextBuffer to show:
     buffer = Gtk::TextBuffer.new
 
-    # This is the list of tags to use, ideally one per color:
-    tags = Hash.new
-    @colors.each_key do |key|
-      unless :default == key then
-        tags["#{key}"] = buffer.create_tag "#{key}"
-        tags["#{key}"].set_foreground "#{key}"
-      end
-    end
-
-    # These will be the places where to apply each tag once the final buffer
-    # text has been composed:
-    tags_to_apply = Array.new
-
-    # Now, for each entry of logs_gui....
-    @logs_gui.each_with_index do |entry, idx|
-      # First, let's handle the tag:
-      # Be sure this is not a malformed tag due to some kind of error:
-      if entry[:tag].key? :color and entry[:tag].key? :begin and 
-         entry[:tag].key? :end then
-        # Turn the relative :begin and :end informations into absolute ones
-        # regarding the current buffer:
-        tags_to_apply.push :begin => buffer.text.length + entry[:tag][:begin],
-                           :end => buffer.text.length + entry[:tag][:end],
-                           :tag => tags[entry[:tag][:color]]
+    # Apparently something can always go wrong with GTK3 stuff, so...
+    begin
+      # This is the list of tags to use, ideally one per color:
+      tags = Hash.new
+      @colors.each_key do |key|
+        unless :default == key then
+          tags["#{key}"] = buffer.create_tag "#{key}"
+          tags["#{key}"].set_foreground "#{key}"
+        end
       end
 
-      # Text part: this is easy, simply append it.
+      # These will be the places where to apply each tag once the final buffer
+      # text has been composed:
+      tags_to_apply = Array.new
+
+      # Now, for each entry of logs_gui....
+      @logs_gui.each do |entry|
+        # First, let's handle the tag:
+        # Be sure this is not a malformed tag due to some kind of error:
+        if entry[:tag].key? :color and entry[:tag].key? :begin and 
+          entry[:tag].key? :end then
+          # Turn the relative :begin and :end informations into absolute ones
+          # regarding the current buffer:
+          tags_to_apply.push :begin => buffer.text.length +
+                                       entry[:tag][:begin],
+                             :end => buffer.text.length + entry[:tag][:end],
+                             :tag => tags[entry[:tag][:color]]
+        end
+
+        # Text part: this is easy, simply append it.
+        # NOTE: gotta add an extra "  " at the end of each line, plus a "\n"
+        # at the end of the last line, to avoid some text being obscured by
+        # the window scrollers in some GTK3 themes.
+        buffer.text += entry[:text] + "  \n"
+      end
+
+      # Finally, apply each tag that we have processed!
+      tags_to_apply.each do |tag|
+        iter_begin = buffer.get_iter_at :offset => tag[:begin]
+        iter_end = buffer.get_iter_at :offset => tag[:end]
+        buffer.apply_tag tag[:tag], iter_begin, iter_end
+      end
+
+    # In the worst case scenario, simply create a buffer with plain text:
+    rescue
       # NOTE: gotta add an extra "  " at the end of each line, plus a "\n"
       # at the end of the last line, to avoid some text being obscured by
       # the window scrollers in some GTK3 themes.
-      buffer.text += entry[:text] + "  \n"
-    end
-
-    # Finally, apply each tag that we have processed!
-    tags_to_apply.each do |tag|
-      iter_begin = buffer.get_iter_at :offset => tag[:begin]
-      iter_end = buffer.get_iter_at :offset => tag[:end]
-      buffer.apply_tag tag[:tag], iter_begin, iter_end
+     
+      @logs_gui.each do |entry|
+        buffer.text += entry[:text] + "  \n"
+      end
     end
 
     return buffer
