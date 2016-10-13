@@ -140,7 +140,7 @@ of have to get used to designing them, so here we are.</p>
           <div class="method-source-code" id="new-source">
             <pre><span class="ruby-comment"># File lib/gilt.rb, line 15</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>
-  <span class="ruby-keyword">super</span>
+  <span class="ruby-keyword">super</span>()
 
   <span class="ruby-comment"># Quit icon:</span>
   <span class="ruby-identifier">signal_connect</span> <span class="ruby-string">&quot;destroy&quot;</span> <span class="ruby-keyword">do</span>
@@ -351,7 +351,7 @@ text to show on the GUI.</p>
       <span class="ruby-comment"># Gotta add some extra spaces because of scroll widgets covering the</span>
       <span class="ruby-comment"># last characters with some themes:</span>
       <span class="ruby-identifier">s</span>.<span class="ruby-identifier">logs_gui</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">entry</span><span class="ruby-operator">|</span>
-        <span class="ruby-identifier">ret</span> = <span class="ruby-node">&quot;#{ret}#{entry}  \n&quot;</span>
+        <span class="ruby-identifier">ret</span> = <span class="ruby-node">&quot;#{ret}#{entry[:text]}  \n&quot;</span>
       <span class="ruby-keyword">end</span>
     <span class="ruby-keyword">end</span>
   <span class="ruby-keyword">end</span>

@@ -15,7 +15,6 @@ class Ham
   @config_global  # Global options for all entries (if not overridden).
   @config_entries # Entry-specific options, which override global ones.
   @logs           # Logs modality, either on, off or gui.
-  @logs_gui       # Logs to be used by the GUI.
 
   # Our logger: 
   include Oink
@@ -26,27 +25,23 @@ class Ham
   # Set to true if the Ham is usable, false otherwise.
   attr_reader :edible
 
-  # Logs to be used by the GUI.
-  attr_reader :logs_gui
-
   # Constructor. To work properly, the following should be provided:
   # :path => path to the folder which should become a Ham.
   # :logs => :off/:on/:gui, modality to use for logging.
   def initialize( options = {} )
-    # Initialize instance variables:
     @folder = Pathname.new options[:path]
     @edible = true
     @config_global = Hash.new
     @config_entries = Hash.new
     @logs = options[:logs]
-    @logs_gui = Array.new
+    super()
 
     # If there's no wine_env folder, it's not edible.
     unless Pathname.new( "#{@folder}/wine_env" ).directory? then
       @edible = false
 
-      oink "#{@@colors[:shell][:red]}!!! Ignored:" +
-           "#{@@colors[:shell][:default]} #{@folder.basename}",
+      oink "#{@colors[:red]}!!! Ignored:" +
+           "#{@colors[:default]} #{@folder.basename}",
            " > Sub-folder wine_env not found."
     end
 
@@ -56,8 +51,8 @@ class Ham
     unless !@edible or config_file.file? or config_file.readable? then
       @edible = false
 
-      oink "#{@@colors[:shell][:red]}!!! Ignored:" +
-           "#{@@colors[:shell][:default]} #{@folder.basename}",
+      oink "#{@colors[:red]}!!! Ignored:" +
+           "#{@colors[:default]} #{@folder.basename}",
            " > Config.yaml not found."
     end
 
@@ -94,8 +89,8 @@ class Ham
       if 0 == @config_entries.size then
         @edible = false
 
-        oink "#{@@colors[:shell][:red]}!!! Ignored:" +
-             "#{@@colors[:shell][:default]} #{@folder.basename}",
+        oink "#{@colors[:red]}!!! Ignored:" +
+             "#{@colors[:default]} #{@folder.basename}",
              " > Not enough entries in config.yaml."
       end
     end
@@ -116,16 +111,16 @@ class Ham
       if entry["Path"].nil? and @config_global["Path"].nil? then
         ret = Hash.new
 
-        oink "#{@@colors[:shell][:red]}!!! Ignored entry of " +
-             "#{@folder.basename}:#{@@colors[:shell][:default]} \"#{key}\"",
+        oink "#{@colors[:red]}!!! Ignored entry of " +
+             "#{@folder.basename}:#{@colors[:default]} \"#{key}\"",
              " > No valud value for \"Path\" key in neither \"#{key}\" nor " +
              "\"Global Values\"."
 
       elsif entry["Exec"].nil? then
         ret = Hash.new
 
-        oink "#{@@colors[:shell][:red]}!!! Ignored entry of " +
-             "#{@folder.basename}:#{@@colors[:shell][:default]} \"#{key}\"",
+        oink "#{@colors[:red]}!!! Ignored entry of " +
+             "#{@folder.basename}:#{@colors[:default]} \"#{key}\"",
              " > No value for \"Exec\" key."
 
       # Last but not least: if there is no "Name" key, the desired .desktop
@@ -146,8 +141,8 @@ class Ham
       else
         ret = Hash.new
 
-        oink "#{@@colors[:shell][:red]}!!! Ignored entry of " +
-             "#{@folder.basename}:#{@@colors[:shell][:default]} \"#{key}\"",
+        oink "#{@colors[:red]}!!! Ignored entry of " +
+             "#{@folder.basename}:#{@colors[:default]} \"#{key}\"",
              " > \"Path\" key points to a non existing location."
       end
     end

@@ -81,7 +81,7 @@
 
   <ul class="link-list" role="directory">
     
-    <li ><a href="#method-c-new">::new</a>
+    <li class="calls-super" ><a href="#method-c-new">::new</a>
     
     <li ><a href="#method-i-killAllHams">#killAllHams</a>
     
@@ -157,19 +157,6 @@ href="Ham.html">Ham</a> must be composed of:</p>
         </div>
       </div>
       
-      <div id="attribute-i-logs_gui" class="method-detail">
-        <div class="method-heading attribute-method-heading">
-          <span class="method-name">logs_gui</span><span
-            class="attribute-access-type">[R]</span>
-        </div>
-
-        <div class="method-description">
-        
-        <p>Logs to be used by the GUI.</p>
-        
-        </div>
-      </div>
-      
     </section>
     
 
@@ -197,16 +184,21 @@ href="Ham.html">Ham</a> must be composed of:</p>
 =&gt; on/off/gui, modality to use for logging.</p>
           
           
+            <div class="method-calls-super">
+              Calls superclass method
+              <a href="Oink.html#method-c-new">Oink.new</a>
+            </div>
+          
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/sswine.rb, line 35</span>
+            <pre><span class="ruby-comment"># File lib/sswine.rb, line 31</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>( <span class="ruby-identifier">options</span> = { <span class="ruby-value">:logs</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">:off</span> } )
   <span class="ruby-ivar">@main_dir</span> = <span class="ruby-constant">Pathname</span>.<span class="ruby-identifier">new</span> <span class="ruby-node">&quot;#{ENV[&quot;HOME&quot;]}/.sswine&quot;</span>
   <span class="ruby-ivar">@hams</span> = <span class="ruby-constant">Array</span>.<span class="ruby-identifier">new</span>
   <span class="ruby-ivar">@innvisible</span> = <span class="ruby-keyword">false</span>
   <span class="ruby-ivar">@logs</span> = <span class="ruby-identifier">options</span>[<span class="ruby-value">:logs</span>]
-  <span class="ruby-ivar">@logs_gui</span> = <span class="ruby-constant">Array</span>.<span class="ruby-identifier">new</span>
+  <span class="ruby-keyword">super</span>()
 
   <span class="ruby-comment"># If the main folder does not exist, create it.</span>
   <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@main_dir</span>.<span class="ruby-identifier">directory?</span> <span class="ruby-keyword">then</span>
@@ -275,7 +267,7 @@ href="Ham.html">Ham</a> must be composed of:</p>
 
           
           <div class="method-source-code" id="killAllHams-source">
-            <pre><span class="ruby-comment"># File lib/sswine.rb, line 220</span>
+            <pre><span class="ruby-comment"># File lib/sswine.rb, line 216</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">killAllHams</span>
   <span class="ruby-ivar">@hams</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">h</span><span class="ruby-operator">|</span>
     <span class="ruby-identifier">h</span>.<span class="ruby-identifier">killHam</span>
@@ -313,7 +305,7 @@ one.</p>
 
           
           <div class="method-source-code" id="openShell-source">
-            <pre><span class="ruby-comment"># File lib/sswine.rb, line 238</span>
+            <pre><span class="ruby-comment"># File lib/sswine.rb, line 234</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">openShell</span>
   <span class="ruby-comment"># This will store the user input:</span>
   <span class="ruby-identifier">choice</span> = <span class="ruby-value">-1</span>
@@ -378,7 +370,7 @@ one.</p>
 
           
           <div class="method-source-code" id="updateAllHams-source">
-            <pre><span class="ruby-comment"># File lib/sswine.rb, line 228</span>
+            <pre><span class="ruby-comment"># File lib/sswine.rb, line 224</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">updateAllHams</span>
   <span class="ruby-ivar">@hams</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">h</span><span class="ruby-operator">|</span>
     <span class="ruby-identifier">h</span>.<span class="ruby-identifier">updateHam</span>
@@ -414,7 +406,7 @@ an entry for each valid one of each <a href="Ham.html">Ham</a>.</p>
 
           
           <div class="method-source-code" id="writeMenuEntries-source">
-            <pre><span class="ruby-comment"># File lib/sswine.rb, line 76</span>
+            <pre><span class="ruby-comment"># File lib/sswine.rb, line 72</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">writeMenuEntries</span>
   <span class="ruby-comment"># This is to make a decent log:</span>
   <span class="ruby-identifier">created</span> = <span class="ruby-constant">Hash</span>.<span class="ruby-identifier">new</span>
@@ -535,19 +527,19 @@ an entry for each valid one of each <a href="Ham.html">Ham</a>.</p>
 
   <span class="ruby-keyword">else</span>
     <span class="ruby-comment"># Header:</span>
-    <span class="ruby-identifier">oink</span> <span class="ruby-node">&quot;Created entries in #{@@colors[:shell][:yellow]}&quot;</span> <span class="ruby-operator">+</span>
-         <span class="ruby-node">&quot;#{desktop_files_folder.realpath}#{@@colors[:shell][:default]} for:&quot;</span>
+    <span class="ruby-identifier">oink</span> <span class="ruby-node">&quot;Created entries in #{@colors[:yellow]}&quot;</span> <span class="ruby-operator">+</span>
+         <span class="ruby-node">&quot;#{desktop_files_folder.realpath}#{@colors[:default]} for:&quot;</span>
 
     <span class="ruby-comment"># If the GUI entry has been created, print it first:</span>
     <span class="ruby-keyword">unless</span> <span class="ruby-identifier">gui_desktop_entry</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-keyword">then</span>
-      <span class="ruby-identifier">oink</span> <span class="ruby-node">&quot; &gt; #{@@colors[:shell][:blue]}Sswine&quot;</span> <span class="ruby-operator">+</span>
-           <span class="ruby-node">&quot;#{@@colors[:shell][:default]}&quot;</span>,
+      <span class="ruby-identifier">oink</span> <span class="ruby-node">&quot; &gt; #{@colors[:blue]}Sswine&quot;</span> <span class="ruby-operator">+</span>
+           <span class="ruby-node">&quot;#{@colors[:default]}&quot;</span>,
            <span class="ruby-node">&quot;    #{gui_desktop_entry.basename}&quot;</span>
     <span class="ruby-keyword">end</span>
 
     <span class="ruby-identifier">created</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">key</span>, <span class="ruby-identifier">entries</span><span class="ruby-operator">|</span>
       <span class="ruby-comment"># Show the Ham&#39;s name:</span>
-      <span class="ruby-identifier">oink</span> <span class="ruby-node">&quot; &gt; #{@@colors[:shell][:blue]}#{key}#{@@colors[:shell][:default]}&quot;</span>
+      <span class="ruby-identifier">oink</span> <span class="ruby-node">&quot; &gt; #{@colors[:blue]}#{key}#{@colors[:default]}&quot;</span>
 
       <span class="ruby-comment"># Show what this Ham has generated:</span>
       <span class="ruby-identifier">entries</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">entry</span><span class="ruby-operator">|</span>

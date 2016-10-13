@@ -19,16 +19,12 @@ class Sswine
   @hams      # Each Ham is a sub-directory of @main_dir.
   @invisible # An invisible Sswine is one with no Hams.
   @logs      # Logs modality, either on, off or gui.
-  @logs_gui  # Logs to be used by the GUI.
 
   # Our logger:
   include Oink
 
   # An invisible Sswine is one with no Hams.
   attr_reader :invisible
-
-  # Logs to be used by the GUI.
-  attr_reader :logs_gui
 
   # Constructor. To work properly, the following should be provided:
   # :logs => on/off/gui, modality to use for logging.
@@ -37,7 +33,7 @@ class Sswine
     @hams = Array.new
     @innvisible = false
     @logs = options[:logs]
-    @logs_gui = Array.new
+    super()
 
     # If the main folder does not exist, create it.
     unless @main_dir.directory? then
@@ -193,19 +189,19 @@ class Sswine
 
     else
       # Header:
-      oink "Created entries in #{@@colors[:shell][:yellow]}" +
-           "#{desktop_files_folder.realpath}#{@@colors[:shell][:default]} for:"
+      oink "Created entries in #{@colors[:yellow]}" +
+           "#{desktop_files_folder.realpath}#{@colors[:default]} for:"
 
       # If the GUI entry has been created, print it first:
       unless gui_desktop_entry.nil? then
-        oink " > #{@@colors[:shell][:blue]}Sswine" +
-             "#{@@colors[:shell][:default]}",
+        oink " > #{@colors[:blue]}Sswine" +
+             "#{@colors[:default]}",
              "    #{gui_desktop_entry.basename}"
       end
 
       created.each do |key, entries|
         # Show the Ham's name:
-        oink " > #{@@colors[:shell][:blue]}#{key}#{@@colors[:shell][:default]}"
+        oink " > #{@colors[:blue]}#{key}#{@colors[:default]}"
 
         # Show what this Ham has generated:
         entries.each do |entry|

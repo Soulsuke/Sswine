@@ -13,7 +13,7 @@ class Gilt < Gtk::Window
 
   # Constructor. It is supposed to initialize and show the GUI.
   def initialize
-    super
+    super()
 
     # Quit icon:
     signal_connect "destroy" do
@@ -189,7 +189,7 @@ class Gilt < Gtk::Window
         # Gotta add some extra spaces because of scroll widgets covering the
         # last characters with some themes:
         s.logs_gui.each do |entry|
-          ret = "#{ret}#{entry}  \n"
+          ret = "#{ret}#{entry[:text]}  \n"
         end
       end
     end

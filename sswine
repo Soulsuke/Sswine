@@ -13,16 +13,12 @@ It uses a class so it can include the Oink module without any issue.
 =end
 
 class SswineLauncher
-  @logs      # Logs modality, either on, off or gui.
-  @logs_gui  # Logs to be used by the GUI.
-
   # Our logger:
   include Oink
 
   # Constructor. It does nothing, really.
   def initialize
-    @logs = :on
-    @logs_gui = Array.new
+    super()
   end
 
   # Private method. Contains the help reference of command line Sswine.
@@ -33,40 +29,31 @@ class SswineLauncher
   
     # Help reference lines:
     # Header:
-    lines.push "#{@@colors[:shell][:yellow]}Sswine: split wine. " +
-               "#{@@colors[:shell][:default]}"
-    lines.push "#{@@colors[:shell][:yellow]}Usage:" +
-               "#{@@colors[:shell][:default]}"
+    lines.push "#{@colors[:yellow]}Sswine: split wine.#{@colors[:default]}"
+    lines.push "#{@colors[:yellow]}Usage:#{@colors[:default]}"
     # Check hams:
-    lines.push "#{@@colors[:shell][:blue]}#{$0} -c/--check" +
-               "#{@@colors[:shell][:default]}: " +
+    lines.push "#{@colors[:blue]}#{$0} -c/--check#{@colors[:default]}: " +
                "checks each entry of each Ham for errors. No output means " +
                "that everything is ok."
     # Write .desktop files:
-    lines.push "#{@@colors[:shell][:blue]}#{$0} -d/--desktop" +
-               "#{@@colors[:shell][:default]}: " +
+    lines.push "#{@colors[:blue]}#{$0} -d/--desktop#{@colors[:default]}: " +
                "writes .desktop files for each valid entry of each edible Ham."
     # GTK3 GUI:
-    lines.push "#{@@colors[:shell][:blue]}#{$0} -g/--gui" +
-               "#{@@colors[:shell][:default]}: " +
+    lines.push "#{@colors[:blue]}#{$0} -g/--gui#{@colors[:default]}: " +
                "launches the GTK3 GUI."
     # Help reference:
-    lines.push "#{@@colors[:shell][:blue]}#{$0} -h/--help" +
-               "#{@@colors[:shell][:default]}: " +
+    lines.push "#{@colors[:blue]}#{$0} -h/--help#{@colors[:default]}: " +
                "shows this help reference."
     # Kill all hams:
-    lines.push "#{@@colors[:shell][:blue]}#{$0} -k/--kill" +
-               "#{@@colors[:shell][:default]}: " +
+    lines.push "#{@colors[:blue]}#{$0} -k/--kill#{@colors[:default]}: " +
                "runs 'wineserver -k' for each Ham."
     # Open shell:
-    lines.push "#{@@colors[:shell][:blue]}#{$0} -s/--shell" +
-               "#{@@colors[:shell][:default]}: " +
+    lines.push "#{@colors[:blue]}#{$0} -s/--shell#{@colors[:default]}: " +
                "prompts the user to choose an edible Ham. Then, the user's " +
                "default shell is opened in the choosen entry's folder, with " +
                "the WINEPREFIX variable correctly set."
     # Update all hams:
-    lines.push "#{@@colors[:shell][:blue]}#{$0} -u/--update" +
-               "#{@@colors[:shell][:default]}: " +
+    lines.push "#{@colors[:blue]}#{$0} -u/--update#{@colors[:default]}: " +
                "runs 'wineboot' for each edible Ham. This is supposed to " +
                "update wine files on each of them."
 
@@ -112,8 +99,7 @@ class SswineLauncher
           require "#{Pathname.new( $0 ).realpath.dirname}/lib/gilt.rb"
     
         rescue LoadError
-          puts "#{@@colors[:shell][:red]}!!! Error:" +
-               "#{@@colors[:shell][:default]} " +
+          puts "#{@colors[:red]}!!! Error:#{@colors[:default]} " +
                "Failed to start the GUI! Is the gem `gtk3` correctly " +
                "installed?"
           exit -1
