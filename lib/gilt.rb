@@ -1,4 +1,5 @@
 require "gtk3"
+require "#{Pathname.new( $0 ).realpath.dirname}/lib/oink.rb"
 require "#{Pathname.new( $0 ).realpath.dirname}/lib/sswine.rb"
 
 =begin
@@ -10,10 +11,16 @@ used to designing them, so here we are.
 
 class Gilt < Gtk::Window
   @command # Currently selected Sswine command.
+  @logs # Logs modality, either on, off or gui.
+
+  # Our logger: 
+  include Oink
 
   # Constructor. It is supposed to initialize and show the GUI.
   def initialize
-    super()
+    super
+    @logs = :gui
+    oink_initialize
 
     # Quit icon:
     signal_connect "destroy" do
@@ -87,9 +94,8 @@ class Gilt < Gtk::Window
     grid.attach commands, 0, 1, 2, 1
 
     # Area where Sswine's output will be shown:
-    output_buffer = Gtk::TextBuffer.new
     output_scroller = Gtk::ScrolledWindow.new
-    output_view = Gtk::TextView.new output_buffer
+    output_view = Gtk::TextView.new
     output_view.editable = false
     output_view.set_monospace  true
     output_scroller.add output_view
@@ -98,8 +104,10 @@ class Gilt < Gtk::Window
     # Execution button:
     execute = Gtk::Button.new :label => "Execute!"
     execute.signal_connect "clicked" do
-      # On click, call the function which will handle the logic:
-      output_buffer.text = executeCommand
+      # On click, call the function which will handle the logic, and set the
+      # resulting TextBuffer in use for our TextView:
+      executeCommand
+      output_view.set_buffer generateTextBuffer
     end
     grid.attach execute, 2, 1, 1, 1
 
@@ -111,32 +119,52 @@ class Gilt < Gtk::Window
     Gtk.main
   end
 
+  # Private method. Generates and return a Gtk::TextBuffer from @logs_gui.
+  private
+  def generateTextBuffer
+    # This will countain the TextBuffer to show:
+    buffer = Gtk::TextBuffer.new
+
+    # This will contain the tags to apply to the buffer:
+    tags = Array.new
+
+    # Now, for each entry of logs_gui....
+    @logs_gui.each do |entry|
+      # Text part: this is easy!
+      buffer.text = buffer.text + entry[:text] + "    \n"
+    end
+
+    return buffer
+  end
+
   # Private method. Handles the logic of the "Execute!" button.
-  # Returns the text to show on the GUI.
   private
   def executeCommand
-    s = nil
-    ret = ""
+    # This is to clear logs:
+    logs_gui_clear
+
+    # Later on, this will contain our Sswine instance:
+    sswine = nil
 
     # Depending on the command, do the right thing:
     case @command
       when "check" then
-        s = Sswine.new :logs => :gui
+        sswine = Sswine.new :logs => :gui
 
       when "desktop" then
-        s = Sswine.new :logs => :gui
-        s.writeMenuEntries
+        sswine = Sswine.new :logs => :gui
+        sswine.writeMenuEntries
 
       when "kill" then
-        s = Sswine.new
-        s.killAllHams
-        ret = "All Hams have been killed."
+        sswine = Sswine.new
+        sswine.killAllHams
+        oink "All Hams have been killed."
 
       when "shell" then
-        s = Sswine.new
+        sswine = Sswine.new
 
-        if s.invisible then
-          ret = "No Hams found. Nothing to do."
+        if sswine.invisible then
+          oink "No Hams found. Nothing to do."
 
         else
           # I found no way to get the default terminal emulator in a distro
@@ -163,38 +191,36 @@ class Gilt < Gtk::Window
           terminal_emulators.each do |term|
             # 3. If a terminal has been found, use it:
             unless `which #{term} 2> /dev/null`.empty? then
-              `#{term} -e "sswine -s" &> /dev/null`
-              return "Used terminal emulator: #{`which #{term}`}"
+              `#{term} -e "#{$0} -s" &> /dev/null`
+              oink "Used terminal emulator: #{`which #{term}`}"
+              break
             end
 
             # 4. If no terminal has been found, return an error:
-            ret = "No terminal emulator found in the system's path.\n" +
-                  "Please, install one of the following:\n" +
-                  terminal_emulators.join( "\n" )
+            oink "No terminal emulator found in the system's path.\n" +
+                 "Please, install one of the following:\n" +
+                 terminal_emulators.join( "\n" )
           end
         end
 
       when "update" then
-        s = Sswine.new
-        s.updateAllHams
-        ret = "All Hams have been updated."
+        sswine = Sswine.new
+        sswine.updateAllHams
+        oink "All Hams have been updated."
     end
 
-    # Make sure there's an output to show:
-    if ret.empty? then
-      if s.nil? or s.logs_gui.empty? then
-        ret = "No errors occurred, everything is fine."
+    # If Glit generated no logs, then it gotta be taken elsewhere:
+    if logs_gui.empty? then
+      # If even the Sswine instance contains no logs, then show a "no errors"
+      # message:
+      if sswine.nil? or sswine.logs_gui.empty? then
+        oink "No errors occurred, everything is fine."
 
+      # Else, appende the logs of our Sswine instance:
       else
-        # Gotta add some extra spaces because of scroll widgets covering the
-        # last characters with some themes:
-        s.logs_gui.each do |entry|
-          ret = "#{ret}#{entry[:text]}  \n"
-        end
+        logs_gui_append sswine
       end
     end
-
-    return ret
   end
 
 end

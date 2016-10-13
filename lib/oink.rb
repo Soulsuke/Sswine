@@ -1,5 +1,7 @@
 =begin
 This module's purpose is to handle logs on behalf of the other classes.  
+Any class that includes this module should call oink_initialize somewhere 
+within their constructor.
 =end
 
 module Oink
@@ -11,10 +13,11 @@ module Oink
 
   # This is the container of logs formatted for the GTK3 GUI.  
   # It is an array of Hashes, each with the fields :text and :tags.
-  attr_accessor :logs_gui
+  attr_reader :logs_gui
 
-  # Constructor. Mandatory to initialize instance variables.
-  def initialize
+  # Mandatory to initialize instance variables. Sort of a constructor.
+  public
+  def oink_initialize
     @colors = {
       :blue => "\e[34m",
       :cyan => "",
@@ -136,6 +139,21 @@ module Oink
         end
       end
     end
+  end
+
+  # Appends the value of element.logs_gui to our @logs_gui.
+  public
+  def logs_gui_append( element )
+    # Only has a meaning if the given element actually has this property:
+    if element.methods.include? :logs_gui and
+      @logs_gui += element.logs_gui
+    end
+  end
+
+  # Clears the content of @logs_gui
+  public
+  def logs_gui_clear
+    @logs_gui = Array.new
   end
 
 end

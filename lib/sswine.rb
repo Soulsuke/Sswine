@@ -33,7 +33,7 @@ class Sswine
     @hams = Array.new
     @innvisible = false
     @logs = options[:logs]
-    super()
+    oink_initialize
 
     # If the main folder does not exist, create it.
     unless @main_dir.directory? then
@@ -50,7 +50,7 @@ class Sswine
         pork = Ham.new :path => entry, :logs => @logs
 
         # Add any entry in @logs_gui of every Ham:
-        @logs_gui += pork.logs_gui
+        logs_gui_append pork
 
         # No error message is printed here, because Ham's constructor already
         # does so.

@@ -18,7 +18,7 @@ class SswineLauncher
 
   # Constructor. It does nothing, really.
   def initialize
-    super()
+    oink_initialize
   end
 
   # Private method. Contains the help reference of command line Sswine.
