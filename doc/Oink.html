@@ -63,11 +63,15 @@
 
   <ul class="link-list" role="directory">
     
-    <li ><a href="#method-c-new">::new</a>
-    
     <li ><a href="#method-i-digest">#digest</a>
     
+    <li ><a href="#method-i-logs_gui_append">#logs_gui_append</a>
+    
+    <li ><a href="#method-i-logs_gui_clear">#logs_gui_clear</a>
+    
     <li ><a href="#method-i-oink">#oink</a>
+    
+    <li ><a href="#method-i-oink_initialize">#oink_initialize</a>
     
   </ul>
 </div>
@@ -83,6 +87,10 @@
   <section class="description">
     
 <p>This module&#39;s purpose is to handle logs on behalf of the other classes.</p>
+
+<p>Any class that includes this module should call <a
+href="Oink.html#method-i-oink_initialize">#oink_initialize</a> somewhere 
+within their constructor.</p>
 
   </section>
 
@@ -119,7 +127,7 @@
       <div id="attribute-i-logs_gui" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">logs_gui</span><span
-            class="attribute-access-type">[RW]</span>
+            class="attribute-access-type">[R]</span>
         </div>
 
         <div class="method-description">
@@ -135,17 +143,17 @@
     
 
     
-     <section id="public-class-5Buntitled-5D-method-details" class="method-section">
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
        <header>
-         <h3>Public Class Methods</h3>
+         <h3>Public Instance Methods</h3>
        </header>
 
     
-      <div id="method-c-new" class="method-detail ">
+      <div id="method-i-logs_gui_append" class="method-detail ">
         
         <div class="method-heading">
-          <span class="method-name">new</span><span
-            class="method-args">()</span>
+          <span class="method-name">logs_gui_append</span><span
+            class="method-args">( element )</span>
           
           <span class="method-click-advice">click to toggle source</span>
           
@@ -154,28 +162,17 @@
 
         <div class="method-description">
           
-          <p>Constructor. Mandatory to initialize instance variables.</p>
+          <p>Appends the value of element.logs_gui to our @logs_gui.</p>
           
           
 
           
-          <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/oink.rb, line 17</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>
-  <span class="ruby-ivar">@colors</span> = {
-    <span class="ruby-value">:blue</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;\e[34m&quot;</span>,
-    <span class="ruby-value">:cyan</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;&quot;</span>,
-    <span class="ruby-value">:red</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;\e[31m&quot;</span>,
-    <span class="ruby-value">:yellow</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;\e[33m&quot;</span>,
-    <span class="ruby-comment"># Always keep this one last:</span>
-    <span class="ruby-value">:default</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;\e[0m&quot;</span>
-  }
-  <span class="ruby-ivar">@logs_gui</span> = <span class="ruby-constant">Array</span>.<span class="ruby-identifier">new</span>
-
-  <span class="ruby-comment"># Unless otherwise specified, logs are on. This is to allow classes without</span>
-  <span class="ruby-comment"># @logs instance variables to still use Oink to log.</span>
-  <span class="ruby-keyword">unless</span> <span class="ruby-keyword">defined?</span> <span class="ruby-ivar">@logs</span> <span class="ruby-keyword">then</span>
-    <span class="ruby-ivar">@logs</span> = <span class="ruby-value">:on</span>
+          <div class="method-source-code" id="logs_gui_append-source">
+            <pre><span class="ruby-comment"># File lib/oink.rb, line 140</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">logs_gui_append</span>( <span class="ruby-identifier">element</span> )
+  <span class="ruby-comment"># Only has a meaning if the given element actually has this property:</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">element</span>.<span class="ruby-identifier">methods</span>.<span class="ruby-identifier">include?</span> <span class="ruby-value">:logs_gui</span> <span class="ruby-keyword">and</span>
+    <span class="ruby-ivar">@logs_gui</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">element</span>.<span class="ruby-identifier">logs_gui</span>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -188,12 +185,37 @@
       </div>
 
     
-    </section>
-  
-     <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
-       <header>
-         <h3>Public Instance Methods</h3>
-       </header>
+      <div id="method-i-logs_gui_clear" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">logs_gui_clear</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Clears the content of @logs_gui</p>
+          
+          
+
+          
+          <div class="method-source-code" id="logs_gui_clear-source">
+            <pre><span class="ruby-comment"># File lib/oink.rb, line 149</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">logs_gui_clear</span>
+  <span class="ruby-ivar">@logs_gui</span> = <span class="ruby-constant">Array</span>.<span class="ruby-identifier">new</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
 
     
       <div id="method-i-oink" class="method-detail ">
@@ -215,7 +237,7 @@
 
           
           <div class="method-source-code" id="oink-source">
-            <pre><span class="ruby-comment"># File lib/oink.rb, line 95</span>
+            <pre><span class="ruby-comment"># File lib/oink.rb, line 98</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">oink</span>( <span class="ruby-operator">*</span><span class="ruby-identifier">logs</span> )
   <span class="ruby-comment"># This only has a meaning if logs are not disabled:</span>
   <span class="ruby-keyword">unless</span> <span class="ruby-value">:off</span> <span class="ruby-operator">==</span> <span class="ruby-ivar">@logs</span> <span class="ruby-keyword">then</span>
@@ -226,13 +248,8 @@
         <span class="ruby-keyword">when</span> <span class="ruby-value">:gui</span> <span class="ruby-keyword">then</span>
           <span class="ruby-comment"># Create a temporary Hash to house this entry:</span>
           <span class="ruby-identifier">tmp</span> = <span class="ruby-constant">Hash</span>.<span class="ruby-identifier">new</span>
-
           <span class="ruby-identifier">tmp</span>[<span class="ruby-value">:text</span>] = <span class="ruby-identifier">entry</span>
-          <span class="ruby-identifier">tmp</span>[<span class="ruby-value">:tags</span>] = <span class="ruby-constant">Array</span>.<span class="ruby-identifier">new</span>
-
-          <span class="ruby-comment"># For now, this will only save one tag per entry. It should be</span>
-          <span class="ruby-comment"># changed later on.</span>
-          <span class="ruby-identifier">tmp_tag</span> = <span class="ruby-constant">Hash</span>.<span class="ruby-identifier">new</span>
+          <span class="ruby-identifier">tmp</span>[<span class="ruby-value">:tag</span>] = <span class="ruby-constant">Hash</span>.<span class="ruby-identifier">new</span>
 
           <span class="ruby-comment"># Replace shell colors with GUI ones:</span>
           <span class="ruby-ivar">@colors</span>.<span class="ruby-identifier">each_key</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">color</span><span class="ruby-operator">|</span>
@@ -240,18 +257,17 @@
             <span class="ruby-keyword">unless</span> <span class="ruby-identifier">tmp</span>[<span class="ruby-value">:text</span>].<span class="ruby-identifier">index</span>( <span class="ruby-ivar">@colors</span>[<span class="ruby-identifier">color</span>]).<span class="ruby-identifier">nil?</span> <span class="ruby-keyword">then</span>
               <span class="ruby-comment"># End of GTK3 tag:</span>
               <span class="ruby-keyword">if</span> <span class="ruby-value">:default</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">color</span> <span class="ruby-keyword">then</span>
-                <span class="ruby-identifier">tmp_tag</span>[<span class="ruby-value">:end</span>] = <span class="ruby-identifier">tmp</span>[<span class="ruby-value">:text</span>].<span class="ruby-identifier">index</span> <span class="ruby-ivar">@colors</span>[<span class="ruby-identifier">color</span>]
+                <span class="ruby-identifier">tmp</span>[<span class="ruby-value">:tag</span>][<span class="ruby-value">:end</span>] = <span class="ruby-identifier">tmp</span>[<span class="ruby-value">:text</span>].<span class="ruby-identifier">index</span> <span class="ruby-ivar">@colors</span>[<span class="ruby-identifier">color</span>]
               <span class="ruby-comment"># Beginning of GTK3 tag and its color:</span>
               <span class="ruby-keyword">else</span>
-                <span class="ruby-identifier">tmp_tag</span>[<span class="ruby-value">:begin</span>] = <span class="ruby-identifier">tmp</span>[<span class="ruby-value">:text</span>].<span class="ruby-identifier">index</span> <span class="ruby-ivar">@colors</span>[<span class="ruby-identifier">color</span>]
-                <span class="ruby-identifier">tmp_tag</span>[<span class="ruby-value">:color</span>] = <span class="ruby-node">&quot;#{color}&quot;</span>
+                <span class="ruby-identifier">tmp</span>[<span class="ruby-value">:tag</span>][<span class="ruby-value">:begin</span>] = <span class="ruby-identifier">tmp</span>[<span class="ruby-value">:text</span>].<span class="ruby-identifier">index</span> <span class="ruby-ivar">@colors</span>[<span class="ruby-identifier">color</span>]
+                <span class="ruby-identifier">tmp</span>[<span class="ruby-value">:tag</span>][<span class="ruby-value">:color</span>] = <span class="ruby-node">&quot;#{color}&quot;</span>
               <span class="ruby-keyword">end</span>
             <span class="ruby-keyword">end</span>
 
             <span class="ruby-identifier">tmp</span>[<span class="ruby-value">:text</span>].<span class="ruby-identifier">gsub!</span> <span class="ruby-ivar">@colors</span>[<span class="ruby-identifier">color</span>], <span class="ruby-string">&quot;&quot;</span>
           <span class="ruby-keyword">end</span>
 
-          <span class="ruby-identifier">tmp</span>[<span class="ruby-value">:tags</span>].<span class="ruby-identifier">push</span> <span class="ruby-identifier">tmp_tag</span>
           <span class="ruby-ivar">@logs_gui</span>.<span class="ruby-identifier">push</span> <span class="ruby-identifier">tmp</span>
 
         <span class="ruby-comment"># Normal logs: simply print them</span>
@@ -259,6 +275,53 @@
           <span class="ruby-identifier">puts</span> <span class="ruby-identifier">digest</span>( <span class="ruby-value">:entry</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">entry</span>, <span class="ruby-value">:cap</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">%x`tput cols`</span> )
       <span class="ruby-keyword">end</span>
     <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-oink_initialize" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">oink_initialize</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Mandatory to initialize instance variables. Sort of a constructor.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="oink_initialize-source">
+            <pre><span class="ruby-comment"># File lib/oink.rb, line 20</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">oink_initialize</span>
+  <span class="ruby-ivar">@colors</span> = {
+    <span class="ruby-value">:blue</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;\e[34m&quot;</span>,
+    <span class="ruby-value">:cyan</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;\e[36m&quot;</span>,
+    <span class="ruby-value">:red</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;\e[31m&quot;</span>,
+    <span class="ruby-value">:yellow</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;\e[33m&quot;</span>,
+    <span class="ruby-comment"># Always keep this one last:</span>
+    <span class="ruby-value">:default</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;\e[0m&quot;</span>
+  }
+  <span class="ruby-ivar">@logs_gui</span> = <span class="ruby-constant">Array</span>.<span class="ruby-identifier">new</span>
+
+  <span class="ruby-comment"># Unless otherwise specified, logs are on. This is to allow classes without</span>
+  <span class="ruby-comment"># @logs instance variables to still use Oink to log.</span>
+  <span class="ruby-keyword">unless</span> <span class="ruby-keyword">defined?</span> <span class="ruby-ivar">@logs</span> <span class="ruby-keyword">then</span>
+    <span class="ruby-ivar">@logs</span> = <span class="ruby-value">:on</span>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -300,7 +363,7 @@ needed). :cap =&gt; max characters per single line.</p>
 
           
           <div class="method-source-code" id="digest-source">
-            <pre><span class="ruby-comment"># File lib/oink.rb, line 40</span>
+            <pre><span class="ruby-comment"># File lib/oink.rb, line 43</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">digest</span>( <span class="ruby-identifier">options</span> = {} )
   <span class="ruby-comment"># Complete container of all composed lines:</span>
   <span class="ruby-identifier">composed_container</span> = <span class="ruby-constant">Array</span>.<span class="ruby-identifier">new</span>

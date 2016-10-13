@@ -81,7 +81,7 @@
 
   <ul class="link-list" role="directory">
     
-    <li class="calls-super" ><a href="#method-c-new">::new</a>
+    <li ><a href="#method-c-new">::new</a>
     
     <li ><a href="#method-i-showHelp">#showHelp</a>
     
@@ -145,17 +145,12 @@ without any issue.</p>
           <p>Constructor. It does nothing, really.</p>
           
           
-            <div class="method-calls-super">
-              Calls superclass method
-              <a href="Oink.html#method-c-new">Oink.new</a>
-            </div>
-          
 
           
           <div class="method-source-code" id="new-source">
             <pre><span class="ruby-comment"># File sswine, line 20</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>
-  <span class="ruby-keyword">super</span>()
+  <span class="ruby-identifier">oink_initialize</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -316,28 +311,28 @@ href="Sswine.html">Sswine</a>.</p>
   <span class="ruby-identifier">lines</span>.<span class="ruby-identifier">push</span> <span class="ruby-node">&quot;#{@colors[:yellow]}Sswine: split wine.#{@colors[:default]}&quot;</span>
   <span class="ruby-identifier">lines</span>.<span class="ruby-identifier">push</span> <span class="ruby-node">&quot;#{@colors[:yellow]}Usage:#{@colors[:default]}&quot;</span>
   <span class="ruby-comment"># Check hams:</span>
-  <span class="ruby-identifier">lines</span>.<span class="ruby-identifier">push</span> <span class="ruby-node">&quot;#{@colors[:blue]}#{$0} -c/--check#{@colors[:default]}: &quot;</span> <span class="ruby-operator">+</span>
+  <span class="ruby-identifier">lines</span>.<span class="ruby-identifier">push</span> <span class="ruby-node">&quot;#{@colors[:cyan]}#{$0} -c/--check#{@colors[:default]}: &quot;</span> <span class="ruby-operator">+</span>
              <span class="ruby-string">&quot;checks each entry of each Ham for errors. No output means &quot;</span> <span class="ruby-operator">+</span>
              <span class="ruby-string">&quot;that everything is ok.&quot;</span>
   <span class="ruby-comment"># Write .desktop files:</span>
-  <span class="ruby-identifier">lines</span>.<span class="ruby-identifier">push</span> <span class="ruby-node">&quot;#{@colors[:blue]}#{$0} -d/--desktop#{@colors[:default]}: &quot;</span> <span class="ruby-operator">+</span>
+  <span class="ruby-identifier">lines</span>.<span class="ruby-identifier">push</span> <span class="ruby-node">&quot;#{@colors[:cyan]}#{$0} -d/--desktop#{@colors[:default]}: &quot;</span> <span class="ruby-operator">+</span>
              <span class="ruby-string">&quot;writes .desktop files for each valid entry of each edible Ham.&quot;</span>
   <span class="ruby-comment"># GTK3 GUI:</span>
-  <span class="ruby-identifier">lines</span>.<span class="ruby-identifier">push</span> <span class="ruby-node">&quot;#{@colors[:blue]}#{$0} -g/--gui#{@colors[:default]}: &quot;</span> <span class="ruby-operator">+</span>
+  <span class="ruby-identifier">lines</span>.<span class="ruby-identifier">push</span> <span class="ruby-node">&quot;#{@colors[:cyan]}#{$0} -g/--gui#{@colors[:default]}: &quot;</span> <span class="ruby-operator">+</span>
              <span class="ruby-string">&quot;launches the GTK3 GUI.&quot;</span>
   <span class="ruby-comment"># Help reference:</span>
-  <span class="ruby-identifier">lines</span>.<span class="ruby-identifier">push</span> <span class="ruby-node">&quot;#{@colors[:blue]}#{$0} -h/--help#{@colors[:default]}: &quot;</span> <span class="ruby-operator">+</span>
+  <span class="ruby-identifier">lines</span>.<span class="ruby-identifier">push</span> <span class="ruby-node">&quot;#{@colors[:cyan]}#{$0} -h/--help#{@colors[:default]}: &quot;</span> <span class="ruby-operator">+</span>
              <span class="ruby-string">&quot;shows this help reference.&quot;</span>
   <span class="ruby-comment"># Kill all hams:</span>
-  <span class="ruby-identifier">lines</span>.<span class="ruby-identifier">push</span> <span class="ruby-node">&quot;#{@colors[:blue]}#{$0} -k/--kill#{@colors[:default]}: &quot;</span> <span class="ruby-operator">+</span>
+  <span class="ruby-identifier">lines</span>.<span class="ruby-identifier">push</span> <span class="ruby-node">&quot;#{@colors[:cyan]}#{$0} -k/--kill#{@colors[:default]}: &quot;</span> <span class="ruby-operator">+</span>
              <span class="ruby-string">&quot;runs &#39;wineserver -k&#39; for each Ham.&quot;</span>
   <span class="ruby-comment"># Open shell:</span>
-  <span class="ruby-identifier">lines</span>.<span class="ruby-identifier">push</span> <span class="ruby-node">&quot;#{@colors[:blue]}#{$0} -s/--shell#{@colors[:default]}: &quot;</span> <span class="ruby-operator">+</span>
+  <span class="ruby-identifier">lines</span>.<span class="ruby-identifier">push</span> <span class="ruby-node">&quot;#{@colors[:cyan]}#{$0} -s/--shell#{@colors[:default]}: &quot;</span> <span class="ruby-operator">+</span>
              <span class="ruby-string">&quot;prompts the user to choose an edible Ham. Then, the user&#39;s &quot;</span> <span class="ruby-operator">+</span>
              <span class="ruby-string">&quot;default shell is opened in the choosen entry&#39;s folder, with &quot;</span> <span class="ruby-operator">+</span>
              <span class="ruby-string">&quot;the WINEPREFIX variable correctly set.&quot;</span>
   <span class="ruby-comment"># Update all hams:</span>
-  <span class="ruby-identifier">lines</span>.<span class="ruby-identifier">push</span> <span class="ruby-node">&quot;#{@colors[:blue]}#{$0} -u/--update#{@colors[:default]}: &quot;</span> <span class="ruby-operator">+</span>
+  <span class="ruby-identifier">lines</span>.<span class="ruby-identifier">push</span> <span class="ruby-node">&quot;#{@colors[:cyan]}#{$0} -u/--update#{@colors[:default]}: &quot;</span> <span class="ruby-operator">+</span>
              <span class="ruby-string">&quot;runs &#39;wineboot&#39; for each edible Ham. This is supposed to &quot;</span> <span class="ruby-operator">+</span>
              <span class="ruby-string">&quot;update wine files on each of them.&quot;</span>
 

@@ -81,7 +81,7 @@
 
   <ul class="link-list" role="directory">
     
-    <li class="calls-super" ><a href="#method-c-new">::new</a>
+    <li ><a href="#method-c-new">::new</a>
     
     <li ><a href="#method-i-killAllHams">#killAllHams</a>
     
@@ -184,11 +184,6 @@ href="Ham.html">Ham</a> must be composed of:</p>
 =&gt; on/off/gui, modality to use for logging.</p>
           
           
-            <div class="method-calls-super">
-              Calls superclass method
-              <a href="Oink.html#method-c-new">Oink.new</a>
-            </div>
-          
 
           
           <div class="method-source-code" id="new-source">
@@ -198,7 +193,7 @@ href="Ham.html">Ham</a> must be composed of:</p>
   <span class="ruby-ivar">@hams</span> = <span class="ruby-constant">Array</span>.<span class="ruby-identifier">new</span>
   <span class="ruby-ivar">@innvisible</span> = <span class="ruby-keyword">false</span>
   <span class="ruby-ivar">@logs</span> = <span class="ruby-identifier">options</span>[<span class="ruby-value">:logs</span>]
-  <span class="ruby-keyword">super</span>()
+  <span class="ruby-identifier">oink_initialize</span>
 
   <span class="ruby-comment"># If the main folder does not exist, create it.</span>
   <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@main_dir</span>.<span class="ruby-identifier">directory?</span> <span class="ruby-keyword">then</span>
@@ -215,7 +210,7 @@ href="Ham.html">Ham</a> must be composed of:</p>
       <span class="ruby-identifier">pork</span> = <span class="ruby-constant">Ham</span>.<span class="ruby-identifier">new</span> <span class="ruby-value">:path</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">entry</span>, <span class="ruby-value">:logs</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@logs</span>
 
       <span class="ruby-comment"># Add any entry in @logs_gui of every Ham:</span>
-      <span class="ruby-ivar">@logs_gui</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">pork</span>.<span class="ruby-identifier">logs_gui</span>
+      <span class="ruby-identifier">logs_gui_append</span> <span class="ruby-identifier">pork</span>
 
       <span class="ruby-comment"># No error message is printed here, because Ham&#39;s constructor already</span>
       <span class="ruby-comment"># does so.</span>
@@ -532,14 +527,14 @@ an entry for each valid one of each <a href="Ham.html">Ham</a>.</p>
 
     <span class="ruby-comment"># If the GUI entry has been created, print it first:</span>
     <span class="ruby-keyword">unless</span> <span class="ruby-identifier">gui_desktop_entry</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-keyword">then</span>
-      <span class="ruby-identifier">oink</span> <span class="ruby-node">&quot; &gt; #{@colors[:blue]}Sswine&quot;</span> <span class="ruby-operator">+</span>
+      <span class="ruby-identifier">oink</span> <span class="ruby-node">&quot; &gt; #{@colors[:cyan]}Sswine&quot;</span> <span class="ruby-operator">+</span>
            <span class="ruby-node">&quot;#{@colors[:default]}&quot;</span>,
            <span class="ruby-node">&quot;    #{gui_desktop_entry.basename}&quot;</span>
     <span class="ruby-keyword">end</span>
 
     <span class="ruby-identifier">created</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">key</span>, <span class="ruby-identifier">entries</span><span class="ruby-operator">|</span>
       <span class="ruby-comment"># Show the Ham&#39;s name:</span>
-      <span class="ruby-identifier">oink</span> <span class="ruby-node">&quot; &gt; #{@colors[:blue]}#{key}#{@colors[:default]}&quot;</span>
+      <span class="ruby-identifier">oink</span> <span class="ruby-node">&quot; &gt; #{@colors[:cyan]}#{key}#{@colors[:default]}&quot;</span>
 
       <span class="ruby-comment"># Show what this Ham has generated:</span>
       <span class="ruby-identifier">entries</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">entry</span><span class="ruby-operator">|</span>

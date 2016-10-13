@@ -105,13 +105,8 @@ module Oink
           when :gui then
             # Create a temporary Hash to house this entry:
             tmp = Hash.new
-
             tmp[:text] = entry
-            tmp[:tags] = Array.new
-
-            # For now, this will only save one tag per entry. It should be
-            # changed later on.
-            tmp_tag = Hash.new
+            tmp[:tag] = Hash.new
 
             # Replace shell colors with GUI ones:
             @colors.each_key do |color|
@@ -119,18 +114,17 @@ module Oink
               unless tmp[:text].index( @colors[color]).nil? then
                 # End of GTK3 tag:
                 if :default == color then
-                  tmp_tag[:end] = tmp[:text].index @colors[color]
+                  tmp[:tag][:end] = tmp[:text].index @colors[color]
                 # Beginning of GTK3 tag and its color:
                 else
-                  tmp_tag[:begin] = tmp[:text].index @colors[color]
-                  tmp_tag[:color] = "#{color}"
+                  tmp[:tag][:begin] = tmp[:text].index @colors[color]
+                  tmp[:tag][:color] = "#{color}"
                 end
               end
 
               tmp[:text].gsub! @colors[color], ""
             end
 
-            tmp[:tags].push tmp_tag
             @logs_gui.push tmp
 
           # Normal logs: simply print them

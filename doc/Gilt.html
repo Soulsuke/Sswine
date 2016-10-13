@@ -62,7 +62,18 @@
   
 </div>
 
-    
+    <div id="includes-section" class="nav-section">
+  <h3>Included Modules</h3>
+
+  <ul class="link-list">
+  
+  
+    <li><a class="include" href="Oink.html">Oink</a>
+  
+  
+  </ul>
+</div>
+
     
     <!-- Method Quickref -->
 <div id="method-list-section" class="nav-section">
@@ -73,6 +84,8 @@
     <li class="calls-super" ><a href="#method-c-new">::new</a>
     
     <li ><a href="#method-i-executeCommand">#executeCommand</a>
+    
+    <li ><a href="#method-i-generateTextBuffer">#generateTextBuffer</a>
     
   </ul>
 </div>
@@ -138,9 +151,11 @@ of have to get used to designing them, so here we are.</p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/gilt.rb, line 15</span>
+            <pre><span class="ruby-comment"># File lib/gilt.rb, line 20</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>
-  <span class="ruby-keyword">super</span>()
+  <span class="ruby-keyword">super</span>
+  <span class="ruby-ivar">@logs</span> = <span class="ruby-value">:gui</span>
+  <span class="ruby-identifier">oink_initialize</span>
 
   <span class="ruby-comment"># Quit icon:</span>
   <span class="ruby-identifier">signal_connect</span> <span class="ruby-string">&quot;destroy&quot;</span> <span class="ruby-keyword">do</span>
@@ -214,9 +229,8 @@ of have to get used to designing them, so here we are.</p>
   <span class="ruby-identifier">grid</span>.<span class="ruby-identifier">attach</span> <span class="ruby-identifier">commands</span>, <span class="ruby-value">0</span>, <span class="ruby-value">1</span>, <span class="ruby-value">2</span>, <span class="ruby-value">1</span>
 
   <span class="ruby-comment"># Area where Sswine&#39;s output will be shown:</span>
-  <span class="ruby-identifier">output_buffer</span> = <span class="ruby-constant">Gtk</span><span class="ruby-operator">::</span><span class="ruby-constant">TextBuffer</span>.<span class="ruby-identifier">new</span>
   <span class="ruby-identifier">output_scroller</span> = <span class="ruby-constant">Gtk</span><span class="ruby-operator">::</span><span class="ruby-constant">ScrolledWindow</span>.<span class="ruby-identifier">new</span>
-  <span class="ruby-identifier">output_view</span> = <span class="ruby-constant">Gtk</span><span class="ruby-operator">::</span><span class="ruby-constant">TextView</span>.<span class="ruby-identifier">new</span> <span class="ruby-identifier">output_buffer</span>
+  <span class="ruby-identifier">output_view</span> = <span class="ruby-constant">Gtk</span><span class="ruby-operator">::</span><span class="ruby-constant">TextView</span>.<span class="ruby-identifier">new</span>
   <span class="ruby-identifier">output_view</span>.<span class="ruby-identifier">editable</span> = <span class="ruby-keyword">false</span>
   <span class="ruby-identifier">output_view</span>.<span class="ruby-identifier">set_monospace</span>  <span class="ruby-keyword">true</span>
   <span class="ruby-identifier">output_scroller</span>.<span class="ruby-identifier">add</span> <span class="ruby-identifier">output_view</span>
@@ -225,8 +239,10 @@ of have to get used to designing them, so here we are.</p>
   <span class="ruby-comment"># Execution button:</span>
   <span class="ruby-identifier">execute</span> = <span class="ruby-constant">Gtk</span><span class="ruby-operator">::</span><span class="ruby-constant">Button</span>.<span class="ruby-identifier">new</span> <span class="ruby-value">:label</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;Execute!&quot;</span>
   <span class="ruby-identifier">execute</span>.<span class="ruby-identifier">signal_connect</span> <span class="ruby-string">&quot;clicked&quot;</span> <span class="ruby-keyword">do</span>
-    <span class="ruby-comment"># On click, call the function which will handle the logic:</span>
-    <span class="ruby-identifier">output_buffer</span>.<span class="ruby-identifier">text</span> = <span class="ruby-identifier">executeCommand</span>
+    <span class="ruby-comment"># On click, call the function which will handle the logic, and set the</span>
+    <span class="ruby-comment"># resulting TextBuffer in use for our TextView:</span>
+    <span class="ruby-identifier">executeCommand</span>
+    <span class="ruby-identifier">output_view</span>.<span class="ruby-identifier">set_buffer</span> <span class="ruby-identifier">generateTextBuffer</span>
   <span class="ruby-keyword">end</span>
   <span class="ruby-identifier">grid</span>.<span class="ruby-identifier">attach</span> <span class="ruby-identifier">execute</span>, <span class="ruby-value">2</span>, <span class="ruby-value">1</span>, <span class="ruby-value">1</span>, <span class="ruby-value">1</span>
 
@@ -268,37 +284,39 @@ of have to get used to designing them, so here we are.</p>
 
         <div class="method-description">
           
-          <p>Private method. Handles the logic of the “Execute!” button. Returns the
-text to show on the GUI.</p>
+          <p>Private method. Handles the logic of the “Execute!” button.</p>
           
           
 
           
           <div class="method-source-code" id="executeCommand-source">
-            <pre><span class="ruby-comment"># File lib/gilt.rb, line 117</span>
+            <pre><span class="ruby-comment"># File lib/gilt.rb, line 173</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">executeCommand</span>
-  <span class="ruby-identifier">s</span> = <span class="ruby-keyword">nil</span>
-  <span class="ruby-identifier">ret</span> = <span class="ruby-string">&quot;&quot;</span>
+  <span class="ruby-comment"># This is to clear logs:</span>
+  <span class="ruby-identifier">logs_gui_clear</span>
+
+  <span class="ruby-comment"># Later on, this will contain our Sswine instance:</span>
+  <span class="ruby-identifier">sswine</span> = <span class="ruby-keyword">nil</span>
 
   <span class="ruby-comment"># Depending on the command, do the right thing:</span>
   <span class="ruby-keyword">case</span> <span class="ruby-ivar">@command</span>
     <span class="ruby-keyword">when</span> <span class="ruby-string">&quot;check&quot;</span> <span class="ruby-keyword">then</span>
-      <span class="ruby-identifier">s</span> = <span class="ruby-constant">Sswine</span>.<span class="ruby-identifier">new</span> <span class="ruby-value">:logs</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">:gui</span>
+      <span class="ruby-identifier">sswine</span> = <span class="ruby-constant">Sswine</span>.<span class="ruby-identifier">new</span> <span class="ruby-value">:logs</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">:gui</span>
 
     <span class="ruby-keyword">when</span> <span class="ruby-string">&quot;desktop&quot;</span> <span class="ruby-keyword">then</span>
-      <span class="ruby-identifier">s</span> = <span class="ruby-constant">Sswine</span>.<span class="ruby-identifier">new</span> <span class="ruby-value">:logs</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">:gui</span>
-      <span class="ruby-identifier">s</span>.<span class="ruby-identifier">writeMenuEntries</span>
+      <span class="ruby-identifier">sswine</span> = <span class="ruby-constant">Sswine</span>.<span class="ruby-identifier">new</span> <span class="ruby-value">:logs</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">:gui</span>
+      <span class="ruby-identifier">sswine</span>.<span class="ruby-identifier">writeMenuEntries</span>
 
     <span class="ruby-keyword">when</span> <span class="ruby-string">&quot;kill&quot;</span> <span class="ruby-keyword">then</span>
-      <span class="ruby-identifier">s</span> = <span class="ruby-constant">Sswine</span>.<span class="ruby-identifier">new</span>
-      <span class="ruby-identifier">s</span>.<span class="ruby-identifier">killAllHams</span>
-      <span class="ruby-identifier">ret</span> = <span class="ruby-string">&quot;All Hams have been killed.&quot;</span>
+      <span class="ruby-identifier">sswine</span> = <span class="ruby-constant">Sswine</span>.<span class="ruby-identifier">new</span>
+      <span class="ruby-identifier">sswine</span>.<span class="ruby-identifier">killAllHams</span>
+      <span class="ruby-identifier">oink</span> <span class="ruby-string">&quot;All Hams have been killed.&quot;</span>
 
     <span class="ruby-keyword">when</span> <span class="ruby-string">&quot;shell&quot;</span> <span class="ruby-keyword">then</span>
-      <span class="ruby-identifier">s</span> = <span class="ruby-constant">Sswine</span>.<span class="ruby-identifier">new</span>
+      <span class="ruby-identifier">sswine</span> = <span class="ruby-constant">Sswine</span>.<span class="ruby-identifier">new</span>
 
-      <span class="ruby-keyword">if</span> <span class="ruby-identifier">s</span>.<span class="ruby-identifier">invisible</span> <span class="ruby-keyword">then</span>
-        <span class="ruby-identifier">ret</span> = <span class="ruby-string">&quot;No Hams found. Nothing to do.&quot;</span>
+      <span class="ruby-keyword">if</span> <span class="ruby-identifier">sswine</span>.<span class="ruby-identifier">invisible</span> <span class="ruby-keyword">then</span>
+        <span class="ruby-identifier">oink</span> <span class="ruby-string">&quot;No Hams found. Nothing to do.&quot;</span>
 
       <span class="ruby-keyword">else</span>
         <span class="ruby-comment"># I found no way to get the default terminal emulator in a distro</span>
@@ -325,38 +343,112 @@ text to show on the GUI.</p>
         <span class="ruby-identifier">terminal_emulators</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">term</span><span class="ruby-operator">|</span>
           <span class="ruby-comment"># 3. If a terminal has been found, use it:</span>
           <span class="ruby-keyword">unless</span> <span class="ruby-node">%x`which #{term} 2&gt; /dev/null`</span>.<span class="ruby-identifier">empty?</span> <span class="ruby-keyword">then</span>
-            <span class="ruby-node">%x`#{term} -e &quot;sswine -s&quot; &amp;&gt; /dev/null`</span>
-            <span class="ruby-keyword">return</span> <span class="ruby-node">&quot;Used terminal emulator: #{`which #{term}`}&quot;</span>
+            <span class="ruby-node">%x`#{term} -e &quot;#{$0} -s&quot; &amp;&gt; /dev/null`</span>
+            <span class="ruby-identifier">oink</span> <span class="ruby-node">&quot;Used terminal emulator: #{`which #{term}`}&quot;</span>
+            <span class="ruby-keyword">break</span>
           <span class="ruby-keyword">end</span>
 
           <span class="ruby-comment"># 4. If no terminal has been found, return an error:</span>
-          <span class="ruby-identifier">ret</span> = <span class="ruby-string">&quot;No terminal emulator found in the system&#39;s path.\n&quot;</span> <span class="ruby-operator">+</span>
-                <span class="ruby-string">&quot;Please, install one of the following:\n&quot;</span> <span class="ruby-operator">+</span>
-                <span class="ruby-identifier">terminal_emulators</span>.<span class="ruby-identifier">join</span>( <span class="ruby-string">&quot;\n&quot;</span> )
+          <span class="ruby-identifier">oink</span> <span class="ruby-string">&quot;No terminal emulator found in the system&#39;s path.\n&quot;</span> <span class="ruby-operator">+</span>
+               <span class="ruby-string">&quot;Please, install one of the following:\n&quot;</span> <span class="ruby-operator">+</span>
+               <span class="ruby-identifier">terminal_emulators</span>.<span class="ruby-identifier">join</span>( <span class="ruby-string">&quot;\n&quot;</span> )
         <span class="ruby-keyword">end</span>
       <span class="ruby-keyword">end</span>
 
     <span class="ruby-keyword">when</span> <span class="ruby-string">&quot;update&quot;</span> <span class="ruby-keyword">then</span>
-      <span class="ruby-identifier">s</span> = <span class="ruby-constant">Sswine</span>.<span class="ruby-identifier">new</span>
-      <span class="ruby-identifier">s</span>.<span class="ruby-identifier">updateAllHams</span>
-      <span class="ruby-identifier">ret</span> = <span class="ruby-string">&quot;All Hams have been updated.&quot;</span>
+      <span class="ruby-identifier">sswine</span> = <span class="ruby-constant">Sswine</span>.<span class="ruby-identifier">new</span>
+      <span class="ruby-identifier">sswine</span>.<span class="ruby-identifier">updateAllHams</span>
+      <span class="ruby-identifier">oink</span> <span class="ruby-string">&quot;All Hams have been updated.&quot;</span>
   <span class="ruby-keyword">end</span>
 
-  <span class="ruby-comment"># Make sure there&#39;s an output to show:</span>
-  <span class="ruby-keyword">if</span> <span class="ruby-identifier">ret</span>.<span class="ruby-identifier">empty?</span> <span class="ruby-keyword">then</span>
-    <span class="ruby-keyword">if</span> <span class="ruby-identifier">s</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-keyword">or</span> <span class="ruby-identifier">s</span>.<span class="ruby-identifier">logs_gui</span>.<span class="ruby-identifier">empty?</span> <span class="ruby-keyword">then</span>
-      <span class="ruby-identifier">ret</span> = <span class="ruby-string">&quot;No errors occurred, everything is fine.&quot;</span>
+  <span class="ruby-comment"># If Glit generated no logs, then it gotta be taken elsewhere:</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">logs_gui</span>.<span class="ruby-identifier">empty?</span> <span class="ruby-keyword">then</span>
+    <span class="ruby-comment"># If even the Sswine instance contains no logs, then show a &quot;no errors&quot;</span>
+    <span class="ruby-comment"># message:</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">sswine</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-keyword">or</span> <span class="ruby-identifier">sswine</span>.<span class="ruby-identifier">logs_gui</span>.<span class="ruby-identifier">empty?</span> <span class="ruby-keyword">then</span>
+      <span class="ruby-identifier">oink</span> <span class="ruby-string">&quot;No errors occurred, everything is fine.&quot;</span>
 
+    <span class="ruby-comment"># Else, appende the logs of our Sswine instance:</span>
     <span class="ruby-keyword">else</span>
-      <span class="ruby-comment"># Gotta add some extra spaces because of scroll widgets covering the</span>
-      <span class="ruby-comment"># last characters with some themes:</span>
-      <span class="ruby-identifier">s</span>.<span class="ruby-identifier">logs_gui</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">entry</span><span class="ruby-operator">|</span>
-        <span class="ruby-identifier">ret</span> = <span class="ruby-node">&quot;#{ret}#{entry[:text]}  \n&quot;</span>
-      <span class="ruby-keyword">end</span>
+      <span class="ruby-identifier">logs_gui_append</span> <span class="ruby-identifier">sswine</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-generateTextBuffer" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">generateTextBuffer</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Private method. Generates and return a Gtk::TextBuffer from @logs_gui.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="generateTextBuffer-source">
+            <pre><span class="ruby-comment"># File lib/gilt.rb, line 124</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">generateTextBuffer</span>
+  <span class="ruby-comment"># This will countain the TextBuffer to show:</span>
+  <span class="ruby-identifier">buffer</span> = <span class="ruby-constant">Gtk</span><span class="ruby-operator">::</span><span class="ruby-constant">TextBuffer</span>.<span class="ruby-identifier">new</span>
+
+  <span class="ruby-comment"># This is the list of tags to use, ideally one per color:</span>
+  <span class="ruby-identifier">tags</span> = <span class="ruby-constant">Hash</span>.<span class="ruby-identifier">new</span>
+  <span class="ruby-ivar">@colors</span>.<span class="ruby-identifier">each_key</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">key</span><span class="ruby-operator">|</span>
+    <span class="ruby-keyword">unless</span> <span class="ruby-value">:default</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">key</span> <span class="ruby-keyword">then</span>
+      <span class="ruby-identifier">tags</span>[<span class="ruby-node">&quot;#{key}&quot;</span>] = <span class="ruby-identifier">buffer</span>.<span class="ruby-identifier">create_tag</span> <span class="ruby-node">&quot;#{key}&quot;</span>
+      <span class="ruby-identifier">tags</span>[<span class="ruby-node">&quot;#{key}&quot;</span>].<span class="ruby-identifier">set_foreground</span> <span class="ruby-node">&quot;#{key}&quot;</span>
     <span class="ruby-keyword">end</span>
   <span class="ruby-keyword">end</span>
 
-  <span class="ruby-keyword">return</span> <span class="ruby-identifier">ret</span>
+  <span class="ruby-comment"># These will be the places where to apply each tag once the final buffer</span>
+  <span class="ruby-comment"># text has been composed:</span>
+  <span class="ruby-identifier">tags_to_apply</span> = <span class="ruby-constant">Array</span>.<span class="ruby-identifier">new</span>
+
+  <span class="ruby-comment"># Now, for each entry of logs_gui....</span>
+  <span class="ruby-ivar">@logs_gui</span>.<span class="ruby-identifier">each_with_index</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">entry</span>, <span class="ruby-identifier">idx</span><span class="ruby-operator">|</span>
+    <span class="ruby-comment"># First, let&#39;s handle the tag:</span>
+    <span class="ruby-comment"># Be sure this is not a malformed tag due to some kind of error:</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">entry</span>[<span class="ruby-value">:tag</span>].<span class="ruby-identifier">key?</span> <span class="ruby-value">:color</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">entry</span>[<span class="ruby-value">:tag</span>].<span class="ruby-identifier">key?</span> <span class="ruby-value">:begin</span> <span class="ruby-keyword">and</span> 
+       <span class="ruby-identifier">entry</span>[<span class="ruby-value">:tag</span>].<span class="ruby-identifier">key?</span> <span class="ruby-value">:end</span> <span class="ruby-keyword">then</span>
+      <span class="ruby-comment"># Turn the relative :begin and :end informations into absolute ones</span>
+      <span class="ruby-comment"># regarding the current buffer:</span>
+      <span class="ruby-identifier">tags_to_apply</span>.<span class="ruby-identifier">push</span> <span class="ruby-value">:begin</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">buffer</span>.<span class="ruby-identifier">text</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">entry</span>[<span class="ruby-value">:tag</span>][<span class="ruby-value">:begin</span>],
+                         <span class="ruby-value">:end</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">buffer</span>.<span class="ruby-identifier">text</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">entry</span>[<span class="ruby-value">:tag</span>][<span class="ruby-value">:end</span>],
+                         <span class="ruby-value">:tag</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">tags</span>[<span class="ruby-identifier">entry</span>[<span class="ruby-value">:tag</span>][<span class="ruby-value">:color</span>]]
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-comment"># Text part: this is easy, simply append it.</span>
+    <span class="ruby-comment"># NOTE: gotta add an extra &quot;  &quot; at the end of each line, plus a &quot;\n&quot;</span>
+    <span class="ruby-comment"># at the end of the last line, to avoid some text being obscured by</span>
+    <span class="ruby-comment"># the window scrollers in some GTK3 themes.</span>
+    <span class="ruby-identifier">buffer</span>.<span class="ruby-identifier">text</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">entry</span>[<span class="ruby-value">:text</span>] <span class="ruby-operator">+</span> <span class="ruby-string">&quot;  \n&quot;</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-comment"># Finally, apply each tag that we have processed!</span>
+  <span class="ruby-identifier">tags_to_apply</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">tag</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">iter_begin</span> = <span class="ruby-identifier">buffer</span>.<span class="ruby-identifier">get_iter_at</span> <span class="ruby-value">:offset</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">tag</span>[<span class="ruby-value">:begin</span>]
+    <span class="ruby-identifier">iter_end</span> = <span class="ruby-identifier">buffer</span>.<span class="ruby-identifier">get_iter_at</span> <span class="ruby-value">:offset</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">tag</span>[<span class="ruby-value">:end</span>]
+    <span class="ruby-identifier">buffer</span>.<span class="ruby-identifier">apply_tag</span> <span class="ruby-identifier">tag</span>[<span class="ruby-value">:tag</span>], <span class="ruby-identifier">iter_begin</span>, <span class="ruby-identifier">iter_end</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">buffer</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           

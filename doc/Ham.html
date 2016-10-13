@@ -81,7 +81,7 @@
 
   <ul class="link-list" role="directory">
     
-    <li class="calls-super" ><a href="#method-c-new">::new</a>
+    <li ><a href="#method-c-new">::new</a>
     
     <li ><a href="#method-i-checkEntry">#checkEntry</a>
     
@@ -187,11 +187,6 @@ usable config file contain a wine_env folder.</p>
 :logs =&gt; :off/:on/:gui, modality to use for logging.</p>
           
           
-            <div class="method-calls-super">
-              Calls superclass method
-              <a href="Oink.html#method-c-new">Oink.new</a>
-            </div>
-          
 
           
           <div class="method-source-code" id="new-source">
@@ -202,7 +197,7 @@ usable config file contain a wine_env folder.</p>
   <span class="ruby-ivar">@config_global</span> = <span class="ruby-constant">Hash</span>.<span class="ruby-identifier">new</span>
   <span class="ruby-ivar">@config_entries</span> = <span class="ruby-constant">Hash</span>.<span class="ruby-identifier">new</span>
   <span class="ruby-ivar">@logs</span> = <span class="ruby-identifier">options</span>[<span class="ruby-value">:logs</span>]
-  <span class="ruby-keyword">super</span>()
+  <span class="ruby-identifier">oink_initialize</span>
 
   <span class="ruby-comment"># If there&#39;s no wine_env folder, it&#39;s not edible.</span>
   <span class="ruby-keyword">unless</span> <span class="ruby-constant">Pathname</span>.<span class="ruby-identifier">new</span>( <span class="ruby-node">&quot;#{@folder}/wine_env&quot;</span> ).<span class="ruby-identifier">directory?</span> <span class="ruby-keyword">then</span>

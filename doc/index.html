@@ -84,7 +84,124 @@
 </nav>
 
 <main role="main">
-<p>This is the API documentation for RDoc Documentation.
+
+
+<h1 id="label-Sswine"><a href="Sswine.html">Sswine</a><span><a href="#label-Sswine">&para;</a> <a href="#top">&uarr;</a></span></h1>
+
+<p><a href="Sswine.html">Sswine</a>, which stands for “Sswine: split wine”.</p>
+
+<h3 id="label-General">General<span><a href="#label-General">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<p>This program, written in Ruby, is made to handle multiple wine bottles
+located in $HOME/.sswine.<br> Such folder must be populated with
+sub-folders, named Hams. Each Ham&#39;s name should give a clue about what
+its purpouse is for.<br> A valid <a href="Ham.html">Ham</a> folder must
+contain at least:<br> - config.yaml: a configuration entry (see below for a
+reference)<br> - wine_env: a wine bottle</p>
+
+<p>Optionally, it can also contain:<br> - icons: a folder containing
+Ham-specific icons (any image file supported by  your desktoop
+manager&#39;s menu)<br> - custom_wine: a folder containing a custom version
+of wine, to be used for  this <a href="Ham.html">Ham</a>.</p>
+
+<h3 id="label-Usage">Usage<span><a href="#label-Usage">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<p>Sswine&#39;s current functionalities are (as shown in its help
+reference):<br> - sswine -c/–check: checks each entry of each <a
+href="Ham.html">Ham</a> for errors. No output means  that everything is
+ok.<br> - sswine -d/–desktop: writes .desktop files for each valid entry of
+each  edible <a href="Ham.html">Ham</a>.<br> - sswine -g/–gui: launches the
+GTK3 GUI.<br> - sswine -h/–help: shows this help reference.<br> - sswine
+-k/–kill: runs &#39;wineserver -k&#39; for each <a
+href="Ham.html">Ham</a>.<br> - sswine -s/–shell: prompts the user to choose
+an edible <a href="Ham.html">Ham</a>. Then, the user&#39;s  default shell
+is opened in the choosen entry&#39;s folder,  with the WINEPREFIX variable
+correctly set.<br> - sswine -u/–update: runs &#39;wineboot&#39; for each
+edible <a href="Ham.html">Ham</a>. This is supposed to  update wine files
+on each of them.</p>
+
+<p><strong>WARNING:</strong> Although it&#39;s already implied, I&#39;d like
+to state that to use the GTK3 GUI, the ruby gem “gtk3” has to be installed.</p>
+
+<h3 id="label-config.yaml">config.yaml<span><a href="#label-config.yaml">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<p>This file must always contain at least an entry.<br> Each entry must be
+composed of a name and a series of values, using the following syntax:</p>
+
+<blockquote>
+<p><code>Entry Name:</code><br>  <code>Key1: &quot;Value1&quot;</code><br>
+ <code>Key2: &quot;Value2&quot;</code></p>
+</blockquote>
+
+<p>The entry&#39;s name will be the .desktop file&#39;s one. If no “Name” key
+is provided, it will fill in for it as well.</p>
+
+<p>To create a usable menu entry, you must specify the keys needed to create a
+valid .desktop file according to freedesktop.org&#39;s specification.</p>
+
+<p>If more entries would use the same value for some keys, you can specify
+global values to use for all entries (which are overridden by
+entry-specific values) in the following way:</p>
+
+<blockquote>
+<p><code>Global Values:</code><br>  <code>Key1: &quot;Value1&quot;</code><br>
+ <code>Key2: &quot;Value2&quot;</code></p>
+</blockquote>
+
+<p><strong>WARNING:</strong> The value of key “Path”, if specified, must be
+relative to “$HOME/.sswine/&lt;Ham&gt;/wine_env/drive_c”, which is pretty
+much an unavoidable path while using wine.<br> <strong>WARNING:</strong> If
+the value of key “Exec” contains spaces other than the ones separating
+commands, they have to be escaped. Also “&quot; character needs to be
+escaped. To put it shortly: you have to put two \ before any space which
+does not separate two different commands.</p>
+
+<p>A sample config.yaml is:</p>
+
+<blockquote>
+<p><code>Global Values:</code><br>  <code>Encoding:
+&quot;UTF-8&quot;</code><br>  <code>Version: &quot;1.0&quot;</code><br>
+ <code>Type: &quot;Application&quot;</code><br>  <code>Terminal:
+&quot;false&quot;</code><br>  <code>Categories:
+&quot;Games;&quot;</code><br>  <code>Icon:
+&quot;global_icon.png&quot;</code><br>  <code>Path:
+&quot;global/path&quot;</code><br>  <code>Hidden:
+&quot;false&quot;</code><br>  <code>NoDisplay: &quot;false&quot;</code></p>
+
+<p><code>Program Name:</code><br>  <code>Exec: &quot;wine
+exec.exe&quot;</code><br>  <code>Icon: &quot;entry_icon.png&quot;</code></p>
+
+<p><code>Other Program:</code><br>  <code>Exec: &quot;wine exec\ with\
+spaces.exe&quot;</code><br>  <code>Name: &quot;Other/Program&quot;</code></p>
+</blockquote>
+
+<p>Will generate “Program Name.desktop”:</p>
+
+<blockquote>
+<p><code>[Desktop Entry]</code><br> <code>Categories=Games;</code><br>
+<code>Encoding=UTF-8</code><br> <code>Exec=env
+WINEPREFIX=/home/&lt;user&gt;/.sswine/test/wine_env wine
+exec.exe</code><br> <code>Hidden=false</code><br>
+<code>Icon=/home/&lt;user&gt;/.sswine/test/icons/entry_icon.png</code><br>
+<code>NoDisplay=false</code><br>
+<code>Path=/home/&lt;user&gt;/.sswine/test/wine_env/drive_c/global/path</code><br>
+<code>Terminal=false</code><br> <code>Type=Application</code><br>
+<code>Version=1.0</code></p>
+</blockquote>
+
+<p>And “Other Program.desktop”:</p>
+
+<blockquote>
+<p><code>[Desktop Entry]</code><br> <code>Categories=Games;</code><br>
+<code>Encoding=UTF-8</code><br> <code>Exec=env
+WINEPREFIX=/home/&lt;user&gt;/.sswine/test/wine_env wine exec\ with\
+spaces.exe</code><br> <code>Hidden=false</code><br>
+<code>Icon=/home/&lt;user&gt;/.sswine/test/icons/global_icon.png</code><br>
+<code>Name=Other/Program</code><br> <code>NoDisplay=false</code><br>
+<code>Path=/home/&lt;user&gt;/.sswine/test/wine_env/drive_c/global/path</code><br>
+<code>Terminal=false</code><br> <code>Type=Application</code><br>
+<code>Version=1.0</code></p>
+</blockquote>
 </main>
 
 

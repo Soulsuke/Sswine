@@ -11,7 +11,7 @@ used to designing them, so here we are.
 
 class Gilt < Gtk::Window
   @command # Currently selected Sswine command.
-  @logs # Logs modality, either on, off or gui.
+  @logs    # Logs modality, either on, off or gui.
 
   # Our logger: 
   include Oink
@@ -125,7 +125,7 @@ class Gilt < Gtk::Window
     # This will countain the TextBuffer to show:
     buffer = Gtk::TextBuffer.new
 
-    # This is the list of tags to use:
+    # This is the list of tags to use, ideally one per color:
     tags = Hash.new
     @colors.each_key do |key|
       unless :default == key then
@@ -134,33 +134,36 @@ class Gilt < Gtk::Window
       end
     end
 
+    # These will be the places where to apply each tag once the final buffer
+    # text has been composed:
+    tags_to_apply = Array.new
+
     # Now, for each entry of logs_gui....
     @logs_gui.each_with_index do |entry, idx|
-      prev_length = buffer.text.length
-
-      # Text part: this is easy!
-      buffer.text += entry[:text] + "    \n"
-
-      # First, handle tags:
-      entry[:tags].each do |tag|
-        # Extra check for malformed tags:
-        if tag.key? :color and tag.key? :begin and tag.key? :end then
-          # Begin iter:
-          iter_begin = buffer.get_iter_at :offset => prev_length + tag[:begin]
-
-          # End iter:
-          iter_end = buffer.get_iter_at :offset => prev_length + tag[:begin]
-
-          # Apply tag:
-          buffer.apply_tag tags[tag[:color]], iter_begin, iter_end
-        end
+      # First, let's handle the tag:
+      # Be sure this is not a malformed tag due to some kind of error:
+      if entry[:tag].key? :color and entry[:tag].key? :begin and 
+         entry[:tag].key? :end then
+        # Turn the relative :begin and :end informations into absolute ones
+        # regarding the current buffer:
+        tags_to_apply.push :begin => buffer.text.length + entry[:tag][:begin],
+                           :end => buffer.text.length + entry[:tag][:end],
+                           :tag => tags[entry[:tag][:color]]
       end
+
+      # Text part: this is easy, simply append it.
+      # NOTE: gotta add an extra "  " at the end of each line, plus a "\n"
+      # at the end of the last line, to avoid some text being obscured by
+      # the window scrollers in some GTK3 themes.
+      buffer.text += entry[:text] + "  \n"
     end
 
-    # TODO: add all the tags here. They must be added here for them to work.
-    b = buffer.get_iter_at :offset => 9
-    e = buffer.get_iter_at :offset => 28
-    buffer.apply_tag tags["red"], b, e
+    # Finally, apply each tag that we have processed!
+    tags_to_apply.each do |tag|
+      iter_begin = buffer.get_iter_at :offset => tag[:begin]
+      iter_end = buffer.get_iter_at :offset => tag[:end]
+      buffer.apply_tag tag[:tag], iter_begin, iter_end
+    end
 
     return buffer
   end
