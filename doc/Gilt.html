@@ -232,7 +232,13 @@ of have to get used to designing them, so here we are.</p>
   <span class="ruby-identifier">output_scroller</span> = <span class="ruby-constant">Gtk</span><span class="ruby-operator">::</span><span class="ruby-constant">ScrolledWindow</span>.<span class="ruby-identifier">new</span>
   <span class="ruby-identifier">output_view</span> = <span class="ruby-constant">Gtk</span><span class="ruby-operator">::</span><span class="ruby-constant">TextView</span>.<span class="ruby-identifier">new</span>
   <span class="ruby-identifier">output_view</span>.<span class="ruby-identifier">editable</span> = <span class="ruby-keyword">false</span>
-  <span class="ruby-identifier">output_view</span>.<span class="ruby-identifier">set_monospace</span>  <span class="ruby-keyword">true</span>
+  <span class="ruby-comment"># Apparently, this can fail:</span>
+  <span class="ruby-keyword">begin</span>
+    <span class="ruby-identifier">output_view</span>.<span class="ruby-identifier">set_monospace</span>  <span class="ruby-keyword">true</span>
+  <span class="ruby-keyword">rescue</span>
+    <span class="ruby-identifier">oink</span> <span class="ruby-node">&quot;#{@colors[:red]}!!! Error: cannot set monospace font!&quot;</span> <span class="ruby-operator">+</span>
+         <span class="ruby-node">&quot;#{@colors[:default]}&quot;</span>
+  <span class="ruby-keyword">end</span>
   <span class="ruby-identifier">output_scroller</span>.<span class="ruby-identifier">add</span> <span class="ruby-identifier">output_view</span>
   <span class="ruby-identifier">grid</span>.<span class="ruby-identifier">attach</span> <span class="ruby-identifier">output_scroller</span>, <span class="ruby-value">0</span>, <span class="ruby-value">2</span>, <span class="ruby-value">3</span>, <span class="ruby-value">5</span>
 
@@ -290,7 +296,7 @@ of have to get used to designing them, so here we are.</p>
 
           
           <div class="method-source-code" id="executeCommand-source">
-            <pre><span class="ruby-comment"># File lib/gilt.rb, line 187</span>
+            <pre><span class="ruby-comment"># File lib/gilt.rb, line 195</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">executeCommand</span>
   <span class="ruby-comment"># This is to clear logs:</span>
   <span class="ruby-identifier">logs_gui_clear</span>
@@ -410,7 +416,7 @@ of have to get used to designing them, so here we are.</p>
 
           
           <div class="method-source-code" id="generateTextBuffer-source">
-            <pre><span class="ruby-comment"># File lib/gilt.rb, line 124</span>
+            <pre><span class="ruby-comment"># File lib/gilt.rb, line 130</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">generateTextBuffer</span>
   <span class="ruby-comment"># This will countain the TextBuffer to show:</span>
   <span class="ruby-identifier">buffer</span> = <span class="ruby-constant">Gtk</span><span class="ruby-operator">::</span><span class="ruby-constant">TextBuffer</span>.<span class="ruby-identifier">new</span>
@@ -460,6 +466,8 @@ of have to get used to designing them, so here we are.</p>
 
   <span class="ruby-comment"># In the worst case scenario, simply create a buffer with plain text:</span>
   <span class="ruby-keyword">rescue</span>
+    <span class="ruby-identifier">oink</span> <span class="ruby-node">&quot;#{@colors[:red]}!!! Error: cannot set colors!#{@colors[:default]}&quot;</span>
+
     <span class="ruby-comment"># NOTE: gotta add an extra &quot;  &quot; at the end of each line, plus a &quot;\n&quot;</span>
     <span class="ruby-comment"># at the end of the last line, to avoid some text being obscured by</span>
     <span class="ruby-comment"># the window scrollers in some GTK3 themes.</span>

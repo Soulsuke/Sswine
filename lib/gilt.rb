@@ -97,7 +97,13 @@ class Gilt < Gtk::Window
     output_scroller = Gtk::ScrolledWindow.new
     output_view = Gtk::TextView.new
     output_view.editable = false
-    output_view.set_monospace  true
+    # Apparently, this can fail:
+    begin
+      output_view.set_monospace  true
+    rescue
+      oink "#{@colors[:red]}!!! Error: cannot set monospace font!" +
+           "#{@colors[:default]}"
+    end
     output_scroller.add output_view
     grid.attach output_scroller, 0, 2, 3, 5
 
@@ -170,6 +176,8 @@ class Gilt < Gtk::Window
 
     # In the worst case scenario, simply create a buffer with plain text:
     rescue
+      oink "#{@colors[:red]}!!! Error: cannot set colors!#{@colors[:default]}"
+
       # NOTE: gotta add an extra "  " at the end of each line, plus a "\n"
       # at the end of the last line, to avoid some text being obscured by
       # the window scrollers in some GTK3 themes.
