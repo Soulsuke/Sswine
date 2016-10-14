@@ -29,8 +29,8 @@ class SswineLauncher
   
     # Help reference lines:
     # Header:
-    lines.push "#{@colors[:yellow]}Sswine: split wine.#{@colors[:default]}"
-    lines.push "#{@colors[:yellow]}Usage:#{@colors[:default]}"
+    lines.push "#{@colors[:blue]}Sswine: split wine.#{@colors[:default]}"
+    lines.push "#{@colors[:blue]}Usage:#{@colors[:default]}"
     # Check hams:
     lines.push "#{@colors[:cyan]}#{$0} -c/--check#{@colors[:default]}: " +
                "checks each entry of each Ham for errors. No output means " +

@@ -239,7 +239,7 @@ class Gilt < Gtk::Window
             # 3. If a terminal has been found, use it:
             unless `which #{term} 2> /dev/null`.empty? then
               `#{term} -e "#{$0} -s" &> /dev/null`
-              oink "Used terminal emulator: #{@colors[:yellow]}" +
+              oink "Used terminal emulator: #{@colors[:blue]}" +
                    "#{`which #{term}`}#{@colors[:default]}"
               success = true
               break

@@ -189,7 +189,7 @@ class Sswine
 
     else
       # Header:
-      oink "Created entries in #{@colors[:yellow]}" +
+      oink "Created entries in #{@colors[:blue]}" +
            "#{desktop_files_folder.realpath}#{@colors[:default]} for:"
 
       # If the GUI entry has been created, print it first:

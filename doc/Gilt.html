@@ -346,7 +346,7 @@ of have to get used to designing them, so here we are.</p>
           <span class="ruby-comment"># 3. If a terminal has been found, use it:</span>
           <span class="ruby-keyword">unless</span> <span class="ruby-node">%x`which #{term} 2&gt; /dev/null`</span>.<span class="ruby-identifier">empty?</span> <span class="ruby-keyword">then</span>
             <span class="ruby-node">%x`#{term} -e &quot;#{$0} -s&quot; &amp;&gt; /dev/null`</span>
-            <span class="ruby-identifier">oink</span> <span class="ruby-node">&quot;Used terminal emulator: #{@colors[:yellow]}&quot;</span> <span class="ruby-operator">+</span>
+            <span class="ruby-identifier">oink</span> <span class="ruby-node">&quot;Used terminal emulator: #{@colors[:blue]}&quot;</span> <span class="ruby-operator">+</span>
                  <span class="ruby-node">&quot;#{`which #{term}`}#{@colors[:default]}&quot;</span>
             <span class="ruby-identifier">success</span> = <span class="ruby-keyword">true</span>
             <span class="ruby-keyword">break</span>
