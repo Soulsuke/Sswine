@@ -29,7 +29,8 @@ module Oink
     @logs_gui = Array.new
 
     # Unless otherwise specified, logs are on. This is to allow classes without
-    # @logs instance variables to still use Oink to log.
+    # @logs instance variables to still use Oink to log stuff. I'm looking at 
+    # you, SswineLauncher.
     unless defined? @logs then
       @logs = :on
     end
@@ -40,7 +41,7 @@ module Oink
   # :entry => line of text to split (if needed).
   # :cap => max characters per single line.
   private
-  def digest( options = {} )
+  def digest options = {}
     # Complete container of all composed lines:
     composed_container = Array.new
 
@@ -95,7 +96,7 @@ module Oink
 
   # This function will handle the logs.
   public
-  def oink( *logs )
+  def oink *logs
     # This only has a meaning if logs are not disabled:
     unless :off == @logs then
       # For each given log...
@@ -137,7 +138,7 @@ module Oink
 
   # Appends the value of element.logs_gui to our @logs_gui.
   public
-  def logs_gui_append( element )
+  def logs_gui_append element
     # Only has a meaning if the given element actually has this property:
     if element.methods.include? :logs_gui and
       @logs_gui += element.logs_gui

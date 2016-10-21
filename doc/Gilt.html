@@ -185,30 +185,30 @@ of have to get used to designing them, so here we are.</p>
   <span class="ruby-comment"># List of available commands, and the relative tooltips:</span>
   <span class="ruby-identifier">commands_list</span> = <span class="ruby-constant">Array</span>.<span class="ruby-identifier">new</span>
   <span class="ruby-identifier">commands_list</span>.<span class="ruby-identifier">push</span>(
-    <span class="ruby-value">:name</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;check&quot;</span>,
+    <span class="ruby-value">:name</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">:check</span>,
     <span class="ruby-value">:label</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;Check for invalid Hams&quot;</span>,
     <span class="ruby-value">:tooltip</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-node">&quot;Check each folder within #{ENV[&quot;HOME&quot;]}/.sswine for &quot;</span> <span class="ruby-operator">+</span>
                 <span class="ruby-string">&quot;malformed entries.&quot;</span>
   )
   <span class="ruby-identifier">commands_list</span>.<span class="ruby-identifier">push</span>(
-    <span class="ruby-value">:name</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;desktop&quot;</span>,
+    <span class="ruby-value">:name</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">:desktop</span>,
     <span class="ruby-value">:label</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;Create menu entries&quot;</span>,
     <span class="ruby-value">:tooltip</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;Add the Sswine menu folder and populates it with the &quot;</span> <span class="ruby-operator">+</span>
                 <span class="ruby-string">&quot;relative entries.&quot;</span>
   )
   <span class="ruby-identifier">commands_list</span>.<span class="ruby-identifier">push</span>(
-    <span class="ruby-value">:name</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;kill&quot;</span>,
+    <span class="ruby-value">:name</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">:kill</span>,
     <span class="ruby-value">:label</span> =<span class="ruby-operator">&gt;</span><span class="ruby-string">&quot;Kill all Hams&quot;</span>,
     <span class="ruby-value">:tooltip</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;Run `wineserver -k` for each Sswine managed entry, to &quot;</span> <span class="ruby-operator">+</span>
                 <span class="ruby-string">&quot;ensure wine is not running.&quot;</span>
   )
   <span class="ruby-identifier">commands_list</span>.<span class="ruby-identifier">push</span>(
-    <span class="ruby-value">:name</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;shell&quot;</span>,
+    <span class="ruby-value">:name</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">:shell</span>,
     <span class="ruby-value">:label</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;Open a shell for a Ham&quot;</span>,
     <span class="ruby-value">:tooltip</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;I&#39;ll probably remove this one.&quot;</span>
   )
   <span class="ruby-identifier">commands_list</span>.<span class="ruby-identifier">push</span>(
-    <span class="ruby-value">:name</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;update&quot;</span>,
+    <span class="ruby-value">:name</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">:update</span>,
     <span class="ruby-value">:label</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;Update all Hams&quot;</span>,
     <span class="ruby-value">:tooltip</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;Run `wineboot` for each Sswine managed entry, to ensure &quot;</span> <span class="ruby-operator">+</span>
                 <span class="ruby-string">&quot;it is updated to work with the current wine version.&quot;</span>
@@ -305,22 +305,22 @@ of have to get used to designing them, so here we are.</p>
 
   <span class="ruby-comment"># Depending on the command, do the right thing:</span>
   <span class="ruby-keyword">case</span> <span class="ruby-ivar">@command</span>
-    <span class="ruby-keyword">when</span> <span class="ruby-string">&quot;check&quot;</span> <span class="ruby-keyword">then</span>
+    <span class="ruby-keyword">when</span> <span class="ruby-value">:check</span> <span class="ruby-keyword">then</span>
       <span class="ruby-identifier">sswine</span> = <span class="ruby-constant">Sswine</span>.<span class="ruby-identifier">new</span> <span class="ruby-value">:logs</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">:gui</span>
 
-    <span class="ruby-keyword">when</span> <span class="ruby-string">&quot;desktop&quot;</span> <span class="ruby-keyword">then</span>
+    <span class="ruby-keyword">when</span> <span class="ruby-value">:desktop</span> <span class="ruby-keyword">then</span>
       <span class="ruby-identifier">sswine</span> = <span class="ruby-constant">Sswine</span>.<span class="ruby-identifier">new</span> <span class="ruby-value">:logs</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">:gui</span>
       <span class="ruby-identifier">sswine</span>.<span class="ruby-identifier">writeMenuEntries</span>
 
-    <span class="ruby-keyword">when</span> <span class="ruby-string">&quot;kill&quot;</span> <span class="ruby-keyword">then</span>
-      <span class="ruby-identifier">sswine</span> = <span class="ruby-constant">Sswine</span>.<span class="ruby-identifier">new</span>
+    <span class="ruby-keyword">when</span> <span class="ruby-value">:kill</span> <span class="ruby-keyword">then</span>
+      <span class="ruby-identifier">sswine</span> = <span class="ruby-constant">Sswine</span>.<span class="ruby-identifier">new</span> <span class="ruby-value">:logs</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">:gui</span>
       <span class="ruby-identifier">sswine</span>.<span class="ruby-identifier">killAllHams</span>
-      <span class="ruby-identifier">oink</span> <span class="ruby-string">&quot;All Hams have been killed.&quot;</span>
 
-    <span class="ruby-keyword">when</span> <span class="ruby-string">&quot;shell&quot;</span> <span class="ruby-keyword">then</span>
-      <span class="ruby-identifier">sswine</span> = <span class="ruby-constant">Sswine</span>.<span class="ruby-identifier">new</span>
+    <span class="ruby-keyword">when</span> <span class="ruby-value">:shell</span> <span class="ruby-keyword">then</span>
+      <span class="ruby-identifier">sswine</span> = <span class="ruby-constant">Sswine</span>.<span class="ruby-identifier">new</span> <span class="ruby-value">:logs</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">:gui</span>
 
       <span class="ruby-keyword">if</span> <span class="ruby-identifier">sswine</span>.<span class="ruby-identifier">invisible</span> <span class="ruby-keyword">then</span>
+        <span class="ruby-identifier">logs_gui_append</span> <span class="ruby-identifier">sswine</span>
         <span class="ruby-identifier">oink</span> <span class="ruby-string">&quot;No Hams found. Nothing to do.&quot;</span>
 
       <span class="ruby-keyword">else</span>
@@ -367,10 +367,9 @@ of have to get used to designing them, so here we are.</p>
         <span class="ruby-keyword">end</span>
       <span class="ruby-keyword">end</span>
 
-    <span class="ruby-keyword">when</span> <span class="ruby-string">&quot;update&quot;</span> <span class="ruby-keyword">then</span>
-      <span class="ruby-identifier">sswine</span> = <span class="ruby-constant">Sswine</span>.<span class="ruby-identifier">new</span>
+    <span class="ruby-keyword">when</span> <span class="ruby-value">:update</span> <span class="ruby-keyword">then</span>
+      <span class="ruby-identifier">sswine</span> = <span class="ruby-constant">Sswine</span>.<span class="ruby-identifier">new</span> <span class="ruby-value">:logs</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">:gui</span>
       <span class="ruby-identifier">sswine</span>.<span class="ruby-identifier">updateAllHams</span>
-      <span class="ruby-identifier">oink</span> <span class="ruby-string">&quot;All Hams have been updated.&quot;</span>
   <span class="ruby-keyword">end</span>
 
   <span class="ruby-comment"># If Glit generated no logs, then it gotta be taken elsewhere:</span>

@@ -28,7 +28,7 @@ class Ham
   # Constructor. To work properly, the following should be provided:
   # :path => path to the folder which should become a Ham.
   # :logs => :off/:on/:gui, modality to use for logging.
-  def initialize( options = {} )
+  def initialize options = {}
     @folder = Pathname.new options[:path]
     @edible = true
     @config_global = Hash.new
@@ -100,7 +100,7 @@ class Ham
   # and Icon keys will point to, respectively, an existing folder or file.
   # Returns a valid tweaked entry on success, or an empty one otherwise.
   private
-  def checkEntry( entry, key )
+  def checkEntry entry, key
     # This will be the container of the return value:
     ret = entry.sort.to_h
 

@@ -153,7 +153,7 @@ within their constructor.</p>
         
         <div class="method-heading">
           <span class="method-name">logs_gui_append</span><span
-            class="method-args">( element )</span>
+            class="method-args">(element)</span>
           
           <span class="method-click-advice">click to toggle source</span>
           
@@ -168,8 +168,8 @@ within their constructor.</p>
 
           
           <div class="method-source-code" id="logs_gui_append-source">
-            <pre><span class="ruby-comment"># File lib/oink.rb, line 140</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">logs_gui_append</span>( <span class="ruby-identifier">element</span> )
+            <pre><span class="ruby-comment"># File lib/oink.rb, line 141</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">logs_gui_append</span> <span class="ruby-identifier">element</span>
   <span class="ruby-comment"># Only has a meaning if the given element actually has this property:</span>
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">element</span>.<span class="ruby-identifier">methods</span>.<span class="ruby-identifier">include?</span> <span class="ruby-value">:logs_gui</span> <span class="ruby-keyword">and</span>
     <span class="ruby-ivar">@logs_gui</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">element</span>.<span class="ruby-identifier">logs_gui</span>
@@ -204,7 +204,7 @@ within their constructor.</p>
 
           
           <div class="method-source-code" id="logs_gui_clear-source">
-            <pre><span class="ruby-comment"># File lib/oink.rb, line 149</span>
+            <pre><span class="ruby-comment"># File lib/oink.rb, line 150</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">logs_gui_clear</span>
   <span class="ruby-ivar">@logs_gui</span> = <span class="ruby-constant">Array</span>.<span class="ruby-identifier">new</span>
 <span class="ruby-keyword">end</span></pre>
@@ -222,7 +222,7 @@ within their constructor.</p>
         
         <div class="method-heading">
           <span class="method-name">oink</span><span
-            class="method-args">( *logs )</span>
+            class="method-args">(*logs)</span>
           
           <span class="method-click-advice">click to toggle source</span>
           
@@ -237,8 +237,8 @@ within their constructor.</p>
 
           
           <div class="method-source-code" id="oink-source">
-            <pre><span class="ruby-comment"># File lib/oink.rb, line 98</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">oink</span>( <span class="ruby-operator">*</span><span class="ruby-identifier">logs</span> )
+            <pre><span class="ruby-comment"># File lib/oink.rb, line 99</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">oink</span> <span class="ruby-operator">*</span><span class="ruby-identifier">logs</span>
   <span class="ruby-comment"># This only has a meaning if logs are not disabled:</span>
   <span class="ruby-keyword">unless</span> <span class="ruby-value">:off</span> <span class="ruby-operator">==</span> <span class="ruby-ivar">@logs</span> <span class="ruby-keyword">then</span>
     <span class="ruby-comment"># For each given log...</span>
@@ -319,7 +319,8 @@ within their constructor.</p>
   <span class="ruby-ivar">@logs_gui</span> = <span class="ruby-constant">Array</span>.<span class="ruby-identifier">new</span>
 
   <span class="ruby-comment"># Unless otherwise specified, logs are on. This is to allow classes without</span>
-  <span class="ruby-comment"># @logs instance variables to still use Oink to log.</span>
+  <span class="ruby-comment"># @logs instance variables to still use Oink to log stuff. I&#39;m looking at </span>
+  <span class="ruby-comment"># you, SswineLauncher.</span>
   <span class="ruby-keyword">unless</span> <span class="ruby-keyword">defined?</span> <span class="ruby-ivar">@logs</span> <span class="ruby-keyword">then</span>
     <span class="ruby-ivar">@logs</span> = <span class="ruby-value">:on</span>
   <span class="ruby-keyword">end</span>
@@ -346,7 +347,7 @@ within their constructor.</p>
         
         <div class="method-heading">
           <span class="method-name">digest</span><span
-            class="method-args">( options = {} )</span>
+            class="method-args">(options = {})</span>
           
           <span class="method-click-advice">click to toggle source</span>
           
@@ -363,8 +364,8 @@ needed). :cap =&gt; max characters per single line.</p>
 
           
           <div class="method-source-code" id="digest-source">
-            <pre><span class="ruby-comment"># File lib/oink.rb, line 43</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">digest</span>( <span class="ruby-identifier">options</span> = {} )
+            <pre><span class="ruby-comment"># File lib/oink.rb, line 44</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">digest</span> <span class="ruby-identifier">options</span> = {}
   <span class="ruby-comment"># Complete container of all composed lines:</span>
   <span class="ruby-identifier">composed_container</span> = <span class="ruby-constant">Array</span>.<span class="ruby-identifier">new</span>
 

@@ -1,5 +1,6 @@
 # Sswine
-Sswine, which stands for "Sswine: split wine".
+Sswine, which stands for "Sswine: split wine".  
+It is licensed under GPLv3.
 
 ### General
 This program, written in Ruby, is made to handle multiple wine bottles located

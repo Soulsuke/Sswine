@@ -50,30 +50,30 @@ class Gilt < Gtk::Window
     # List of available commands, and the relative tooltips:
     commands_list = Array.new
     commands_list.push(
-      :name => "check",
+      :name => :check,
       :label => "Check for invalid Hams",
       :tooltip => "Check each folder within #{ENV["HOME"]}/.sswine for " +
                   "malformed entries."
     )
     commands_list.push(
-      :name => "desktop",
+      :name => :desktop,
       :label => "Create menu entries",
       :tooltip => "Add the Sswine menu folder and populates it with the " +
                   "relative entries."
     )
     commands_list.push(
-      :name => "kill",
+      :name => :kill,
       :label =>"Kill all Hams",
       :tooltip => "Run `wineserver -k` for each Sswine managed entry, to " +
                   "ensure wine is not running."
     )
     commands_list.push(
-      :name => "shell",
+      :name => :shell,
       :label => "Open a shell for a Ham",
       :tooltip => "I'll probably remove this one."
     )
     commands_list.push(
-      :name => "update",
+      :name => :update,
       :label => "Update all Hams",
       :tooltip => "Run `wineboot` for each Sswine managed entry, to ensure " +
                   "it is updated to work with the current wine version."
@@ -198,22 +198,22 @@ class Gilt < Gtk::Window
 
     # Depending on the command, do the right thing:
     case @command
-      when "check" then
+      when :check then
         sswine = Sswine.new :logs => :gui
 
-      when "desktop" then
+      when :desktop then
         sswine = Sswine.new :logs => :gui
         sswine.writeMenuEntries
 
-      when "kill" then
-        sswine = Sswine.new
+      when :kill then
+        sswine = Sswine.new :logs => :gui
         sswine.killAllHams
-        oink "All Hams have been killed."
 
-      when "shell" then
-        sswine = Sswine.new
+      when :shell then
+        sswine = Sswine.new :logs => :gui
 
         if sswine.invisible then
+          logs_gui_append sswine
           oink "No Hams found. Nothing to do."
 
         else
@@ -260,10 +260,9 @@ class Gilt < Gtk::Window
           end
         end
 
-      when "update" then
-        sswine = Sswine.new
+      when :update then
+        sswine = Sswine.new :logs => :gui
         sswine.updateAllHams
-        oink "All Hams have been updated."
     end
 
     # If Glit generated no logs, then it gotta be taken elsewhere:

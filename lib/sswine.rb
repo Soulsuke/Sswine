@@ -28,7 +28,7 @@ class Sswine
 
   # Constructor. To work properly, the following should be provided:
   # :logs => on/off/gui, modality to use for logging.
-  def initialize( options = { :logs => :off } )
+  def initialize options = { :logs => :off }
     @main_dir = Pathname.new "#{ENV["HOME"]}/.sswine"
     @hams = Array.new
     @innvisible = false
@@ -213,17 +213,39 @@ class Sswine
 
   # Terminates every Ham (alive or not).
   public
-  def killAllHams
-    @hams.each do |h|
-      h.killHam
+  def killAllHams options = {}
+    # This is to override @logs when we want to:
+    if options.key? :logs  then
+      @logs = options[:logs]
+    end
+
+    # Only has a meaning if there are any Hams:
+    unless @invisible then
+      @hams.each do |h|
+        h.killHam
+      end
+
+    else
+      oink "No Hams found. Nothing to do."
     end
   end
 
   # Attempts to update every Ham.
   public
-  def updateAllHams
-    @hams.each do |h|
-      h.updateHam
+  def updateAllHams options = {}
+    # This is to override @logs when we want to:
+    if options.key? :logs  then
+      @logs = options[:logs]
+    end
+
+    # Only has a meaning if there are any Hams:
+    unless @invisible then
+      @hams.each do |h|
+        h.updateHam
+      end
+
+    else
+      oink "No Hams found. Nothing to do."
     end
   end
 
@@ -231,12 +253,17 @@ class Sswine
   # A shell will be opened in such Ham's directory, with the WINEPREFIX
   # varialbe correctly set. The shell to use will be the user's default one.
   public
-  def openShell
+  def openShell options = {}
+    # This is to override @logs when we want to:
+    if options.key? :logs  then
+      @logs = options[:logs]
+    end
+
     # This will store the user input:
     choice = -1
 
     if @invisible then
-      puts "No Hams found. Nothing to do."
+      oink "No Hams found. Nothing to do."
 
     else
       # It has to be user-interactive!

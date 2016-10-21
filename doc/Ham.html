@@ -173,7 +173,7 @@ usable config file contain a wine_env folder.</p>
         
         <div class="method-heading">
           <span class="method-name">new</span><span
-            class="method-args">( options = {} )</span>
+            class="method-args">(options = {})</span>
           
           <span class="method-click-advice">click to toggle source</span>
           
@@ -191,7 +191,7 @@ usable config file contain a wine_env folder.</p>
           
           <div class="method-source-code" id="new-source">
             <pre><span class="ruby-comment"># File lib/ham.rb, line 31</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>( <span class="ruby-identifier">options</span> = {} )
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span> <span class="ruby-identifier">options</span> = {}
   <span class="ruby-ivar">@folder</span> = <span class="ruby-constant">Pathname</span>.<span class="ruby-identifier">new</span> <span class="ruby-identifier">options</span>[<span class="ruby-value">:path</span>]
   <span class="ruby-ivar">@edible</span> = <span class="ruby-keyword">true</span>
   <span class="ruby-ivar">@config_global</span> = <span class="ruby-constant">Hash</span>.<span class="ruby-identifier">new</span>
@@ -493,7 +493,7 @@ making other changes.</p>
         
         <div class="method-heading">
           <span class="method-name">checkEntry</span><span
-            class="method-args">( entry, key )</span>
+            class="method-args">(entry, key)</span>
           
           <span class="method-click-advice">click to toggle source</span>
           
@@ -511,7 +511,7 @@ Returns a valid tweaked entry on success, or an empty one otherwise.</p>
           
           <div class="method-source-code" id="checkEntry-source">
             <pre><span class="ruby-comment"># File lib/ham.rb, line 103</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">checkEntry</span>( <span class="ruby-identifier">entry</span>, <span class="ruby-identifier">key</span> )
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">checkEntry</span> <span class="ruby-identifier">entry</span>, <span class="ruby-identifier">key</span>
   <span class="ruby-comment"># This will be the container of the return value:</span>
   <span class="ruby-identifier">ret</span> = <span class="ruby-identifier">entry</span>.<span class="ruby-identifier">sort</span>.<span class="ruby-identifier">to_h</span>
 

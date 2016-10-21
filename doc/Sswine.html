@@ -171,7 +171,7 @@ href="Ham.html">Ham</a> must be composed of:</p>
         
         <div class="method-heading">
           <span class="method-name">new</span><span
-            class="method-args">( options = { :logs => :off } )</span>
+            class="method-args">(options = { :logs => :off })</span>
           
           <span class="method-click-advice">click to toggle source</span>
           
@@ -188,7 +188,7 @@ href="Ham.html">Ham</a> must be composed of:</p>
           
           <div class="method-source-code" id="new-source">
             <pre><span class="ruby-comment"># File lib/sswine.rb, line 31</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>( <span class="ruby-identifier">options</span> = { <span class="ruby-value">:logs</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">:off</span> } )
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span> <span class="ruby-identifier">options</span> = { <span class="ruby-value">:logs</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">:off</span> }
   <span class="ruby-ivar">@main_dir</span> = <span class="ruby-constant">Pathname</span>.<span class="ruby-identifier">new</span> <span class="ruby-node">&quot;#{ENV[&quot;HOME&quot;]}/.sswine&quot;</span>
   <span class="ruby-ivar">@hams</span> = <span class="ruby-constant">Array</span>.<span class="ruby-identifier">new</span>
   <span class="ruby-ivar">@innvisible</span> = <span class="ruby-keyword">false</span>
@@ -247,7 +247,7 @@ href="Ham.html">Ham</a> must be composed of:</p>
         
         <div class="method-heading">
           <span class="method-name">killAllHams</span><span
-            class="method-args">()</span>
+            class="method-args">(options = {})</span>
           
           <span class="method-click-advice">click to toggle source</span>
           
@@ -263,9 +263,20 @@ href="Ham.html">Ham</a> must be composed of:</p>
           
           <div class="method-source-code" id="killAllHams-source">
             <pre><span class="ruby-comment"># File lib/sswine.rb, line 216</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">killAllHams</span>
-  <span class="ruby-ivar">@hams</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">h</span><span class="ruby-operator">|</span>
-    <span class="ruby-identifier">h</span>.<span class="ruby-identifier">killHam</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">killAllHams</span> <span class="ruby-identifier">options</span> = {}
+  <span class="ruby-comment"># This is to override @logs when we want to:</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">options</span>.<span class="ruby-identifier">key?</span> <span class="ruby-value">:logs</span>  <span class="ruby-keyword">then</span>
+    <span class="ruby-ivar">@logs</span> = <span class="ruby-identifier">options</span>[<span class="ruby-value">:logs</span>]
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-comment"># Only has a meaning if there are any Hams:</span>
+  <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@invisible</span> <span class="ruby-keyword">then</span>
+    <span class="ruby-ivar">@hams</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">h</span><span class="ruby-operator">|</span>
+      <span class="ruby-identifier">h</span>.<span class="ruby-identifier">killHam</span>
+    <span class="ruby-keyword">end</span>
+
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">oink</span> <span class="ruby-string">&quot;No Hams found. Nothing to do.&quot;</span>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -282,7 +293,7 @@ href="Ham.html">Ham</a> must be composed of:</p>
         
         <div class="method-heading">
           <span class="method-name">openShell</span><span
-            class="method-args">()</span>
+            class="method-args">(options = {})</span>
           
           <span class="method-click-advice">click to toggle source</span>
           
@@ -300,13 +311,18 @@ one.</p>
 
           
           <div class="method-source-code" id="openShell-source">
-            <pre><span class="ruby-comment"># File lib/sswine.rb, line 234</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">openShell</span>
+            <pre><span class="ruby-comment"># File lib/sswine.rb, line 256</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">openShell</span> <span class="ruby-identifier">options</span> = {}
+  <span class="ruby-comment"># This is to override @logs when we want to:</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">options</span>.<span class="ruby-identifier">key?</span> <span class="ruby-value">:logs</span>  <span class="ruby-keyword">then</span>
+    <span class="ruby-ivar">@logs</span> = <span class="ruby-identifier">options</span>[<span class="ruby-value">:logs</span>]
+  <span class="ruby-keyword">end</span>
+
   <span class="ruby-comment"># This will store the user input:</span>
   <span class="ruby-identifier">choice</span> = <span class="ruby-value">-1</span>
 
   <span class="ruby-keyword">if</span> <span class="ruby-ivar">@invisible</span> <span class="ruby-keyword">then</span>
-    <span class="ruby-identifier">puts</span> <span class="ruby-string">&quot;No Hams found. Nothing to do.&quot;</span>
+    <span class="ruby-identifier">oink</span> <span class="ruby-string">&quot;No Hams found. Nothing to do.&quot;</span>
 
   <span class="ruby-keyword">else</span>
     <span class="ruby-comment"># It has to be user-interactive!</span>
@@ -350,7 +366,7 @@ one.</p>
         
         <div class="method-heading">
           <span class="method-name">updateAllHams</span><span
-            class="method-args">()</span>
+            class="method-args">(options = {})</span>
           
           <span class="method-click-advice">click to toggle source</span>
           
@@ -365,10 +381,21 @@ one.</p>
 
           
           <div class="method-source-code" id="updateAllHams-source">
-            <pre><span class="ruby-comment"># File lib/sswine.rb, line 224</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">updateAllHams</span>
-  <span class="ruby-ivar">@hams</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">h</span><span class="ruby-operator">|</span>
-    <span class="ruby-identifier">h</span>.<span class="ruby-identifier">updateHam</span>
+            <pre><span class="ruby-comment"># File lib/sswine.rb, line 235</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">updateAllHams</span> <span class="ruby-identifier">options</span> = {}
+  <span class="ruby-comment"># This is to override @logs when we want to:</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">options</span>.<span class="ruby-identifier">key?</span> <span class="ruby-value">:logs</span>  <span class="ruby-keyword">then</span>
+    <span class="ruby-ivar">@logs</span> = <span class="ruby-identifier">options</span>[<span class="ruby-value">:logs</span>]
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-comment"># Only has a meaning if there are any Hams:</span>
+  <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@invisible</span> <span class="ruby-keyword">then</span>
+    <span class="ruby-ivar">@hams</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">h</span><span class="ruby-operator">|</span>
+      <span class="ruby-identifier">h</span>.<span class="ruby-identifier">updateHam</span>
+    <span class="ruby-keyword">end</span>
+
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">oink</span> <span class="ruby-string">&quot;No Hams found. Nothing to do.&quot;</span>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
