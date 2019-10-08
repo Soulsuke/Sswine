@@ -1,9 +1,8 @@
 #! /usr/bin/env ruby
 
 require "fiddle"
-require "pathname"
-require "#{Pathname.new( $0 ).realpath.dirname}/lib/oink.rb"
-require "#{Pathname.new( $0 ).realpath.dirname}/lib/sswine.rb"
+require_relative "lib/oink.rb"
+require_relative "lib/sswine.rb"
 
 =begin
 A simple launcher for Sswine!  
@@ -16,6 +15,11 @@ class SswineLauncher
   # Our logger:
   include Oink
 
+  # Official name to use:
+  def self.name
+    return "sswine"
+  end
+
   # Constructor. It does nothing, really.
   def initialize
     oink_initialize
@@ -24,33 +28,36 @@ class SswineLauncher
   # Private method. Contains the help reference of command line Sswine.
   private
   def showHelp
+    # Shorthand:
+    name = SswineLauncher.name
+
     # Header:
-    oink "Sswine: split wine."
+    oink "#{name.capitalize}: split wine."
     oink "Usage:"
 
     # Check hams:
-    oink "#{@colors[:cyan]}#{$0} -c/--check#{@colors[:default]}: " +
+    oink "#{@colors[:cyan]}#{name} -c/--check#{@colors[:default]}: " +
          "checks each entry of each Ham for errors. No output means that " +
          "everything is ok."
     # Write .desktop files:
-    oink "#{@colors[:cyan]}#{$0} -d/--desktop#{@colors[:default]}: " +
+    oink "#{@colors[:cyan]}#{name} -d/--desktop#{@colors[:default]}: " +
          "writes .desktop files for each valid entry of each edible Ham."
     # GTK3 GUI:
-    oink "#{@colors[:cyan]}#{$0} -g/--gui#{@colors[:default]}: " +
+    oink "#{@colors[:cyan]}#{name} -g/--gui#{@colors[:default]}: " +
          "launches the GTK3 GUI."
     # Help reference:
-    oink "#{@colors[:cyan]}#{$0} -h/--help#{@colors[:default]}: " +
+    oink "#{@colors[:cyan]}#{name} -h/--help#{@colors[:default]}: " +
          "shows this help reference."
     # Kill all hams:
-    oink "#{@colors[:cyan]}#{$0} -k/--kill#{@colors[:default]}: " +
+    oink "#{@colors[:cyan]}#{name} -k/--kill#{@colors[:default]}: " +
          "runs 'wineserver -k' for each Ham."
     # Open shell:
-    oink "#{@colors[:cyan]}#{$0} -s/--shell#{@colors[:default]}: " +
+    oink "#{@colors[:cyan]}#{name} -s/--shell#{@colors[:default]}: " +
          "prompts the user to choose an edible Ham. Then, the user's default" +
          " shell is opened in the choosen entry's folder, with the " +
          "WINEPREFIX variable correctly set."
     # Update all hams:
-    oink "#{@colors[:cyan]}#{$0} -u/--update#{@colors[:default]}: " +
+    oink "#{@colors[:cyan]}#{name} -u/--update#{@colors[:default]}: " +
          "runs 'wineboot' for each edible Ham. This is supposed to update " +
          "wine files on each of them."
   end
@@ -92,7 +99,7 @@ class SswineLauncher
           # It gets required here, so that GTK3 is not a mandatory dependency
           # to run Sswine.
           begin
-            require "#{Pathname.new( $0 ).realpath.dirname}/lib/gilt.rb"
+            require_relative "lib/gilt.rb"
 
           rescue LoadError
             puts "#{@colors[:red]}!!! Error:#{@colors[:default]} " +
@@ -151,6 +158,8 @@ class SswineLauncher
 
 end
 
+# Start everything if needed:
+Process.setproctitle( SswineLauncher.name )
 sl = SswineLauncher.new
 sl.squealForMe ARGV
 
